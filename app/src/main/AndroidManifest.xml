@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.sustownsapp">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:remove="android:maxSdkVersion" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission
+        android:name="android.permission.READ_SMS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.RECEIVE_SMS"
+        tools:node="remove" />
+
+    <application
+        android:name="com.sustown.sustownsapp.app.MyApplication"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/sus_image"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@drawable/sus_image"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:icon">
+        <activity android:name="com.sustown.sustownsapp.Activities.ReceivedContracts" />
+        <activity android:name="com.sustown.sustownsapp.Activities.ContractOrdersInvoice" />
+        <activity android:name="com.sustown.sustownsapp.Activities.ProductDocumentsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.BusinessShipping" />
+        <activity android:name="com.sustown.sustownsapp.Activities.TransportDetailsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.TransportOrdersActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.BankDetailsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.AddTransportActivity" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBq3lLqjiOU_K8ksL-NNyZqtDPOd_4dk-Q" />
+
+        <activity android:name="com.sustown.sustownsapp.Activities.MapsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.ServiceManagementActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.AddPaymentActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.VendorLinkActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.MarketActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.MakeOffer" />
+        <activity android:name="com.sustown.sustownsapp.Activities.OrderDetailsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.QuoteNowActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.AvailableBadges" />
+        <activity android:name="com.sustown.sustownsapp.Activities.BusinessGallery" />
+        <activity android:name="com.sustown.sustownsapp.Activities.BusinessReviews" />
+        <activity android:name="com.sustown.sustownsapp.Activities.BusinessCategory" />
+        <activity android:name="com.sustown.sustownsapp.Activities.BusinessProfileDetails" />
+        <activity android:name="com.sustown.sustownsapp.Activities.SettingsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.OffersActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.StoreOffersActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.StoreReceivedOrdersActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.StoreMyProductsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.MyContractPurchases" />
+        <activity android:name="com.sustown.sustownsapp.Activities.MyContractOrdersActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.MyServiceContractActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.MyProductContractActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.TermsConditionsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.NotificationActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.ChangePasswordActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.ShippingAddressActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.VideoDetailedActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.MakeBookingActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.LogisticsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.MyProfileActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.BidContractsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.ProductDetailsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.CategoryExpandListActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.NewsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.BusinessProfileActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.CartActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.ContactUsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.ProductsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.AboutUsActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.SignUpVendorActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.SignInActivity" />
+        <activity android:name="com.sustown.sustownsapp.Activities.TradeManagementActivity" />
+        <activity
+            android:name="com.sustown.sustownsapp.Activities.SplashActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.sustown.sustownsapp.Activities.MainActivity" />
+    </application>
+
+</manifest>

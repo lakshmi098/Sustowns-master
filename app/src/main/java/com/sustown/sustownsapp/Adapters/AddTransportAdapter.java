@@ -1,0 +1,285 @@
+package com.sustown.sustownsapp.Adapters;
+
+import android.app.Dialog;
+import android.app.DownloadManager;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.sustownsapp.R;
+import com.sustown.sustownsapp.Activities.AddTransportActivity;
+import com.sustown.sustownsapp.Activities.PreferenceUtils;
+import com.sustown.sustownsapp.Activities.TransportDetailsActivity;
+import com.sustown.sustownsapp.Models.OrderModel;
+import com.sustown.sustownsapp.Models.TransportServicesModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapter.ViewHolder> {
+    Context context;
+    LayoutInflater inflater;
+    String user_email, pro_id, user_id, user_role, order_status, order_id, pay_method,booking_status;
+    PreferenceUtils preferenceUtils;
+    List<TransportServicesModel> transportServiceList;
+    ArrayList<OrderModel> orderModels;
+    ProgressDialog progressDialog;
+    Button close_dialog;
+    int row_index = -1;
+    TextView transport_vendor_name, transport_service_name, transport_categories, transport_type, vehicle_type, load_type, charge_per_km,
+            minimum_charge, total_price,docs;
+    SparseBooleanArray mSelectedItem;
+    Boolean isCancel;
+    final String URL2,URL9;
+
+    public AddTransportAdapter(Context context, List<TransportServicesModel> transportServicesModels) {
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.context = context;
+        this.transportServiceList = transportServicesModels;
+        this.mSelectedItem = new SparseBooleanArray();
+        this.isCancel = true;
+        URL2 = "http://www.appsapk.com/downloading/latest/WeChat-6.5.7.apk";
+        URL9 = "http://www.appsapk.com/downloading/latest/UC-Browser.apk";
+    }
+
+    @Override
+    public AddTransportAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.transport_service_item, viewGroup, false);
+        //  product_sale_activity.onItemClick(i);
+        return new AddTransportAdapter.ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(final AddTransportAdapter.ViewHolder viewHolder, final int position) {
+
+        viewHolder.service_name.setText(transportServiceList.get(position).getService_name());
+        viewHolder.category_service.setText(transportServiceList.get(position).getCategory());
+        viewHolder.minimum_charge_Service.setText(transportServiceList.get(position).getPartial_minimum_charge());
+        viewHolder.total_Price_service.setText(transportServiceList.get(position).getPartial_total_price());
+        booking_status = transportServiceList.get(position).getTransport_booking_status();
+        if(booking_status.equalsIgnoreCase("")){
+            if (mSelectedItem.get(position) && !isCancel) {
+                viewHolder.book_service_btn.setVisibility(View.VISIBLE);
+                viewHolder.book_service_btn.setText("Cancel Booking");
+            } else if (isCancel) {
+                viewHolder.book_service_btn.setVisibility(View.VISIBLE);
+                viewHolder.book_service_btn.setText("Book Now");
+            } else {
+                viewHolder.book_service_btn.setVisibility(View.GONE);
+            }
+                viewHolder.cancel_booking_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewHolder.cancel_booking_btn.setVisibility(View.GONE);
+                    viewHolder.book_service_btn.setVisibility(View.VISIBLE);
+                }
+            });
+        } else if (booking_status.equalsIgnoreCase("0")) {
+            if (mSelectedItem.get(position) && !isCancel) {
+                viewHolder.book_service_btn.setVisibility(View.VISIBLE);
+                viewHolder.book_service_btn.setText("Cancel Booking");
+            } else if (isCancel) {
+                viewHolder.book_service_btn.setVisibility(View.VISIBLE);
+                viewHolder.book_service_btn.setText("Book Now");
+            } else {
+                viewHolder.book_service_btn.setVisibility(View.GONE);
+            }
+            viewHolder.cancel_booking_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((AddTransportActivity) context).cancelBooking(position);
+                    viewHolder.cancel_booking_btn.setVisibility(View.GONE);
+                    viewHolder.book_service_btn.setVisibility(View.VISIBLE);
+                }
+            });
+        }else if(booking_status.equalsIgnoreCase("1")){
+            viewHolder.cancelled_text.setText("Cancelled");
+            viewHolder.cancelled_text.setVisibility(View.VISIBLE);
+            viewHolder.book_service_btn.setVisibility(View.GONE);
+        }else if(booking_status.equalsIgnoreCase("2")){
+            viewHolder.ll_pay_vehicle.setVisibility(View.VISIBLE);
+            viewHolder.book_service_btn.setVisibility(View.GONE);
+            viewHolder.pay_now.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((TransportDetailsActivity) context).payOrder(position);
+                }
+            });
+            viewHolder.vehicle_details.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((TransportDetailsActivity) context).contactDetails(position);
+                }
+            });
+        }
+       /* if (mSelectedItem.get(position) && !isCancel) {
+            viewHolder.book_service_btn.setVisibility(View.VISIBLE);
+            viewHolder.book_service_btn.setText("Cancel Booking");
+        } else if (isCancel) {
+            viewHolder.book_service_btn.setVisibility(View.VISIBLE);
+            viewHolder.book_service_btn.setText("Book Now");
+        } else {
+            viewHolder.book_service_btn.setVisibility(View.GONE);
+        }
+
+        viewHolder.cancel_booking_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewHolder.cancel_booking_btn.setVisibility(View.GONE);
+                viewHolder.book_service_btn.setVisibility(View.VISIBLE);
+            }
+        });*/
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // create dialog
+                final Dialog customdialog = new Dialog(context);
+                customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                customdialog.setContentView(R.layout.transport_service_details_dialog);
+                customdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
+
+                transport_vendor_name = (TextView) customdialog.findViewById(R.id.transport_vendor_name);
+                transport_service_name = (TextView) customdialog.findViewById(R.id.transport_service_name);
+                transport_categories = (TextView) customdialog.findViewById(R.id.transport_categories);
+                transport_type = (TextView) customdialog.findViewById(R.id.transport_type);
+                vehicle_type = (TextView) customdialog.findViewById(R.id.vehicle_type);
+                load_type = (TextView) customdialog.findViewById(R.id.load_type);
+                charge_per_km = (TextView) customdialog.findViewById(R.id.charge_per_km);
+                minimum_charge = (TextView) customdialog.findViewById(R.id.minimum_charge);
+                total_price = (TextView) customdialog.findViewById(R.id.total_price);
+                docs = (TextView) customdialog.findViewById(R.id.docs);
+                docs.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri uri= Uri.parse(URL9);
+                        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                        DownloadManager.Request request = new DownloadManager.Request(uri);
+                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
+                                DownloadManager.Request.NETWORK_MOBILE);
+                        Toast.makeText(context, "File Downloading...", Toast.LENGTH_SHORT).show();
+// set title and description
+                        request.setTitle("Data Download");
+                        request.setDescription("Android Data download using DownloadManager.");
+
+                        request.allowScanningByMediaScanner();
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+//set the local destination for download file to a path within the application's external files directory
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"downloadfileName");
+                        request.setMimeType("*/*");
+                        downloadManager.enqueue(request);
+                    }
+                });
+
+                close_dialog = (Button) customdialog.findViewById(R.id.close_dialog);
+
+                transport_vendor_name.setText(transportServiceList.get(position).getTransport_vendor_name());
+                transport_service_name.setText(transportServiceList.get(position).getService_name());
+                transport_categories.setText(transportServiceList.get(position).getCategory());
+                transport_type.setText(transportServiceList.get(position).getTransport_type());
+                vehicle_type.setText(transportServiceList.get(position).getVehicle_type());
+                load_type.setText(transportServiceList.get(position).getLoad_type());
+                charge_per_km.setText(transportServiceList.get(position).getPartial_charge_perkm());
+                minimum_charge.setText(transportServiceList.get(position).getPartial_minimum_charge());
+                total_price.setText(transportServiceList.get(position).getPartial_total_price());
+                docs.setText(transportServiceList.get(position).getDocs());
+/*
+                docs.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       // String url = docs;
+                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(String.valueOf(docs)));
+                        request.setDescription("Some descrition");
+                        request.setTitle("Some title");
+// in order for this if to run, you must use the android 3.2 to compile your app
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                            request.allowScanningByMediaScanner();
+                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                        }
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "name-of-the-file.ext");
+
+// get download service and enqueue file
+                        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                        manager.enqueue(request);
+                    }
+                });
+*/
+
+                close_dialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customdialog.dismiss();
+                    }
+                });
+                customdialog.show();
+            }
+        });
+        viewHolder.book_service_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    ((AddTransportActivity) context).bookNow(position, viewHolder);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+    }
+    public void removeAt(int position) {
+        //  notifyDataSetChanged();
+    }
+
+
+
+    @Override
+    public int getItemCount() {
+        return transportServiceList.size();
+    }
+
+    public void updateBookSuccess(int position, ViewHolder viewHolder) {
+        if (viewHolder.book_service_btn.getText().toString().equalsIgnoreCase("Book Now")) {
+            isCancel = false;
+            mSelectedItem.put(position, true);
+        } else {
+            isCancel = true;
+            mSelectedItem.delete(position);
+        }
+        notifyDataSetChanged();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView service_name, category_service, minimum_charge_Service, total_Price_service,cancelled_text;
+        Button book_service_btn, cancel_booking_btn,pay_now,vehicle_details;
+        LinearLayout ll_pay_vehicle;
+
+        public ViewHolder(View view) {
+            super(view);
+            service_name = (TextView) view.findViewById(R.id.service_name);
+            category_service = (TextView) view.findViewById(R.id.category_service);
+            minimum_charge_Service = (TextView) view.findViewById(R.id.minimum_charge_Service);
+            total_Price_service = (TextView) view.findViewById(R.id.total_Price_service);
+            book_service_btn = (Button) view.findViewById(R.id.book_service_btn);
+            cancel_booking_btn = (Button) view.findViewById(R.id.cancel_booking_btn);
+            cancelled_text = (TextView) view.findViewById(R.id.cancelled_text);
+            ll_pay_vehicle = (LinearLayout) view.findViewById(R.id.ll_pay_vehicle);
+            pay_now = (Button) view.findViewById(R.id.pay_now);
+            vehicle_details = (Button) view.findViewById(R.id.vehicle_details);
+
+        }
+    }
+}

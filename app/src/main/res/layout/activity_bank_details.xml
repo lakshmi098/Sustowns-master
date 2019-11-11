@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/lin_lay"
+    android:background="#fff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="20sp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="My Bank Account Details"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:textColor="@color/appcolor"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:layout_marginRight="20sp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Account Name "
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="left"/>
+
+                <EditText
+                    android:id="@+id/bank_acc_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Bank Account Name"
+                    android:inputType="textPersonName"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Account Address"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="left"/>
+
+                <EditText
+                    android:id="@+id/bank_acc_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:inputType="textPostalAddress" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Account Number"
+                    android:textSize="16sp"
+                    android:maxLength="25"
+                    android:textColor="#000000"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="left"/>
+
+                <EditText
+                    android:id="@+id/bank_account_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:singleLine="true"
+                    android:hint="Bank Account Number"
+                    android:textSize="16sp"
+                    android:inputType="numberDecimal" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bank Name"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="left"/>
+
+                <EditText
+                    android:id="@+id/bank_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:hint="Bank Name"
+                    android:singleLine="true"
+                    android:textSize="16sp"
+                    android:inputType="textPersonName" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bank Country"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="left"/>
+
+                <EditText
+                    android:id="@+id/bank_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:hint="Bank Country"
+                    android:singleLine="true"
+                    android:textSize="16sp"
+                    android:inputType="textPostalAddress" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Branch Name"
+                    android:layout_gravity="left"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    android:layout_marginTop="10dp" />
+
+                <EditText
+                    android:id="@+id/branch_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:hint="Branch Name"
+                    android:singleLine="true"
+                    android:textSize="16sp"
+                    android:inputType="textPersonName" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Branch Address"
+                    android:layout_gravity="left"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    android:layout_marginTop="10dp" />
+
+                <EditText
+                    android:id="@+id/branch_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:singleLine="true"
+                    android:textSize="16sp"
+                    android:inputType="textPostalAddress" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Swift Number"
+                    android:layout_gravity="left"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    android:layout_marginTop="10dp" />
+
+                <EditText
+                    android:id="@+id/swift_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:hint="Swift Number"
+                    android:singleLine="true"
+                    android:textSize="16sp"
+                    android:inputType="numberDecimal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Iban Number"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="left"/>
+
+                <EditText
+                    android:id="@+id/iban_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:hint="iban Number"
+                    android:singleLine="true"
+                    android:textSize="16sp"
+                    android:inputType="numberDecimal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="National routing Number(IFSC)"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="left"/>
+
+                <EditText
+                    android:id="@+id/national_routing_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:hint="Bank IFSC Code"
+                    android:singleLine="true"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Business Number"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="left"/>
+
+                <EditText
+                    android:id="@+id/business_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:hint="Business Number"
+                    android:singleLine="true"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tax id Number"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="left"/>
+
+                <EditText
+                    android:id="@+id/tax_id_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:hint="Tax Id Number"
+                    android:singleLine="true"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Attachment"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="left"/>
+
+                <Button
+                    android:id="@+id/choose_file_bank"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:singleLine="true"
+                    android:text="Choose File"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp">
+
+                    <Button
+                        android:id="@+id/save_Details_bank"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:text="Save Details"
+                        android:background="@drawable/backgroundapp_transparent"
+                        android:textColor="@color/white"
+                        android:padding="10dp"
+                        android:textAllCaps="false"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
