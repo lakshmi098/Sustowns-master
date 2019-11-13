@@ -150,30 +150,52 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
             public void onClick(View v) {
                 job_id = completeRequestModels.get(position).getJob_id();
                 // create dialog completed my quote
-                final Dialog customdialog = new Dialog(context);
-                customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customdialog.setContentView(R.layout.completed_myquote_dialog);
-                customdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-                customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
+                final Dialog customdialog1 = new Dialog(context);
+                customdialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                customdialog1.setContentView(R.layout.completed_myquote_dialog);
+                customdialog1.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                customdialog1.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
 
-                layout_complete_myquote = (LinearLayout) customdialog.findViewById(R.id.layout_complete_myquote);
-                layout_complete_documents = (LinearLayout) customdialog.findViewById(R.id.layout_complete_documents);
+                layout_complete_myquote = (LinearLayout) customdialog1.findViewById(R.id.layout_complete_myquote);
+                layout_complete_documents = (LinearLayout) customdialog1.findViewById(R.id.layout_complete_documents);
                 layout_complete_myquote.setVisibility(View.VISIBLE);
                 layout_complete_documents.setVisibility(View.GONE);
-                title = (TextView) customdialog.findViewById(R.id.title);
-                payment_type_quote = (TextView) customdialog.findViewById(R.id.payment_type_quote);
-                price_quote = (TextView) customdialog.findViewById(R.id.price_quote);
-                description_quote = (TextView) customdialog.findViewById(R.id.description_quote);
-                close_dialog = (Button) customdialog.findViewById(R.id.close_dialog);
-                quote_document = (TextView) customdialog.findViewById(R.id.quote_document);
+                title = (TextView) customdialog1.findViewById(R.id.title);
+                payment_type_quote = (TextView) customdialog1.findViewById(R.id.payment_type_quote);
+                price_quote = (TextView) customdialog1.findViewById(R.id.price_quote);
+                description_quote = (TextView) customdialog1.findViewById(R.id.description_quote);
+                close_dialog = (Button) customdialog1.findViewById(R.id.close_dialog);
+                quote_document = (TextView) customdialog1.findViewById(R.id.quote_document);
+                quote_document.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri uri= Uri.parse(URL9);
+                        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                        DownloadManager.Request request = new DownloadManager.Request(uri);
+                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
+                                DownloadManager.Request.NETWORK_MOBILE);
+                        Toast.makeText(context, "File Downloading...", Toast.LENGTH_SHORT).show();
+// set title and description
+                        request.setTitle("Data Download");
+                        request.setDescription("Android Data download using DownloadManager.");
+                        request.allowScanningByMediaScanner();
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//set the local destination for download file to a path within the application's external files directory
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"downloadfileName");
+                        request.setMimeType("*/*");
+                        downloadManager.enqueue(request);
+                    }
+                });
+
+                complete_quote_img = (ImageView) customdialog1.findViewById(R.id.complete_quote_img);
                 getQuoteDetails();
                 close_dialog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        customdialog.dismiss();
+                        customdialog1.dismiss();
                     }
                 });
-                customdialog.show();
+                customdialog1.show();
             }
         });
         viewHolder.process_documents.setOnClickListener(new View.OnClickListener() {
@@ -353,6 +375,16 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                                             String quoteImage = image_docpath + image;
                                             String appattachment = comjobquoteObj.getString("appattachment");
                                             String approve_status = comjobquoteObj.getString("approve_status");
+
+                                            JSONObject comjobcomObj = root.getJSONObject("comjobcom");
+                                            String id1 = comjobcomObj.getString("id");
+                                            String job_id1 = comjobcomObj.getString("job_id");
+                                            String user_id1 = comjobcomObj.getString("user_id");
+                                            String description1 = comjobcomObj.getString("description");
+                                            String image1 = comjobcomObj.getString("image");
+                                            String quoteImage1 = image_docpath + image;
+                                            String appattachment1 = comjobcomObj.getString("appattachment");
+                                            String approve_status1 = comjobcomObj.getString("approve_status");
 
                                             title.setText(contractname);
                                             payment_type_quote.setText(payment);

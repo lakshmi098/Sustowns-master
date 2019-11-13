@@ -249,17 +249,23 @@ public class ProductDetailsActivity extends AppCompatActivity {
         addtocart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int number = Integer.parseInt(edit_quantity.getText().toString());
+                int number1 = Integer.parseInt(quantity);
                 if(transportStr.equalsIgnoreCase("Select Shipping")){
                     Toast.makeText(ProductDetailsActivity.this, "Please Select Transport Option", Toast.LENGTH_SHORT).show();
                 }else if(transportStr.equalsIgnoreCase("Vendor Shipping")){
                     if(ServiceStr.equalsIgnoreCase("null") || ServiceStr.equalsIgnoreCase(""))
                     {
                         Toast.makeText(ProductDetailsActivity.this, "Services not avaialble for shipping", Toast.LENGTH_SHORT).show();
-                    }else {
+                    }else if(number >= number1){
                         addToCart();
+                    }else{
+                        Toast.makeText(ProductDetailsActivity.this, "Minimum Quantity Required", Toast.LENGTH_SHORT).show();
                     }
-                }else{
+                }else if(number >= number1){
                     addToCart();
+                }else{
+                    Toast.makeText(ProductDetailsActivity.this, "Minimum Quantity Required", Toast.LENGTH_SHORT).show();
                 }
                 //addToCartDatabase();
             }

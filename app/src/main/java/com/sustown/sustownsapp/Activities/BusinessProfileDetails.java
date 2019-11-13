@@ -210,7 +210,6 @@ public class BusinessProfileDetails extends AppCompatActivity {
             }
         });
         getBusinessProfile();
-
     }
     @Override
     public void onBackPressed() {

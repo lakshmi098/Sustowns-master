@@ -150,7 +150,7 @@ public class BusinessReviews extends AppCompatActivity {
         BusinessProfileApi service = retrofit.create(BusinessProfileApi.class);
 
         Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getBusinessProfile("1");
+        callRetrofit = service.getBusinessProfile(user_id);
 
         callRetrofit.enqueue(new Callback<JsonElement>() {
             @Override
@@ -288,7 +288,7 @@ public class BusinessReviews extends AppCompatActivity {
         BusinessProfileApi service = retrofit.create(BusinessProfileApi.class);
 
         Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getBusinessProfile("1");
+        callRetrofit = service.getBusinessProfile(user_id);
 
         callRetrofit.enqueue(new Callback<JsonElement>() {
             @Override
@@ -495,7 +495,7 @@ public class BusinessReviews extends AppCompatActivity {
             UserApi service = retrofit.create(UserApi.class);
 
             Call<JsonElement> callRetrofit = null;
-            callRetrofit = service.submitContractReviews("1",bid,reviewStr,reviewID);
+            callRetrofit = service.submitContractReviews(user_id,bid,reviewStr,reviewID);
             callRetrofit.enqueue(new Callback<JsonElement>() {
 
                 @Override

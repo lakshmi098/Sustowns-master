@@ -46,7 +46,7 @@ public class BidContractsActivity extends AppCompatActivity {
     Button open,quoted,approved,completed,bid_contracts_btn,post_contracts_btn,addProdRequest;
     LinearLayout home,news,store,bidcontracts,poultryprices,ll_requests_contracts,ll_search_contracts,ll_post_contracts,ll_contracts;
     RecyclerView recyclerView;
-    LinearLayout ll_myproductcontracts,ll_myservicecontracts,ll_mycontractorders,ll_mycontractpurchases;
+    LinearLayout ll_myproductcontracts,ll_myservicecontracts,ll_mycontractpurchases;
     OpenRequestAdapter openRequestAdapter;
     QuotedRequestAdapter quotedRequestAdapter;
     ServiceContractAdapter serviceContractAdapter;
@@ -111,7 +111,6 @@ public class BidContractsActivity extends AppCompatActivity {
         completed = (Button) findViewById(R.id.completed_btn);
         ll_myproductcontracts = (LinearLayout) findViewById(R.id.ll_myproductcontracts);
         ll_myservicecontracts = (LinearLayout) findViewById(R.id.ll_myservicecontracts);
-        ll_mycontractorders = (LinearLayout) findViewById(R.id.ll_mycontractorders);
         ll_mycontractpurchases = (LinearLayout) findViewById(R.id.ll_mycontractpurchases);
         ll_requests_contracts.setVisibility(View.VISIBLE);
         contracts_title.setText("Bid Contracts");
@@ -131,13 +130,6 @@ public class BidContractsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(BidContractsActivity.this, MyServiceContractActivity.class);
-                startActivity(i);
-            }
-        });
-        ll_mycontractorders.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(BidContractsActivity.this, MyContractOrdersActivity.class);
                 startActivity(i);
             }
         });
@@ -277,72 +269,7 @@ public class BidContractsActivity extends AppCompatActivity {
                 bidCompleteRequests();
             }
         });
-/*
-        service_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ll_my_Product_contracts.setVisibility(View.GONE);
-                addProdRequest.setText("Add Service Request");
-                service_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
-                product_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
-                product_btn.setTextColor(getResources().getColor(R.color.black));
-                service_btn.setTextColor(getResources().getColor(R.color.white));
-              //  serviceContractAdapter = new ServiceContractAdapter(BidContractsActivity.this, contracts);
-              //  recycler_view_post_contracts.setAdapter(serviceContractAdapter);
-
-                addProdRequest.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(BidContractsActivity.this, "service", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            }
-        });
-*/
-
-
-/*
-        filter_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(BidContractsActivity.this, v);
-                //Inflating the Popup using xml file
-                popup.getMenuInflater().inflate(R.menu.bid_contracts_list, popup.getMenu());
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int id = item.getItemId();
-                        if (id == R.id.continent_type) {
-                            */
-/*ll_shipping_type.setVisibility(View.VISIBLE);
-                            ll_buyer_network.setVisibility(View.GONE);
-                            ll_custom_invoice.setVisibility(View.GONE);*//*
-
-                        }
-                        else if (id == R.id.country_type) {
-                           */
-/* ll_shipping_type.setVisibility(View.GONE);
-                            ll_buyer_network.setVisibility(View.VISIBLE);
-                            ll_custom_invoice.setVisibility(View.GONE);*//*
-
-                        }
-                        else if (id == R.id.category_type) {
-                         */
-/*   ll_shipping_type.setVisibility(View.GONE);
-                            ll_buyer_network.setVisibility(View.GONE);
-                            ll_custom_invoice.setVisibility(View.VISIBLE);*//*
-
-                        }
-                        return true;
-                    }
-                });
-                popup.show(); //showing popup menu
-            }
-        });
-*/
-
-     //   hideAndShowItems();
+        //   hideAndShowItems();
         bidOpenRequests();
     }
     @Override
@@ -818,7 +745,8 @@ public class BidContractsActivity extends AppCompatActivity {
                                     try {
                                         root = new JSONObject(searchResponse);
                                         //   String message = root.getString("message");
-                                        //String approve Requests = root.getString("approve Requests");
+                                        String approve_Requests = root.getString("approve Requests");
+                                        String image_doc_path = root.getString("image_doc_path");
                                         String success = root.getString("success");
                                         if (success.equalsIgnoreCase("1")) {
                                             JSONArray jsonArray = root.getJSONArray("approve");
@@ -863,7 +791,7 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 String email = jsonObject.getString("email");
                                                 String usercity = jsonObject.getString("usercity");
                                                 String usercountry = jsonObject.getString("usercountry");
-                                                String Image = image;
+                                                String ImageStr = image_doc_path + image;
 
                                                 preferenceUtils.saveString(PreferenceUtils.JOB_ID,id);
 
@@ -879,7 +807,7 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 completeRequestModel.setSubsubcat_id(subsubcat_id);
                                                 completeRequestModel.setEnd_date(end_date);
                                                 completeRequestModel.setContractname(contractname);
-                                                completeRequestModel.setImage(Image);
+                                                completeRequestModel.setImage(ImageStr);
                                                 completeRequestModel.setMinqantity(minqantity);
                                                 completeRequestModel.setJob_location(job_location);
                                                 completeRequestModel.setCity(city);

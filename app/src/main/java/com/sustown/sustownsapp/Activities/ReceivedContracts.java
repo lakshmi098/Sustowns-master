@@ -343,7 +343,7 @@ public class ReceivedContracts extends AppCompatActivity {
                                                 String id2 = quoteObj.getString("id");
                                                 String job_id1 = quoteObj.getString("job_id");
                                                 String user_id_quote = quoteObj.getString("user_id");
-                                                String instant_amount = quoteObj.getString("after_amount");
+                                                String instant_amount = quoteObj.getString("instant_amount");
                                                 String payment = quoteObj.getString("payment");
                                                 String currency = quoteObj.getString("currency");
                                                //String status = quoteObj.getString("status");

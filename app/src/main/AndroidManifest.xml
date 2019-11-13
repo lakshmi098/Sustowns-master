@@ -49,6 +49,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon">
+        <activity android:name="com.sustown.sustownsapp.Activities.PaymentContractsActvity"></activity>
         <activity android:name="com.sustown.sustownsapp.Activities.ReceivedContracts" />
         <activity android:name="com.sustown.sustownsapp.Activities.ContractOrdersInvoice" />
         <activity android:name="com.sustown.sustownsapp.Activities.ProductDocumentsActivity" />

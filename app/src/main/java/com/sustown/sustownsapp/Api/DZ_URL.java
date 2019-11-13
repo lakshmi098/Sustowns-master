@@ -85,6 +85,7 @@ public interface DZ_URL {
     String APPROVE_QUOTE_RECEIVED_CONTRACT = "Postcontractservice/quoteapprovestat";
     String GET_RECEIVED_CONTRACTS = "Postcontractservice/Quoteapp";
     String CONFIRM_QUOTE_RECEIVED_CONTRACT = "Postcontractservice/completequotestatus";
+    String MAKE_PAYMENT_BANK_APPROVE = "https://www.sustowns.com/Postcontractservice/quoteapprove/";
 
     String TRANSPORT_REGISTRATION = "transportservices/addtransportvendor";
     String GET_TRANS_SERVICES = "transportservices/myservices";

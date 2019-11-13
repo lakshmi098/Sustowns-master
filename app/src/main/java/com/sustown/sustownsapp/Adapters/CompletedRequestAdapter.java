@@ -1,9 +1,12 @@
 package com.sustown.sustownsapp.Adapters;
 
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sustownsapp.R;
 import com.google.gson.JsonElement;
@@ -49,13 +53,14 @@ public class CompletedRequestAdapter extends RecyclerView.Adapter<CompletedReque
     LinearLayout layout_complete_myquote, layout_complete_documents;
     TextView complete_description, complete_image, complete_document, close_dialog1,quote_document;
     ImageView complete_quote_img,complete_quote_img1;
-
+    final String URL9;
     public CompletedRequestAdapter(Context context, ArrayList<CompleteRequestModel> completeRequestModels) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
         this.completeRequestModels = completeRequestModels;
         preferenceUtils = new PreferenceUtils(context);
         user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID, "");
+        URL9 = "http://www.appsapk.com/downloading/latest/UC-Browser.apk";
     }
 
     @Override
@@ -90,7 +95,7 @@ public class CompletedRequestAdapter extends RecyclerView.Adapter<CompletedReque
         viewHolder.myquote_completed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                job_id = completeRequestModels.get(position).getJob_id();
+                job_id = completeRequestModels.get(position).getId();
                 // create dialog completed my quote
                 final Dialog customdialog = new Dialog(context);
                 customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -109,6 +114,27 @@ public class CompletedRequestAdapter extends RecyclerView.Adapter<CompletedReque
                 complete_quote_img = (ImageView) customdialog.findViewById(R.id.complete_quote_img);
                 close_dialog = (Button) customdialog.findViewById(R.id.close_dialog);
                 quote_document = (TextView) customdialog.findViewById(R.id.quote_document);
+                quote_document.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri uri= Uri.parse(URL9);
+                        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                        DownloadManager.Request request = new DownloadManager.Request(uri);
+                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
+                                DownloadManager.Request.NETWORK_MOBILE);
+                        Toast.makeText(context, "File Downloading...", Toast.LENGTH_SHORT).show();
+// set title and description
+                        request.setTitle("Data Download");
+                        request.setDescription("Android Data download using DownloadManager.");
+                        request.allowScanningByMediaScanner();
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//set the local destination for download file to a path within the application's external files directory
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"downloadfileName");
+                        request.setMimeType("*/*");
+                        downloadManager.enqueue(request);
+                    }
+                });
+
                 getCompleteQuoteDetails();
                 close_dialog.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -122,7 +148,7 @@ public class CompletedRequestAdapter extends RecyclerView.Adapter<CompletedReque
         viewHolder.product_documents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                job_id = completeRequestModels.get(position).getJob_id();
+                job_id = completeRequestModels.get(position).getId();
                 final Dialog customdialog = new Dialog(context);
                 customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 customdialog.setContentView(R.layout.completed_myquote_dialog);
@@ -136,6 +162,27 @@ public class CompletedRequestAdapter extends RecyclerView.Adapter<CompletedReque
                 complete_description = (TextView) customdialog.findViewById(R.id.complete_description);
                 complete_image = (TextView) customdialog.findViewById(R.id.complete_image);
                 complete_document = (TextView) customdialog.findViewById(R.id.complete_document);
+                complete_document.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri uri= Uri.parse(URL9);
+                        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                        DownloadManager.Request request = new DownloadManager.Request(uri);
+                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
+                                DownloadManager.Request.NETWORK_MOBILE);
+                        Toast.makeText(context, "File Downloading...", Toast.LENGTH_SHORT).show();
+// set title and description
+                        request.setTitle("Data Download");
+                        request.setDescription("Android Data download using DownloadManager.");
+                        request.allowScanningByMediaScanner();
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//set the local destination for download file to a path within the application's external files directory
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"downloadfileName");
+                        request.setMimeType("*/*");
+                        downloadManager.enqueue(request);
+                    }
+                });
+
                 close_dialog1 = (Button) customdialog.findViewById(R.id.close_dialog1);
                 add_document = (Button) customdialog.findViewById(R.id.add_document);
                 complete_quote_img1 = (ImageView) customdialog.findViewById(R.id.complete_quote_img1);

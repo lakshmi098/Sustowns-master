@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/received_orders_cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -40,31 +41,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:text="Name"
-                    android:id="@+id/name_receivedcontract"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/name_receivedcontract"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:maxLines="1"
+                        android:text="Name"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
                     <RatingBar
                         android:id="@+id/ratingBar"
+                        style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="90dp"
                         android:layout_height="wrap_content"
                         android:numStars="5"
                         android:padding="5dp"
-                        android:stepSize="0.1"
-                        style = "?android:attr/ratingBarStyleSmall"
+                        android:progressTint="@color/yellow"
                         android:rating="3.0"
-                        android:progressTint="@color/yellow" />
+                        android:stepSize="0.1" />
 
                     <ImageView
                         android:id="@+id/receivedorder_image"
@@ -73,25 +77,26 @@
                         android:layout_marginTop="5dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/no_image_available" />
+
                     <TextView
+                        android:id="@+id/received_reviews"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:maxLines="1"
                         android:text="0 Reviews"
-                        android:id="@+id/received_reviews"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="10dp"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -100,30 +105,30 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp"
                         android:orientation="horizontal">
-<!--
-                        <TextView
-                            android:layout_width="70dp"
-                            android:layout_height="wrap_content"
-                            android:maxLines="1"
-                            android:text="Name"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
+                        <!--
+                                                <TextView
+                                                    android:layout_width="70dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:maxLines="1"
+                                                    android:text="Name"
+                                                    android:textColor="@color/black"
+                                                    android:textSize="15sp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textColor="@color/black" />-->
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:text=":"
+                                                    android:textColor="@color/black" />-->
                         <TextView
                             android:id="@+id/received_prod_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
                             android:maxLines="3"
-                            android:visibility="gone"
                             android:text="premium quality egg"
                             android:textColor="@color/black"
-                            android:textSize="15sp" />
+                            android:textSize="15sp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -179,13 +184,13 @@
 
                         <TextView
                             android:id="@+id/received_orders_payment"
-                            android:textSize="15sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:maxLines="5"
                             android:text="Advance Payment"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
 
                     </LinearLayout>
 
@@ -198,8 +203,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingBottom="5dp">
 
                             <TextView
                                 android:layout_width="120dp"
@@ -225,12 +230,13 @@
                                 android:textSize="15dp" />
 
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingBottom="5dp">
 
                             <TextView
                                 android:layout_width="120dp"
@@ -260,56 +266,59 @@
                     </LinearLayout>
 
 
-
                 </LinearLayout>
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_gravity="right"
                 android:layout_marginTop="10dp"
-                android:layout_gravity="right">
+                android:orientation="horizontal">
+
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="Approve"
-                    android:layout_marginBottom="10dp"
-                    android:padding="7dp"
-                    android:visibility="gone"
-                    android:layout_marginRight="15dp"
-                    android:textColor="@color/white"
                     android:id="@+id/approve_btn"
-                    android:textSize="13sp"
-                    android:textAllCaps="false"
-                    android:background="@drawable/backgroundapp_transparent_blue"/>
-                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:text="Make Payment"
-                    android:layout_marginBottom="10dp"
-                    android:padding="7dp"
-                    android:visibility="gone"
                     android:layout_marginRight="15dp"
-                    android:textColor="@color/white"
-                    android:id="@+id/payment_btn"
-                    android:textSize="13sp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/backgroundapp_transparent_blue"
+                    android:padding="7dp"
+                    android:text="Approve"
                     android:textAllCaps="false"
-                    android:background="@drawable/backgroundapp_transparent_blue"/>
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
                 <Button
+                    android:id="@+id/payment_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:text="Confirm Contract Completion"
+                    android:layout_marginRight="15dp"
                     android:layout_marginBottom="10dp"
+                    android:background="@drawable/backgroundapp_transparent_blue"
                     android:padding="7dp"
-                    android:visibility="gone"
+                    android:text="Make Payment"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/confirm_contract"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_gravity="right"
                     android:layout_marginRight="15dp"
-                    android:textColor="@color/white"
-                    android:id="@+id/confirm_contract"
-                    android:textSize="13sp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/backgroundapp_transparent_blue"
+                    android:padding="7dp"
+                    android:text="Confirm Contract Completion"
                     android:textAllCaps="false"
-                    android:background="@drawable/backgroundapp_transparent_blue"/>
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/received_status"
@@ -317,10 +326,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginRight="5dp"
-                    android:visibility="gone"
                     android:text="Status : Contract Completed"
                     android:textColor="@color/yellow"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -345,10 +354,10 @@
                         android:layout_gravity="left"
                         android:layout_weight="1"
                         android:maxLines="1"
-                        android:textStyle="bold"
                         android:text="Contractor Details :"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -412,11 +421,12 @@
                         android:textSize="15dp" />
 
                 </LinearLayout>
+
                 <LinearLayout
+                    android:id="@+id/ll_busi_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:id="@+id/ll_busi_address"
                     android:orientation="horizontal">
 
                     <TextView
@@ -443,6 +453,7 @@
                         android:textSize="15dp" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -473,6 +484,7 @@
                         android:textSize="15dp" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -503,6 +515,7 @@
                         android:textSize="15dp" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -539,5 +552,61 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:padding="8dp"
+        android:visibility="gone"
+        android:id="@+id/ll_order_placed_text"
+        android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Order Placed Successfully"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thank you for your order"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:text="If you would like to view the status of your order"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="or make any changes to it,please visit "
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/my_orders_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Orders"
+                android:textStyle="bold"
+                android:textColor="@color/appcolor"
+                android:textSize="17sp" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

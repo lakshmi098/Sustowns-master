@@ -17,7 +17,7 @@ public class TradeManagementActivity extends AppCompatActivity {
     public static String username,useremail,user_role;
     ImageView backarrow;
     LinearLayout home,news,store,bidcontracts,poultryprices,ll_signout;
-    LinearLayout ll_cart,ll_orders,ll_offers,ll_transport_orders,ll_transport_details;
+    LinearLayout ll_cart,ll_orders,ll_offers,ll_transport_orders,ll_transport_details,ll_contract_orders;
     TextView home_text,news_text,store_text,contracts_text,market_text;
 
     @Override
@@ -38,6 +38,7 @@ public class TradeManagementActivity extends AppCompatActivity {
         ll_offers = (LinearLayout) findViewById(R.id.ll_offers);
         ll_transport_orders = (LinearLayout) findViewById(R.id.ll_transport_orders);
         ll_transport_details = (LinearLayout) findViewById(R.id.ll_transport_details);
+        ll_contract_orders = (LinearLayout) findViewById(R.id.ll_contract_orders);
 
         if (user_role.equalsIgnoreCase("poultry")) {
             ll_cart.setVisibility(View.VISIBLE);
@@ -45,12 +46,21 @@ public class TradeManagementActivity extends AppCompatActivity {
             ll_offers.setVisibility(View.VISIBLE);
             ll_transport_orders.setVisibility(View.GONE);
             ll_transport_details.setVisibility(View.VISIBLE);
+            ll_contract_orders.setVisibility(View.VISIBLE);
         } else if(user_role.equalsIgnoreCase("transport")){
             ll_cart.setVisibility(View.VISIBLE);
             ll_orders.setVisibility(View.GONE);
             ll_offers.setVisibility(View.GONE);
             ll_transport_orders.setVisibility(View.VISIBLE);
             ll_transport_details.setVisibility(View.GONE);
+            ll_contract_orders.setVisibility(View.GONE);
+        }else{
+            ll_cart.setVisibility(View.VISIBLE);
+            ll_orders.setVisibility(View.VISIBLE);
+            ll_offers.setVisibility(View.VISIBLE);
+            ll_transport_orders.setVisibility(View.GONE);
+            ll_transport_details.setVisibility(View.VISIBLE);
+            ll_contract_orders.setVisibility(View.VISIBLE);
         }
 
         home = (LinearLayout) findViewById(R.id.ll_home);
@@ -128,6 +138,13 @@ public class TradeManagementActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        ll_contract_orders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(TradeManagementActivity.this, MyContractOrdersActivity.class);
+                startActivity(i);
+            }
+        });
         ll_transport_orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +163,13 @@ public class TradeManagementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(TradeManagementActivity.this, TransportDetailsActivity.class);
+                startActivity(i);
+            }
+        });
+        ll_transport_orders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(TradeManagementActivity.this, MyContractOrdersActivity.class);
                 startActivity(i);
             }
         });

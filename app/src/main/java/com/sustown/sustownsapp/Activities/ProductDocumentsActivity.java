@@ -56,7 +56,7 @@ public class ProductDocumentsActivity extends AppCompatActivity {
     EditText description_edit;
     Button chooseimage_btn,choosedoc_btn,submit,close_dialog;
     CircleImageView profile_image;
-    TextView title,approve_doc_text;
+    TextView title,approve_doc_text,complete_document;
     public String PickedImgPath = null;
     String name,user_id,Description,filename,ret,fileString;
     private int requestCode;
@@ -112,6 +112,7 @@ public class ProductDocumentsActivity extends AppCompatActivity {
             close_dialog = (Button) findViewById(R.id.close_dialog);
             title.setText(titleStr);
             approve_doc_text = (TextView) findViewById(R.id.approve_doc_text);
+            complete_document = (TextView) findViewById(R.id.complete_document);
             chooseimage_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

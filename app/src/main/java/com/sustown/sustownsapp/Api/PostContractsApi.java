@@ -37,4 +37,8 @@ public interface PostContractsApi {
 
     @GET(DZ_URL.EDIT_POULTRY_PRODUCT_CONTRACT)
     Call<JsonElement> editPoultryProdContract(@Query("job_id") String job_id, @Query("v_to") String v_to);
+
+    @GET(DZ_URL.MAKE_PAYMENT_BANK_APPROVE)
+    Call<JsonElement> makePaymentByBank(@Query("user_id") String user_id, @Query("pay_type") String pay_type,@Query("amount") String amount,
+                                        @Query("quotedid") String quotedid,@Query("jobquatid") String jobquatid,@Query("action") String action);
 }

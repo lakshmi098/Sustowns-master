@@ -800,7 +800,7 @@ public class MyProductContractActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
-                fromDateText.setText("From Date : "+dayOfMonth+"/"+(monthOfYear+1)+"/"+year);
+                fromDateText.setText("From Date : "+dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
             }};
         DatePickerDialog dpDialog=new DatePickerDialog(this, listener, year, month, day);
         dpDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -813,7 +813,7 @@ public class MyProductContractActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
-                toDateText.setText("To Date : "+dayOfMonth+"/"+(monthOfYear+1)+"/"+year);
+                toDateText.setText("To Date : "+dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
             }};
         DatePickerDialog dpDialog=new DatePickerDialog(this, listener, year, month, day);
         dpDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -825,7 +825,7 @@ public class MyProductContractActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
-                poultryedittodate.setText("To Date : "+dayOfMonth+"/"+(monthOfYear+1)+"/"+year);
+                poultryedittodate.setText("To Date : "+dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
             }};
         DatePickerDialog dpDialog=new DatePickerDialog(this, listener, year, month, day);
         dpDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -838,8 +838,8 @@ public class MyProductContractActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
-                PoultryFromDate = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
-                poultryfromDateText.setText(dayOfMonth+"/"+(monthOfYear+1)+"/"+year);
+                PoultryFromDate = dayOfMonth+"-"+(monthOfYear+1)+"-"+year;
+                poultryfromDateText.setText(dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
 
             }};
 
@@ -855,8 +855,8 @@ public class MyProductContractActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
-                PoultryToDate = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
-                poultrytoDateText.setText(dayOfMonth+"/"+(monthOfYear+1)+"/"+year);
+                PoultryToDate = dayOfMonth+"-"+(monthOfYear+1)+"-"+year;
+                poultrytoDateText.setText(dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
 
             }};
 
@@ -872,8 +872,8 @@ public class MyProductContractActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
-                PoultryEditToDate = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
-                poultryedittodate.setText(dayOfMonth+"/"+(monthOfYear+1)+"/"+year);
+                PoultryEditToDate = dayOfMonth+"-"+(monthOfYear+1)+"-"+year;
+                poultryedittodate.setText(dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
 
             }};
 
@@ -1226,11 +1226,11 @@ public class MyProductContractActivity extends AppCompatActivity {
         try {
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("user_id", user_id);
-            jsonObj.put("v_from", PoultryFromDate);
-            jsonObj.put("v_to",PoultryToDate);
-            jsonObj.put("catid","145");
-            jsonObj.put("subcat","146");
-            jsonObj.put("ssubcat","147");
+            jsonObj.put("v_from", PoultryFromDate.replaceAll("\\\\",""));
+            jsonObj.put("v_to",PoultryToDate.replaceAll("\\\\",""));
+            jsonObj.put("catid","144");
+            jsonObj.put("subcat","145");
+            jsonObj.put("ssubcat","146");
             jsonObj.put("job_name",PoultryProdName);
             jsonObj.put("quality",PoultryQuality);
             jsonObj.put("quantity",poultry_quantity_edit.getText().toString());
@@ -1268,9 +1268,9 @@ public class MyProductContractActivity extends AppCompatActivity {
             jsonObj.put("user_id", user_id);
             jsonObj.put("v_from", PoultryFromDate.replaceAll("\\\\",""));
             jsonObj.put("v_to",PoultryToDate.replaceAll("\\\\",""));
-            jsonObj.put("catid","145");
-            jsonObj.put("subcat","146");
-            jsonObj.put("ssubcat","147");
+            jsonObj.put("catid","144");
+            jsonObj.put("subcat","145");
+            jsonObj.put("ssubcat","146");
             jsonObj.put("job_name",PoultryProdName);
             jsonObj.put("quality",PoultryQuality);
             jsonObj.put("quantity",poultry_quantity_edit.getText().toString());
@@ -1307,11 +1307,11 @@ public class MyProductContractActivity extends AppCompatActivity {
         try {
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("user_id", user_id);
-            jsonObj.put("v_from", PoultryFromDate);
-            jsonObj.put("v_to",PoultryToDate);
-            jsonObj.put("catid","145");
-            jsonObj.put("subcat","146");
-            jsonObj.put("ssubcat","147");
+            jsonObj.put("v_from", PoultryFromDate.replaceAll("\\\\",""));
+            jsonObj.put("v_to",PoultryToDate.replaceAll("\\\\",""));
+            jsonObj.put("catid","144");
+            jsonObj.put("subcat","145");
+            jsonObj.put("ssubcat","146");
             jsonObj.put("job_name",PoultryProdName);
             jsonObj.put("quality",PoultryQuality);
             jsonObj.put("quantity",poultry_quantity_edit.getText().toString());
@@ -1383,109 +1383,6 @@ public class MyProductContractActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void poultryAddProductContractRequest() {
-        //user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
-
-        //  progressdialog();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DZ_URL.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        PostContractsApi service = retrofit.create(PostContractsApi.class);
-        Call<JsonElement> callRetrofit = null;
-        if (PoultryLocation.equalsIgnoreCase("buyers")) {
-            if (actionValue.equalsIgnoreCase("existing")) {
-                callRetrofit = service.addProductContract(user_id, PoultryFromDate, "", PoultryToDate, "146", "145", "144",
-                        PoultryProdName, PoultryQuality, poultry_quantity_edit.getText().toString().trim(), poultry_contract_heading.getText().toString().trim(), PoultryLocation, "sell", profileString, AddressId, name_address.getText().toString().trim(),
-                        company_address.getText().toString().trim(), first_name_address.getText().toString().trim(), last_name_address.getText().toString().trim(), email_address.getText().toString().trim(), Product_Detail_Address_Map, address2_address.getText().toString().trim(), pincode_address.getText().toString().trim(),
-                        radioText, address_state.getText().toString().trim(), address_town.getText().toString().trim(), mobile_address.getText().toString().trim(), fax_address.getText().toString().trim(), Latitude, Longitude, Action, actionValue);
-            } else {
-                callRetrofit = service.addProductContract(user_id, PoultryFromDate, "", PoultryToDate, "146", "145", "144",
-                        PoultryProdName, PoultryQuality, poultry_quantity_edit.getText().toString().trim(), poultry_contract_heading.getText().toString().trim(), PoultryLocation, "buy", profileString, AddressId, name_address.getText().toString().trim(),
-                        company_address.getText().toString().trim(), first_name_address.getText().toString().trim(), last_name_address.getText().toString().trim(), email_address.getText().toString().trim(), Product_Detail_Address_Map, address2_address.getText().toString().trim(), pincode_address.getText().toString().trim(),
-                        countryAddress, address_state.getText().toString().trim(), address_town.getText().toString().trim(), mobile_address.getText().toString().trim(), fax_address.getText().toString().trim(), Latitude, Longitude, Action, quantityUnitStr);
-                // }
-            }}else{
-                callRetrofit = service.addProductContract(user_id, PoultryFromDate, "", PoultryToDate, "146", "145", "144",
-                        PoultryProdName, PoultryQuality, poultry_quantity_edit.getText().toString().trim(), poultry_contract_heading.getText().toString().trim(), PoultryLocation, "buy", profileString, "", "",
-                        "", "", "", "", "", "", "",
-                        "", "", "", "", "", "", "", "", quantityUnitStr);
-            }
-            callRetrofit.enqueue(new Callback<JsonElement>() {
-                @Override
-                public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                    try {
-                        if (response.isSuccessful()) {
-                            // progressDialog.dismiss();
-                            Log.d("Success Call", ">>>>" + call);
-                            Log.d("Success Call ", ">>>>" + response.body().toString());
-
-                            System.out.println("----------------------------------------------------");
-                            Log.d("Call request", call.request().toString());
-                            Log.d("Call request header", call.request().headers().toString());
-                            Log.d("Response raw header", response.headers().toString());
-                            Log.d("Response raw", String.valueOf(response.raw().body()));
-                            Log.d("Response code", String.valueOf(response.code()));
-                            System.out.println("----------------------------------------------------");
-
-
-                            if (response.body().toString() != null) {
-
-                                if (response != null) {
-                                    String searchResponse = response.body().toString();
-                                    Log.d("Reg", "Response  >>" + searchResponse.toString());
-
-                                    if (searchResponse != null) {
-                                        JSONObject root = null;
-                                        try {
-                                            root = new JSONObject(searchResponse);
-                                            String message;
-                                            Integer success;
-                                            message = root.getString("message");
-                                            success = root.getInt("success");
-                                            if (success == 1) {
-                                                linear_pro_contracts.setVisibility(View.VISIBLE);
-                                                ll_addprod_contracts.setVisibility(View.GONE);
-                                                ll_poultry_add_contract_product.setVisibility(View.GONE);
-
-                                                Intent i = new Intent(MyProductContractActivity.this, MyProductContractActivity.class);
-                                                startActivity(i);
-                                                Toast.makeText(MyProductContractActivity.this, message, Toast.LENGTH_SHORT).show();
-                                                // finish();
-                                                // progressDialog.dismiss();
-
-                                            } else {
-                                                Toast.makeText(MyProductContractActivity.this, message, Toast.LENGTH_SHORT).show();
-
-                                            }
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        // progressDialog.dismiss();
-                                    }
-                                }
-                            }
-                        } else {
-                            // Toast.makeText(SignInActivity.this, "Service not responding", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    // progressDialog.dismiss();
-
-                }
-
-                @Override
-                public void onFailure(Call<JsonElement> call, Throwable t) {
-                    Log.d("Error Call", ">>>>" + call.toString());
-                    Log.d("Error", ">>>>" + t.toString());
-                    //   // Toast.makeText(StoreMyProductsActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
-                    //  progressDialog.dismiss();
-                }
-            });
-        }
-
     private void editPoultryProdContractRequest() {
         //user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
         job_id = openRequestModels.get(position).getId();

@@ -192,6 +192,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         //  notifyDataSetChanged();
 
     }
+    public void progressdialog() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("please wait...");
+        progressDialog.setCancelable(true);
+        progressDialog.show();
+    }
     public void setJsonObject() {
 
         try {
@@ -204,12 +210,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 JSONObject quantityObject = new JSONObject();
                /* quantityObject.put("cart_id","763");
                 quantityObject.put("qty","15");*/
-               if(CartId.equalsIgnoreCase(cartServerModel.getCart_id())) {
-                   quantityObject.put("cart_id", cartServerModel.getCart_id());
-                   quantityObject.put("qty", QuantityStr);
-               }else{
+                if(CartId.equalsIgnoreCase(cartServerModel.getCart_id())) {
+                    quantityObject.put("cart_id", cartServerModel.getCart_id());
+                    quantityObject.put("qty", QuantityStr);
+                }else{
 
-               }
+                }
                 quantityArray.put(quantityObject);
             }
             useridObj.put("quantityArray",quantityArray);
@@ -241,6 +247,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                             String success = response.getString("success");
                             if(success.equalsIgnoreCase("1")){
                                 ((CartActivity)context).getCartListItems();
+
                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -256,14 +263,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 });
 
     }
-
-    public void progressdialog() {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("please wait...");
-        progressDialog.setCancelable(true);
-        progressDialog.show();
-    }
-
     public void removeShippingItem() {
         //  row_id = preferenceUtils.getStringFromPreference(PreferenceUtils.RowIdCart,"");
         //helper.showLoader(context, "Removing..", "Please wait for a while");

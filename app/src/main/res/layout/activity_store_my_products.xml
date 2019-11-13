@@ -1099,7 +1099,7 @@
                         android:layout_marginRight="10dp"
                         android:maxLines="4"
                         android:padding="5dp"
-                        android:hint="Select address manually"
+                        android:hint="Choose from Map"
                         android:inputType="textPostalAddress"
                         android:textColorHint="@color/appcolor"
                         android:textColor="@color/black"
