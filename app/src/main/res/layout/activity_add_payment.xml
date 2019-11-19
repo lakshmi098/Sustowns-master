@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/linearlayout"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.Toolbar
@@ -78,6 +79,7 @@
             android:text="If you Paid Money Will update within 24 Hours...!"
             android:textSize="16sp"
             android:textColor="@color/black"
+            android:visibility="gone"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:id="@+id/add_payment_msg"/>
@@ -119,13 +121,13 @@
                 android:textSize="16sp" />
 
             <RadioButton
+                android:id="@+id/online_radiobtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Online Transaction Id(Through Netbanking)"
-                android:id="@+id/online_radiobtn"
+                android:layout_marginTop="5dp"
                 android:checked="false"
                 android:paddingBottom="5dp"
-                android:layout_marginTop="5dp"
+                android:text="Bank / Wire Transfer"
                 android:textSize="16sp" />
         </RadioGroup>
 
@@ -172,15 +174,6 @@
                 android:text="MM/DD/YYYY"
                 android:id="@+id/payment_date"
                 android:textAllCaps="false"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="selected date"
-                    android:layout_marginLeft="20dp"
-                    android:id="@+id/selected_date"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"/>
-
             </LinearLayout>
             <CalendarView
                 android:id="@+id/start_dis_cal"

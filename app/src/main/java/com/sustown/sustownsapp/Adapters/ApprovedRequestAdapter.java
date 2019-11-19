@@ -230,12 +230,14 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
 
             }
         });
+/*
         viewHolder.payment_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ShippingAddressActivity.class);
                 context.startActivity(intent);
-              /*  helper.showDialog((Activity) context, SweetAlertDialog.WARNING_TYPE, "", "Do you want to continue with online payment?",
+              */
+/*  helper.showDialog((Activity) context, SweetAlertDialog.WARNING_TYPE, "", "Do you want to continue with online payment?",
                     new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -247,9 +249,11 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                     sweetAlertDialog.dismissWithAnimation();
                 }
-            });*/
+            });*//*
+
         }
         });
+*/
 
         viewHolder.my_process_documents.setOnClickListener(new View.OnClickListener() {
             @Override

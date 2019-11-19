@@ -30,10 +30,6 @@
             android:title="Account"
             android:visible="false" />
         <item
-            android:id="@+id/storemanagement_nav"
-            android:title="Store Management"
-            android:icon="@drawable/store"/>
-        <item
             android:id="@+id/service_management_nav"
             android:title="Service Management"
             android:icon="@drawable/store"
@@ -42,6 +38,10 @@
             android:id="@+id/trade_management_nav"
             android:title="Trade Management"
             android:icon="@drawable/rupees"/>
+        <item
+            android:id="@+id/storemanagement_nav"
+            android:title="Store Management"
+            android:icon="@drawable/store"/>
 
         <item
             android:id="@+id/customizations_nav"

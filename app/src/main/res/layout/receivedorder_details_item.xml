@@ -138,7 +138,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="120dp"
+                            android:layout_width="110dp"
                             android:layout_height="wrap_content"
                             android:text="Description"
                             android:textColor="@color/black"
@@ -169,7 +169,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="120dp"
+                            android:layout_width="110dp"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
                             android:text="Payment Type "
@@ -207,7 +207,7 @@
                             android:paddingBottom="5dp">
 
                             <TextView
-                                android:layout_width="120dp"
+                                android:layout_width="110dp"
                                 android:layout_height="wrap_content"
                                 android:text="Amount to be paid"
                                 android:textColor="@color/black"
@@ -231,37 +231,6 @@
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:orientation="horizontal"
-                            android:paddingBottom="5dp">
-
-                            <TextView
-                                android:layout_width="120dp"
-                                android:layout_height="wrap_content"
-                                android:text="Document"
-                                android:textColor="@color/black"
-                                android:textSize="15dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=":"
-                                android:textColor="@color/black" />
-
-                            <TextView
-                                android:id="@+id/uploaded_document"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:maxLines="5"
-                                android:text="INR5000"
-                                android:textColor="@color/appcolor"
-                                android:textSize="15dp" />
-
-                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -269,12 +238,41 @@
                 </LinearLayout>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Document"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/uploaded_document"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="7dp"
+                    android:maxLines="5"
+                    android:text="INR5000"
+                    android:textStyle="bold"
+                    android:textColor="@color/btn_background_color"
+                    android:textSize="15dp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -319,17 +317,38 @@
                     android:textColor="@color/white"
                     android:textSize="13sp"
                     android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/received_status"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="5dp"
-                    android:text="Status : Contract Completed"
-                    android:textColor="@color/yellow"
-                    android:textSize="15sp"
-                    android:visibility="gone" />
+                    android:id="@+id/ll_contractstatus"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="Status"
+                        android:textColor="@color/black"
+                        android:textSize="15dp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/received_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:maxLines="5"
+                        android:text="Contract Completed"
+                        android:textStyle="bold"
+                        android:textColor="@color/btn_background_color"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -383,7 +402,7 @@
                         android:id="@+id/received_contract_fullname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:maxLines="3"
                         android:text="Sai"
                         android:textColor="@color/black"
@@ -414,7 +433,7 @@
                         android:id="@+id/received_contract_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:maxLines="5"
                         android:text="Sai@sustowns.com"
                         android:textColor="@color/black"
@@ -446,7 +465,7 @@
                         android:id="@+id/received_contract_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:maxLines="5"
                         android:text="hyderabad"
                         android:textColor="@color/black"
@@ -477,7 +496,7 @@
                         android:id="@+id/received_contract_city"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:maxLines="5"
                         android:text="hyderabad"
                         android:textColor="@color/black"
@@ -508,7 +527,7 @@
                         android:id="@+id/received_contract_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:maxLines="5"
                         android:text="123456789"
                         android:textColor="@color/black"
@@ -539,7 +558,7 @@
                         android:id="@+id/received_contract_country"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:maxLines="5"
                         android:text="india"
                         android:textColor="@color/black"

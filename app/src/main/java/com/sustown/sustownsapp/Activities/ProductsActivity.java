@@ -698,6 +698,8 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                                                 String days = jsonObject.getString("days");
                                                 String pr_sku = jsonObject.getString("pr_sku");
                                                 String weight_unit = jsonObject.getString("weight_unit");
+                                                String country_name = jsonObject.getString("country_name");
+                                                String city_name = jsonObject.getString("city_name");
                                                 String imagepath = jsonObject.getString("imagepath");
                                                 String prod_image = imagepath + pr_image;
                                                 preferenceUtils.saveString(PreferenceUtils.PRO_ID, "");
@@ -730,7 +732,8 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                                                 poultryProductsModel.setDays(days);
                                                 poultryProductsModel.setPr_sku(pr_sku);
                                                 poultryProductsModel.setWeight_unit(weight_unit);
-
+                                                poultryProductsModel.setCountry_name(country_name);
+                                                poultryProductsModel.setCity_name(city_name);
                                                 poultryProductsModels.add(poultryProductsModel);
                                             }
                                         }

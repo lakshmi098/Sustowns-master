@@ -487,6 +487,8 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                                     String message = root.getString("message");
                                     String success = root.getString("success");
                                     if (success.equals("1")) {
+                                        if(progressDialog.isShowing())
+                                            progressDialog.dismiss();
                                         JSONArray msg = root.getJSONArray("get_cat");
                                         cartServerList = new ArrayList<>();
                                         for (int i = 0; i < msg.length(); i++) {

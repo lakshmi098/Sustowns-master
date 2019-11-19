@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.sustownsapp.R;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.sustown.sustownsapp.Activities.PreferenceUtils;
 import com.sustown.sustownsapp.Activities.VideoDetailedActivity;
 import com.sustown.sustownsapp.Models.VideoModel;
@@ -28,6 +32,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     ArrayList<VideoModel> videoModels;
     ProgressDialog progressDialog;
     int index = 0;
+    String video;
+    private String API = "AIzaSyCkMFa-P2yzNKMX8fGds-qNH_fwzrwAMYE";
+    YouTubePlayer.OnInitializedListener onInitializedListener;
 
     public VideoAdapter(Context context, ArrayList<VideoModel> videoModels) {
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -52,6 +59,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         viewHolder.frame_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              //  ((VideoDetailedActivity) context).Video();
+             /*      viewHolder.play_btn.setVisibility(View.GONE);
+                viewHolder.youtube_player.initialize(API,onInitializedListener);*/
                 Intent i = new Intent(context, VideoDetailedActivity.class);
                 i.putExtra("video",videoModels.get(position).getVideopath());
                 i.putExtra("content",videoModels.get(position).getDescription());
@@ -59,7 +69,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
                 context.startActivity(i);
             }
         });
-
     }
     @Override
     public int getItemCount() {
@@ -68,14 +77,17 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView text_image_title;
-        ImageView imageView;
+        ImageView imageView,play_btn;
         FrameLayout frame_layout;
+        YouTubePlayerView youtube_player;
 
         public ViewHolder(View view) {
             super(view);
             imageView = (ImageView) view.findViewById(R.id.photos);
             text_image_title = (TextView) view.findViewById(R.id.text_image_title);
             frame_layout = (FrameLayout) view.findViewById(R.id.frame_layout);
+            youtube_player = (YouTubePlayerView) view.findViewById(R.id.youtube_player);
+            play_btn = (ImageView) view.findViewById(R.id.play_btn);
         }
     }
 }

@@ -69,7 +69,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     PreferenceUtils preferenceUtils;
     ProgressDialog progressDialog;
     TextView product_name, prod_price, prod_details_unit, packing_type, min_quantity, availability_stock, vendor_product_details;
-    TextView delivery_time, reviews_text, reviews_count, product_size, vendor_discount;
+    TextView delivery_time, reviews_text, reviews_count, product_size, vendor_discount,added_tocart;
     public static TextView drop_location;
     ArrayList<AddToCartModel> addToCartModels = new ArrayList<>();
     Realm realm;
@@ -124,6 +124,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             image = intent.getStringExtra("Image");*/
         } catch (Exception e) {
             e.printStackTrace();
+
             finish();
         }
     }
@@ -174,6 +175,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         product_price = (TextView) findViewById(R.id.product_price);
         change_address_btn = (Button) findViewById(R.id.change_address_btn);
         shipping_charge = (TextView) findViewById(R.id.shipping_charge);
+        added_tocart = (TextView) findViewById(R.id.added_tocart);
         ll_select_shipping_services = (LinearLayout) findViewById(R.id.ll_select_shipping_services);
         spinner_thirdparty_shipping = (Spinner) findViewById(R.id.spinner_thirdparty_shipping);
         String name= null;
@@ -801,7 +803,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                             .into(image_product_details);
                                                 }*/
                                                 product_name.setText(pr_title);
-                                                prod_price.setText(pr_currency + pr_price);
+                                                prod_price.setText(pr_currency+" "+pr_price);
                                                 prod_details_unit.setText(pr_weight + weight_unit);
                                                 packing_type.setText(pr_packtype);
                                                 min_quantity.setText(quantity);
@@ -809,6 +811,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                 vendor_product_details.setText(bus_name);
                                                 delivery_time.setText(days + " Days");
                                                 edit_quantity.setText(quantity);
+                                                if(reviewcount.isEmpty()|| reviewcount != null){
+                                                    reviews_count.setText("No Reviews");
+                                                }
                                                 reviews_count.setText("Reviews" + "(" + reviewcount + ")");
                                                 int quantityInt = Integer.parseInt(quantity);
                                                 int priceStr = Integer.parseInt(pr_price);
@@ -1039,6 +1044,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                         }
                                                     });
                                             snackbar.show();
+                                        /*    added_tocart.setVisibility(View.VISIBLE);
+                                            addtocart.setVisibility(View.GONE);*/
                                            // Toast.makeText(ProductDetailsActivity.this, message, Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
                                         } else {

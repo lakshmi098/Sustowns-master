@@ -247,7 +247,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                             String success = response.getString("success");
                             if(success.equalsIgnoreCase("1")){
                                 ((CartActivity)context).getCartListItems();
-
                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();

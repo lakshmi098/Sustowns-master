@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,14 +56,14 @@ public class AddPaymentActivity extends AppCompatActivity {
 
     RecyclerView recycler_view_add_payment;
     ImageView backarrow;
-    TextView total_amount_add_payment,add_payment_msg,selected_date;
+    TextView total_amount_add_payment,add_payment_msg;
     EditText cheque_no,amount;
     Button paymentDate,submit_btn;
     private Calendar cal;
     private int day;
     private int month;
     private int year;
-    LinearLayout ll_bank_details;
+    LinearLayout ll_bank_details,linearlayout;
     TextView acc_name,acc_no,acc_ifsccode,acc_address,acc_note;
     ProgressDialog progressDialog;
     AddPaymentAdapter addPaymentAdapter;
@@ -87,6 +88,7 @@ public class AddPaymentActivity extends AppCompatActivity {
         randId = getIntent().getStringExtra("RandId");
         add_payment_msg = (TextView) findViewById(R.id.add_payment_msg);
         total_amount_add_payment = (TextView) findViewById(R.id.total_amount_add_payment);
+        linearlayout = (LinearLayout) findViewById(R.id.linearlayout);
         recycler_view_add_payment = (RecyclerView) findViewById(R.id.recycler_view_add_payment);
         LinearLayoutManager layoutManager = new LinearLayoutManager(AddPaymentActivity.this,LinearLayoutManager.VERTICAL,false);
         recycler_view_add_payment.setLayoutManager(layoutManager);
@@ -95,7 +97,6 @@ public class AddPaymentActivity extends AppCompatActivity {
         paymentDate = (Button) findViewById(R.id.payment_date);
         amount = (EditText) findViewById(R.id.amount);
         submit_btn = (Button) findViewById(R.id.submit_btn);
-        selected_date = (TextView) findViewById(R.id.selected_date);
         ll_bank_details = (LinearLayout) findViewById(R.id.ll_bank_details);
         acc_name = (TextView) findViewById(R.id.bank_account_name);
         acc_no = (TextView) findViewById(R.id.bank_account_no);
@@ -161,25 +162,20 @@ public class AddPaymentActivity extends AppCompatActivity {
         getPaymentList();
         getBankDetailsList();
     }
-
     public void DateDialog(){
-
         DatePickerDialog.OnDateSetListener listener=new DatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
                 SelectedDate = dayOfMonth+"-"+(monthOfYear+1)+"-"+year;
-                selected_date.setText(SelectedDate);
-
+                paymentDate.setText(SelectedDate);
             }};
-
         DatePickerDialog dpDialog=new DatePickerDialog(this, listener, year, month, day);
-        dpDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+        dpDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
         dpDialog.show();
 
     }
-
     public void progressdialog() {
         progressDialog = new ProgressDialog(AddPaymentActivity.this);
         progressDialog.setMessage("please wait...");
@@ -321,7 +317,7 @@ public class AddPaymentActivity extends AppCompatActivity {
     }
     public void androidNetworkingpayByBank(JSONObject jsonObject){
         progressdialog();
-        AndroidNetworking.post("http://dev1.sustowns.com/Sustownsservice/paybybank_api")
+        AndroidNetworking.post("https://www.sustowns.com/Sustownsservice/paybybank_api")
                 .addJSONObjectBody(jsonObject) // posting java object
                 .setTag("test")
                 .setPriority(Priority.HIGH)
@@ -334,8 +330,10 @@ public class AddPaymentActivity extends AppCompatActivity {
                             String message = response.getString("message");
                             String success = response.getString("success");
                             if (success.equalsIgnoreCase("1")) {
+                                Snackbar snackbar = Snackbar
+                                        .make(linearlayout,"Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours", Snackbar.LENGTH_LONG);
+                                snackbar.show();
                                 progressDialog.dismiss();
-                                Toast.makeText(AddPaymentActivity.this, message, Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(AddPaymentActivity.this, StoreReceivedOrdersActivity.class);
                                 startActivity(i);
                             } else {
@@ -352,89 +350,6 @@ public class AddPaymentActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 });
-    }
-
-
-    public void submitAddPayment() {
-        user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
-        order_id = preferenceUtils.getStringFromPreference(PreferenceUtils.ORDER_ID,"");
-        transation_id = preferenceUtils.getStringFromPreference(PreferenceUtils.TRANSACTION_ID,"");
-        progressdialog();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DZ_URL.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        UserApi service = retrofit.create(UserApi.class);
-        ChequeNo = cheque_no.getText().toString().trim();
-        Amount = amount.getText().toString().trim();
-        Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.submitInAddPayment("471","286","zyxscBpg9NGqx87",ChequeNo,Amount, String.valueOf(selected_date));
-        callRetrofit.enqueue(new Callback<JsonElement>() {
-
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        progressDialog.dismiss();
-                        System.out.println("----------------------------------------------------");
-                        Log.d("Call request", call.request().toString());
-                        Log.d("Call request header", call.request().headers().toString());
-                        Log.d("Response raw header", response.headers().toString());
-                        Log.d("Response raw", String.valueOf(response.raw().body()));
-                        Log.d("Response code", String.valueOf(response.code()));
-
-                        System.out.println("----------------------------------------------------");
-
-                        if (response.body().toString() != null) {
-
-                            if (response != null) {
-                                String searchResponse = response.body().toString();
-                                Log.d("Categeries", "response  >>" + searchResponse.toString());
-
-                                if (searchResponse != null) {
-                                    JSONObject root = null;
-                                    try {
-                                        root = new JSONObject(searchResponse);
-                                        String result = root.getString("result");
-                                        String msg = root.getString("msg");
-                                        String success = root.getString("success");
-                                        if (success.equalsIgnoreCase("1")) {
-                                            Intent i = new Intent(AddPaymentActivity.this, StoreReceivedOrdersActivity.class);
-                                            startActivity(i);
-                                            Toast.makeText(AddPaymentActivity.this, msg, Toast.LENGTH_SHORT).show();
-                                        }
-                                        else {
-                                            Toast.makeText(AddPaymentActivity.this, msg, Toast.LENGTH_SHORT).show();
-                                            progressDialog.dismiss();
-                                        }
-
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    progressDialog.dismiss();
-                                }
-
-                            }
-                        }
-                    }
-                    else {
-                        //  Toast.makeText(CartActivity.this, "Cart is not added", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                    }
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-//                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
     }
 
     private void getBankDetailsList() {

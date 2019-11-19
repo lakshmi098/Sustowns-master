@@ -83,8 +83,8 @@ public class ProductsAdapter extends BaseAdapter {
             pr_weight.setText(poultryProductsModels.get(i).getPr_weight()+" "+poultryProductsModels.get(i).getWeight_unit());
             pr_moq.setText("MOQ : "+poultryProductsModels.get(i).getPr_min());
             pr_min_unit.setText("* (Unit : "+poultryProductsModels.get(i).getPr_weight()+")");
-            country_text.setText(poultryProductsModels.get(i).getCountry());
-            lcation_text.setText(poultryProductsModels.get(i).getJob_location());
+            country_text.setText(poultryProductsModels.get(i).getCountry_name());
+            lcation_text.setText(poultryProductsModels.get(i).getCity_name());
 
         }else{
             imageView.setImageResource(R.drawable.no_image_available);

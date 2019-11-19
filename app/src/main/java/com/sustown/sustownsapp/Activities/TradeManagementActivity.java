@@ -166,13 +166,6 @@ public class TradeManagementActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        ll_transport_orders.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(TradeManagementActivity.this, MyContractOrdersActivity.class);
-                startActivity(i);
-            }
-        });
     }
     @Override
     public void onBackPressed(){

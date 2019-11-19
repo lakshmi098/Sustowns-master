@@ -55,16 +55,20 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
     RecyclerView recycler_view_transportorders;
     ImageView backarrow, cart_img;
     PreferenceUtils preferenceUtils;
-    String user_id,ordersValue,s_zipcode,b_zipcode,chargePerKm,getkms,getpricekms;
+    String user_id, ordersValue, s_zipcode, b_zipcode, chargePerKm, getkms, getpricekms, order_id, service_id;
     ProgressDialog progressDialog;
     ArrayList<TransportOrdersModel> transportOrdersModels;
     TransportReceivedOrdersAdapter transportReceivedOrdersAdapter;
-    TextView available_text,total_price,kilometers_text;
+    TextView available_text, total_price, kilometers_text,order_vehicle_type,order_load_type,order_quote,order_charge_km,order_min_charge;
     Helper helper;
     AlertDialog alertDialog;
     WebServices webServices;
-    Button radius_btn,extended_radius_btn;
+    Button radius_btn, extended_radius_btn;
     EditText charge_per_km;
+    String OrderId,ServiceId;
+    TextView order_prod_name,order_weight,order_quantity,invoice_no, order_packing_type,order_shipped_to,order_seller_address;
+    TextView shipping_name,shipping_number,shipping_address,shipping_postalcode,seller_name_text,seller_number_text,seller_address_text,seller_postalcode_text;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,13 +129,15 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
         });
         getTransportOrdersList();
     }
+
     public void progressdialog() {
         progressDialog = new ProgressDialog(TransportOrdersActivity.this);
         progressDialog.setMessage("please wait...");
         progressDialog.setCancelable(true);
         progressDialog.show();
     }
-//  Recent get Transport Received Orders
+
+    //  Recent get Transport Received Orders
     public void getTransportOrdersList() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
@@ -141,10 +147,10 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
 
         TransportApi service = retrofit.create(TransportApi.class);
         TransportOrdersModelObj transportOrdersModel1 = new TransportOrdersModelObj();
-        if(ordersValue.equalsIgnoreCase("Radius")) {
+        if (ordersValue.equalsIgnoreCase("Radius")) {
             transportOrdersModel1.setTransport_userid(user_id);
             transportOrdersModel1.setManual_automatic("automatic"); // Radius
-        }else if(ordersValue.equalsIgnoreCase("Extended Radius")){
+        } else if (ordersValue.equalsIgnoreCase("Extended Radius")) {
             transportOrdersModel1.setTransport_userid(user_id);
             transportOrdersModel1.setManual_automatic("manual");// Extended Radius
         }
@@ -183,7 +189,8 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                                 JSONObject jsonObject = dataArray.getJSONObject(i);
                                                 String id = jsonObject.getString("id");
                                                 String user_id = jsonObject.getString("user_id");
-                                                String order_id = jsonObject.getString("order_id");
+                                                order_id = jsonObject.getString("order_id");
+                                                service_id = jsonObject.getString("service_id");
                                                 String service_name = jsonObject.getString("service_name");
                                                 String pr_sku = jsonObject.getString("pr_sku");
                                                 String pr_title = jsonObject.getString("pr_title");
@@ -205,6 +212,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                                 transportOrderModel.setId(id);
                                                 transportOrderModel.setUser_id(user_id);
                                                 transportOrderModel.setOrder_id(order_id);
+                                                transportOrderModel.setService_id(service_id);
                                                 transportOrderModel.setService_name(service_name);
                                                 transportOrderModel.setPr_sku(pr_sku);
                                                 transportOrderModel.setPr_title(pr_title);
@@ -255,111 +263,6 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                     e.printStackTrace();
                 }
             }
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-//                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
-    }
-
-    // Old Transport Received Orders
-/*
-    public void getOldTransportOrdersList() {
-        progressdialog();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DZ_URL.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TransportApi service = retrofit.create(TransportApi.class);
-
-        Call<JsonObject> callRetrofit = null;
-        callRetrofit = service.getTransportReceivedOrders("https://www.sustowns.com/freight/transportvendorordersList/"+user_id);
-        //callRetrofit = service.getTransportReceivedOrders("https://www.sustowns.com/freight/transportvendorordersList/"+user_id);
-        callRetrofit.enqueue(new Callback<JsonObject>() {
-
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        progressDialog.dismiss();
-                        System.out.println("----------------------------------------------------");
-                        Log.d("Call request", call.request().toString());
-                        Log.d("Call request header", call.request().headers().toString());
-                        Log.d("Response raw header", response.headers().toString());
-                        Log.d("Response raw", String.valueOf(response.raw().body()));
-                        Log.d("Response code", String.valueOf(response.code()));
-
-                        System.out.println("----------------------------------------------------");
-
-                        if (response.body().toString() != null) {
-
-                            if (response != null) {
-                                String searchResponse = response.body().toString();
-                                Log.d("Categeries", "response  >>" + searchResponse.toString());
-
-                                if (searchResponse != null) {
-                                    JSONObject root = null;
-                                    try {
-                                        root = new JSONObject(searchResponse);
-                                        //   String message = root.getString("message");
-                                        String status = root.getString("status");
-                                        if (status.equalsIgnoreCase("success")) {
-                                            JSONArray jsonArray = root.getJSONArray("data");
-                                            transportOrdersModels = new ArrayList<>();
-                                            for (int i = 0; i < jsonArray.length(); i++) {
-                                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                                TransportOrdersModel transportOrderModel = new TransportOrdersModel(
-                                                        jsonObject.getString("productId"),
-                                                        jsonObject.getString("productCode"),
-                                                        jsonObject.getString("productName"),
-                                                        jsonObject.getString("orderWeight"),
-                                                        jsonObject.getString("packtype"),
-                                                        jsonObject.getString("orderType"),
-                                                        jsonObject.getString("invoiceNo"),
-                                                        jsonObject.getString("orderDate"),
-                                                        jsonObject.getString("quantity"),
-                                                        jsonObject.getString("trans_status"),
-                                                        jsonObject.getString("orderRandomId"),
-                                                        jsonObject.getString("serviceId")
-                                                );
-                                                transportOrdersModels.add(transportOrderModel);
-                                            }
-                                            if (transportOrdersModels != null) {
-                                                transportReceivedOrdersAdapter = new TransportReceivedOrdersAdapter(TransportOrdersActivity.this, transportOrdersModels, null);
-                                                recycler_view_transportorders.setAdapter(transportReceivedOrdersAdapter);
-                                                transportReceivedOrdersAdapter.notifyDataSetChanged();
-                                                available_text.setVisibility(View.GONE);
-                                            } else {
-                                                recycler_view_transportorders.setVisibility(View.GONE);
-                                                available_text.setVisibility(View.VISIBLE);
-                                                available_text.setText("Orders Are Not Available");
-                                            }
-                                            // Toast.makeText(CartActivity.this, message, Toast.LENGTH_SHORT).show();
-                                            progressDialog.dismiss();
-                                        } else {
-                                            //    Toast.makeText(CareerOppurtunitiesActivity.this, message, Toast.LENGTH_SHORT).show();
-                                            progressDialog.dismiss();
-                                        }
-
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    progressDialog.dismiss();
-                                }
-
-                            }
-                        }
-                    } else {
-                        //  Toast.makeText(CartActivity.this, "Cart is not added", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
@@ -368,7 +271,6 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
             }
         });
     }
-*/
 
     public void confirmOrder(final int position) {
         helper.showDialog(TransportOrdersActivity.this, SweetAlertDialog.WARNING_TYPE, "Are you sure?", "Do you want to confirm?",
@@ -401,45 +303,41 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                     }
                 });
     }
+
     public void viewDetails(int position) {
+         OrderId = transportOrdersModels.get(position).getOrder_id();
+         ServiceId = transportOrdersModels.get(position).getService_id();
         try {
             final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TransportOrdersActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
             View dialogView = inflater.inflate(R.layout.alert_transport_view_details, null);
             dialogBuilder.setView(dialogView);
-
-            TextView invoice_no = dialogView.findViewById(R.id.invoice_no);
-            TextView order_prod_name = dialogView.findViewById(R.id.order_prod_name);
-            TextView order_weight = dialogView.findViewById(R.id.order_weight);
-            TextView order_quantity = dialogView.findViewById(R.id.order_quantity);
-            TextView order_packing_type = dialogView.findViewById(R.id.order_packing_type);
-            TextView order_shipped_to = dialogView.findViewById(R.id.order_shipped_to);
-            TextView order_seller_address = dialogView.findViewById(R.id.order_seller_address);
+            invoice_no = dialogView.findViewById(R.id.invoice_no);
+            order_prod_name = dialogView.findViewById(R.id.order_prod_name);
+            order_weight = dialogView.findViewById(R.id.order_weight);
+            order_quantity = dialogView.findViewById(R.id.order_quantity);
+            order_packing_type = dialogView.findViewById(R.id.order_packing_type);
+            order_vehicle_type = dialogView.findViewById(R.id.order_vehicle_type);
+            order_load_type = dialogView.findViewById(R.id.order_load_type);
+            order_charge_km = dialogView.findViewById(R.id.order_charge_km);
+            order_quote = dialogView.findViewById(R.id.order_quote);
+            order_min_charge = dialogView.findViewById(R.id.order_min_charge);
+            shipping_name = dialogView.findViewById(R.id.shipping_name);
+            shipping_number = dialogView.findViewById(R.id.shipping_number);
+            shipping_address = dialogView.findViewById(R.id.shipping_address);
+            shipping_postalcode = dialogView.findViewById(R.id.shipping_postalcode);
+            seller_name_text = dialogView.findViewById(R.id.seller_name);
+            seller_number_text = dialogView.findViewById(R.id.seller_number);
+            seller_address_text = dialogView.findViewById(R.id.seller_address);
+            seller_postalcode_text = dialogView.findViewById(R.id.seller_postalcode);
             Button order_close = dialogView.findViewById(R.id.order_close);
-
-          /*  invoice_no.setText(transportOrdersModels.get(position).getInvoice_no());
-            order_prod_name.setText(transportOrdersModels.get(position).getProductName());
-            order_weight.setText(transportOrdersModels.get(position).getOrderWeight());
-            order_quantity.setText(transportOrdersModels.get(position).getQuantity());
-            order_packing_type.setText(transportOrdersModels.get(position).getPacktype());*/
-            order_shipped_to.setText("test"+"\n"+"9987456321"+"\n"+"Hyderabad"+"\n"+"500045");
-            order_seller_address.setText("test"+"\n"+"9987456321"+"\n"+"Hyderabad"+"\n"+"500045");
-            /* order_shipped_to.setText(transportDetailsList.get(position).getDisplay_name()+"\n"+
-                    transportDetailsList.get(position).getPay_phone()+"\n"+
-                    transportDetailsList.get(position).getPay_address1()+"\n"+
-                    transportDetailsList.get(position).getPay_zipcode());
-
-            order_seller_address.setText(transportDetailsList.get(position).getSeller_name()+"\n"+
-                    transportDetailsList.get(position).getSeller_number()+"\n"+
-                    transportDetailsList.get(position).getSeller_address()+"\n"+
-                    transportDetailsList.get(position).getSeller_zipcode());*/
-           // invoice_no.setText(transportDetailsList.get(position).getInvoice_number());
             order_close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     alertDialog.dismiss();
                 }
             });
+            getTransportDetailsList();
             alertDialog = dialogBuilder.create();
             try {
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -494,8 +392,8 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
             shipping_pincode.setText(s_zipcode);
             delivery_pincode.setText(b_zipcode);
             charge_per_km.setText(chargePerKm);
-           // kilometers_text.setText(transportOrdersModels.get(position).getQuantity());
-           // total_price.setText(transportOrdersModels.get(position).getPacktype());
+            // kilometers_text.setText(transportOrdersModels.get(position).getQuantity());
+            // total_price.setText(transportOrdersModels.get(position).getPacktype());
             getKmsBasedPincodes();
             submit_sendquote.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -536,14 +434,14 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
 
         TransportApi service = retrofit.create(TransportApi.class);
         Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getKmsBasePincodes("534427","534425",charge_per_km.getText().toString());
-       // callRetrofit = service.getKmsBasePincodes(s_zipcode,b_zipcode,charge_per_km.getText().toString());
+        callRetrofit = service.getKmsBasePincodes("534427", "534425", charge_per_km.getText().toString());
+        // callRetrofit = service.getKmsBasePincodes(s_zipcode,b_zipcode,charge_per_km.getText().toString());
         callRetrofit.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 try {
                     if (response.isSuccessful()) {
-                       // progressDialog.dismiss();
+                        // progressDialog.dismiss();
                         System.out.println("----------------------------------------------------");
                         Log.d("Call request", call.request().toString());
                         Log.d("Call request header", call.request().headers().toString());
@@ -562,32 +460,32 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                     try {
                                         root = new JSONObject(searchResponse);
                                         String success = root.getString("success");
-                                        if(success.equalsIgnoreCase("1")) {
-                                             getkms = root.getString("getkms");
-                                             getpricekms = root.getString("getpricekms");
-                                             kilometers_text.setText(getkms);
-                                             total_price.setText(getpricekms);
-                                        }
-                                        else {
+                                        if (success.equalsIgnoreCase("1")) {
+                                            getkms = root.getString("getkms");
+                                            getpricekms = root.getString("getpricekms");
+                                            kilometers_text.setText(getkms);
+                                            total_price.setText(getpricekms);
+                                        } else {
                                             //    Toast.makeText(CareerOppurtunitiesActivity.this, message, Toast.LENGTH_SHORT).show();
-                                           // progressDialog.dismiss();
+                                            // progressDialog.dismiss();
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                   // progressDialog.dismiss();
+                                    // progressDialog.dismiss();
                                 }
 
                             }
                         }
                     } else {
                         //  Toast.makeText(CartActivity.this, "Cart is not added", Toast.LENGTH_SHORT).show();
-                       // progressDialog.dismiss();
+                        // progressDialog.dismiss();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 //                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
@@ -595,12 +493,13 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
             }
         });
     }
+
     public void submitSendQuoteJsonObject() {
         try {
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("ccost",charge_per_km.getText().toString());
-            jsonObj.put("km",getkms);
-            jsonObj.put("total",getpricekms);
+            jsonObj.put("ccost", charge_per_km.getText().toString());
+            jsonObj.put("km", getkms);
+            jsonObj.put("total", getpricekms);
             jsonObj.put("oid", "22001187");
             jsonObj.put("sid", "69");
             jsonObj.put("userid", "502");
@@ -610,7 +509,8 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
             e.printStackTrace();
         }
     }
-    public void androidNetworkingSubmitQuote(JSONObject jsonObject){
+
+    public void androidNetworkingSubmitQuote(JSONObject jsonObject) {
         progressdialog();
         AndroidNetworking.post("https://www.sustowns.com/Transportservices/sendquotesubmit/")
                 .addJSONObjectBody(jsonObject) // posting java object
@@ -635,6 +535,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                             // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                     @Override
                     public void onError(ANError error) {
                         Log.d("Error", "ANError : " + error);
@@ -642,6 +543,116 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                     }
                 });
     }
+
+    public void getTransportDetailsList() {
+        progressdialog();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DZ_URL.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        TransportApi service = retrofit.create(TransportApi.class);
+        Call<JsonElement> callRetrofit = null;
+        callRetrofit = service.getTransportOrdersDetails(OrderId, ServiceId);
+        callRetrofit.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        progressDialog.dismiss();
+                        System.out.println("----------------------------------------------------");
+                        Log.d("Call request", call.request().toString());
+                        Log.d("Call request header", call.request().headers().toString());
+                        Log.d("Response raw header", response.headers().toString());
+                        Log.d("Response raw", String.valueOf(response.raw().body()));
+                        Log.d("Response code", String.valueOf(response.code()));
+
+                        System.out.println("----------------------------------------------------");
+
+                        if (response.body().toString() != null) {
+                            if (response != null) {
+                                String searchResponse = response.body().toString();
+                                Log.d("Categeries", "response  >>" + searchResponse.toString());
+                                if (searchResponse != null) {
+                                    JSONObject root = null;
+                                    try {
+                                        root = new JSONObject(searchResponse);
+                                        String success = root.getString("success");
+                                        String message = root.getString("message");
+                                        if (success.equalsIgnoreCase("1")) {
+                                            JSONObject orderitemObj = root.getJSONObject("orderitem");
+                                            String product_order_id = orderitemObj.getString("product_order_id");
+                                            String seller_name = orderitemObj.getString("seller_name");
+                                            String seller_number = orderitemObj.getString("seller_number");
+                                            String seller_address = orderitemObj.getString("seller_address");
+                                            String seller_zipcode = orderitemObj.getString("seller_zipcode");
+                                            String display_name = orderitemObj.getString("display_name");
+                                            String bill_phone = orderitemObj.getString("bill_phone");
+                                            String bill_address1 = orderitemObj.getString("bill_address1");
+                                            String bill_zipcode = orderitemObj.getString("bill_zipcode");
+                                            String service_id = orderitemObj.getString("service_id");
+                                            String pr_title = orderitemObj.getString("pr_title");
+                                            String pr_min = orderitemObj.getString("pr_min");
+                                            String pr_weight = orderitemObj.getString("pr_weight");
+                                            String pr_packtype = orderitemObj.getString("pr_packtype");
+                                            String category = orderitemObj.getString("category");
+                                            String vehicle_type = orderitemObj.getString("vehicle_type");
+                                            String unit_code = orderitemObj.getString("unit_code");
+
+                                            JSONObject vehicleObj = root.getJSONObject("vehicle");
+                                            String service_id1 = vehicleObj.getString("service_id");
+                                            String qchrg_km = vehicleObj.getString("qchrg_km");
+                                            String qminchrg_km = vehicleObj.getString("qminchrg_km");
+                                            String vehicle_type1 = vehicleObj.getString("vehicle_type");
+                                            String load = root.getString("load");
+
+                                            invoice_no.setText(product_order_id);
+                                            order_prod_name.setText(pr_title);
+                                            order_weight.setText(pr_weight+" / "+unit_code);
+                                            order_quantity.setText(pr_min);
+                                            order_packing_type.setText(pr_packtype);
+                                            order_vehicle_type.setText(vehicle_type1);
+                                            order_load_type.setText(load);
+                                            order_charge_km.setText(qchrg_km);
+                                            order_min_charge.setText(qminchrg_km);
+                                            shipping_name.setText(display_name);
+                                            shipping_number.setText(bill_phone);
+                                            shipping_address.setText(bill_address1);
+                                            shipping_postalcode.setText(bill_zipcode);
+                                            seller_name_text.setText(seller_name);
+                                            seller_number_text.setText(seller_number);
+                                            seller_address_text.setText(seller_address);
+                                            seller_postalcode_text.setText(seller_zipcode);
+                                            progressDialog.dismiss();
+                                        } else {
+                                            Toast.makeText(TransportOrdersActivity.this, message, Toast.LENGTH_SHORT).show();
+                                            progressDialog.dismiss();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    progressDialog.dismiss();
+                                }
+
+                            }
+                        }
+                    } else {
+                        //  Toast.makeText(CartActivity.this, "Cart is not added", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+//                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+    }
+
 
     private void showConfirmRejectDialog(final boolean isConfirm, final int position) {
         try {
@@ -751,6 +762,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
             e.printStackTrace();
         }
     }
+
     @Override
     public void onDataRetrieved(Object data, String whichUrl) {
         helper.hideLoader();

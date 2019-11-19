@@ -35,13 +35,41 @@
                 android:layout_marginLeft="5dp"
                 android:orientation="vertical"
                 android:gravity="center">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:maxLines="1"
+                        android:text="Order No"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:maxLines="1"
+                        android:text=""
+                        android:id="@+id/order_no"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:maxLines="1"
@@ -72,13 +100,14 @@
                         android:visibility="gone" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:orientation="horizontal">
                     <TextView
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:maxLines="1"
@@ -110,34 +139,6 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="70dp"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:maxLines="1"
-                        android:text="Quantity"
-                        android:textColor="@color/black" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=":"
-                        android:textColor="@color/black" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:maxLines="1"
-                        android:text=""
-                        android:id="@+id/order_quantity"
-                        android:layout_marginLeft="10dp"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -145,7 +146,7 @@
                     android:layout_marginTop="3dp"
                     android:orientation="horizontal">
                     <TextView
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:maxLines="1"
@@ -180,7 +181,7 @@
                         android:id="@+id/ll_status"
                         android:orientation="horizontal">
                         <TextView
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:maxLines="1"
@@ -200,7 +201,7 @@
                             android:text=" "
                             android:id="@+id/order_status"
                             android:layout_marginLeft="10dp"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/appcolor" />
 
                     </LinearLayout>
                     <Button
@@ -212,7 +213,7 @@
                         android:visibility="gone"
                         android:gravity="center"
                         android:layout_gravity="right"
-                        android:padding="10dp"
+                        android:padding="1dp"
                         android:textColor="@color/white"
                         android:textAllCaps="false"
                         android:background="#337ab7"
@@ -220,15 +221,16 @@
                         android:id="@+id/add_transport_btn"/>
 
                     <Button
-                        android:layout_width="120dp"
+                        android:layout_width="190dp"
                         android:layout_height="38dp"
                         android:layout_marginBottom="10dp"
-                        android:text="Pay For Order"
+                        android:text="Add Payment Reference"
                         android:textSize="14sp"
                         android:visibility="gone"
                         android:gravity="center"
                         android:layout_gravity="right"
-                        android:padding="10dp"
+                        android:padding="5dp"
+                        android:layout_marginTop="7dp"
                         android:textColor="@color/white"
                         android:textAllCaps="false"
                         android:background="@color/yellow"

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.media.Rating;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +40,8 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
     ProgressDialog progressDialog;
     Button close_dialog;
     int row_index = -1;
-    TextView transport_vendor_name, transport_service_name, transport_categories, transport_type, vehicle_type, load_type, charge_per_km,
-            minimum_charge, total_price,docs;
+    TextView transport_vendor_name, transport_service_name, transport_distance, transport_type, vehicle_type, load_type, charge_per_km,
+            minimum_charge, total_price,docs,fullcharge_per_km,fullminimum_charge,fulltotal_price;
     SparseBooleanArray mSelectedItem;
     Boolean isCancel;
     final String URL2,URL9;
@@ -65,11 +67,11 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
     public void onBindViewHolder(final AddTransportAdapter.ViewHolder viewHolder, final int position) {
 
         viewHolder.service_name.setText(transportServiceList.get(position).getService_name());
-        viewHolder.category_service.setText(transportServiceList.get(position).getCategory());
+//        viewHolder.ratingBarProduct.setRating(Float.parseFloat(transportServiceList.get(position).getRating()));
         viewHolder.minimum_charge_Service.setText(transportServiceList.get(position).getPartial_minimum_charge());
         viewHolder.total_Price_service.setText(transportServiceList.get(position).getPartial_total_price());
         booking_status = transportServiceList.get(position).getTransport_booking_status();
-        if(booking_status.equalsIgnoreCase("")){
+     /*   if(booking_status.equalsIgnoreCase("")){
             if (mSelectedItem.get(position) && !isCancel) {
                 viewHolder.book_service_btn.setVisibility(View.VISIBLE);
                 viewHolder.book_service_btn.setText("Cancel Booking");
@@ -123,7 +125,7 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
                     ((TransportDetailsActivity) context).contactDetails(position);
                 }
             });
-        }
+        }*/
        /* if (mSelectedItem.get(position) && !isCancel) {
             viewHolder.book_service_btn.setVisibility(View.VISIBLE);
             viewHolder.book_service_btn.setText("Cancel Booking");
@@ -141,7 +143,7 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
                 viewHolder.book_service_btn.setVisibility(View.VISIBLE);
             }
         });*/
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.viewservice_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // create dialog
@@ -153,14 +155,32 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
 
                 transport_vendor_name = (TextView) customdialog.findViewById(R.id.transport_vendor_name);
                 transport_service_name = (TextView) customdialog.findViewById(R.id.transport_service_name);
-                transport_categories = (TextView) customdialog.findViewById(R.id.transport_categories);
+                transport_distance = (TextView) customdialog.findViewById(R.id.transport_distance);
                 transport_type = (TextView) customdialog.findViewById(R.id.transport_type);
                 vehicle_type = (TextView) customdialog.findViewById(R.id.vehicle_type);
                 load_type = (TextView) customdialog.findViewById(R.id.load_type);
                 charge_per_km = (TextView) customdialog.findViewById(R.id.charge_per_km);
                 minimum_charge = (TextView) customdialog.findViewById(R.id.minimum_charge);
                 total_price = (TextView) customdialog.findViewById(R.id.total_price);
+                fullcharge_per_km = (TextView) customdialog.findViewById(R.id.fullcharge_per_km);
+                fullminimum_charge = (TextView) customdialog.findViewById(R.id.fullminimum_charge);
+                fulltotal_price = (TextView) customdialog.findViewById(R.id.fulltotal_price);
                 docs = (TextView) customdialog.findViewById(R.id.docs);
+                close_dialog = (Button) customdialog.findViewById(R.id.close_dialog);
+
+                transport_vendor_name.setText(transportServiceList.get(position).getTransport_vendor_name());
+                transport_service_name.setText(transportServiceList.get(position).getService_name());
+                transport_distance.setText(transportServiceList.get(position).getDistance());
+                transport_type.setText(transportServiceList.get(position).getTransport_type());
+                vehicle_type.setText(transportServiceList.get(position).getVehicle_type());
+                load_type.setText(transportServiceList.get(position).getLoad_type());
+                charge_per_km.setText(transportServiceList.get(position).getPartial_charge_perkm());
+                minimum_charge.setText(transportServiceList.get(position).getPartial_minimum_charge());
+                total_price.setText(transportServiceList.get(position).getPartial_total_price());
+                fullcharge_per_km.setText(transportServiceList.get(position).getFull_charge_perkm());
+                fullminimum_charge.setText(transportServiceList.get(position).getFull_minimum_charge());
+                fulltotal_price.setText(transportServiceList.get(position).getFull_total_price());
+                docs.setText(transportServiceList.get(position).getDocs());
                 docs.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -176,7 +196,6 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
 
                         request.allowScanningByMediaScanner();
                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
 //set the local destination for download file to a path within the application's external files directory
                         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"downloadfileName");
                         request.setMimeType("*/*");
@@ -184,39 +203,6 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
                     }
                 });
 
-                close_dialog = (Button) customdialog.findViewById(R.id.close_dialog);
-
-                transport_vendor_name.setText(transportServiceList.get(position).getTransport_vendor_name());
-                transport_service_name.setText(transportServiceList.get(position).getService_name());
-                transport_categories.setText(transportServiceList.get(position).getCategory());
-                transport_type.setText(transportServiceList.get(position).getTransport_type());
-                vehicle_type.setText(transportServiceList.get(position).getVehicle_type());
-                load_type.setText(transportServiceList.get(position).getLoad_type());
-                charge_per_km.setText(transportServiceList.get(position).getPartial_charge_perkm());
-                minimum_charge.setText(transportServiceList.get(position).getPartial_minimum_charge());
-                total_price.setText(transportServiceList.get(position).getPartial_total_price());
-                docs.setText(transportServiceList.get(position).getDocs());
-/*
-                docs.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                       // String url = docs;
-                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(String.valueOf(docs)));
-                        request.setDescription("Some descrition");
-                        request.setTitle("Some title");
-// in order for this if to run, you must use the android 3.2 to compile your app
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                            request.allowScanningByMediaScanner();
-                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                        }
-                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "name-of-the-file.ext");
-
-// get download service and enqueue file
-                        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-                        manager.enqueue(request);
-                    }
-                });
-*/
 
                 close_dialog.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -231,7 +217,7 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
             @Override
             public void onClick(View v) {
                 try {
-                    ((AddTransportActivity) context).bookNow(position, viewHolder);
+                    ((AddTransportActivity) context).sendRequestQuote(position, viewHolder);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -264,13 +250,14 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView service_name, category_service, minimum_charge_Service, total_Price_service,cancelled_text;
-        Button book_service_btn, cancel_booking_btn,pay_now,vehicle_details;
+        Button book_service_btn, cancel_booking_btn,pay_now,vehicle_details,viewservice_details;
         LinearLayout ll_pay_vehicle;
+        RatingBar ratingBarProduct;
 
         public ViewHolder(View view) {
             super(view);
             service_name = (TextView) view.findViewById(R.id.service_name);
-            category_service = (TextView) view.findViewById(R.id.category_service);
+            ratingBarProduct = (RatingBar) view.findViewById(R.id.ratingBarProduct);
             minimum_charge_Service = (TextView) view.findViewById(R.id.minimum_charge_Service);
             total_Price_service = (TextView) view.findViewById(R.id.total_Price_service);
             book_service_btn = (Button) view.findViewById(R.id.book_service_btn);
@@ -279,6 +266,7 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
             ll_pay_vehicle = (LinearLayout) view.findViewById(R.id.ll_pay_vehicle);
             pay_now = (Button) view.findViewById(R.id.pay_now);
             vehicle_details = (Button) view.findViewById(R.id.vehicle_details);
+            viewservice_details = (Button)view.findViewById(R.id.viewservice_details);
 
         }
     }

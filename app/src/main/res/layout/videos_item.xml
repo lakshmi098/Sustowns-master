@@ -22,7 +22,12 @@
                 android:layout_height="180dp"
                 android:src="@drawable/no_image_available"
                 android:scaleType="fitXY" />
-
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/play_icon"
+                android:id="@+id/play_btn"
+                android:layout_gravity="center"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="30dp"

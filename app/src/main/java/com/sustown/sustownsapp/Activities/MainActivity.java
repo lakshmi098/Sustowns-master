@@ -513,11 +513,14 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                                                 String service_charge = jsonObject.getString("service_charge");
                                                 String pr_enterdate = jsonObject.getString("pr_enterdate");
                                                 String pr_weight = jsonObject.getString("pr_weight");
+                                                String countryorogin = jsonObject.getString("countryorogin");
                                                 String job_location = jsonObject.getString("job_location");
                                                 String country = jsonObject.getString("country");
                                                 String state = jsonObject.getString("state");
                                                 String imagepath = jsonObject.getString("imagepath");
                                                 String weight_unit = jsonObject.getString("weight_unit");
+                                                String country_name = jsonObject.getString("country_name");
+                                                String city_name = jsonObject.getString("city_name");
                                                 String prod_image = imagepath + pr_image;
 
                                                 preferenceUtils.saveString(PreferenceUtils.PROD_ID,id);
@@ -536,6 +539,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                                                 getHomeProductsModel.setImagepath(imagepath);
                                                 getHomeProductsModel.setPr_image(prod_image);
                                                 getHomeProductsModel.setWeight_unit(weight_unit);
+                                                getHomeProductsModel.setCountry_name(country_name);
+                                                getHomeProductsModel.setCity_name(city_name);
                                                 getHomeProducts.add(getHomeProductsModel);
                                             }
                                             if(getHomeProducts != null) {

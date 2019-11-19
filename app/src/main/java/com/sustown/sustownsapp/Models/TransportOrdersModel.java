@@ -5,6 +5,7 @@ public class TransportOrdersModel {
     private String id;
     private String user_id;
     private String order_id;
+    private String service_id;
     private String service_name;
     private String pr_sku;
     private String pr_title;
@@ -44,6 +45,14 @@ public class TransportOrdersModel {
 
     public void setOrder_id(String order_id) {
         this.order_id = order_id;
+    }
+
+    public String getService_id() {
+        return service_id;
+    }
+
+    public void setService_id(String service_id) {
+        this.service_id = service_id;
     }
 
     public String getQuantity() {

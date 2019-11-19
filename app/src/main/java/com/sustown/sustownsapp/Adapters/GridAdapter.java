@@ -55,8 +55,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                         .into(viewHolder.imageView);
             }
             viewHolder.pro_name.setText(getHomeProducts.get(i).getPr_title());
-            viewHolder.country_text.setText(getHomeProducts.get(i).getCountry());
-            viewHolder.location_text.setText(getHomeProducts.get(i).getState());
+            viewHolder.country_text.setText(getHomeProducts.get(i).getCountry_name());
+            viewHolder.location_text.setText(getHomeProducts.get(i).getCity_name());
             viewHolder.pr_currency.setText(getHomeProducts.get(i).getPr_currency());
             viewHolder.pr_price.setText(getHomeProducts.get(i).getPr_price()+" /");
             viewHolder.pr_weight.setText(getHomeProducts.get(i).getPr_weight()+" "+getHomeProducts.get(i).getWeight_unit());

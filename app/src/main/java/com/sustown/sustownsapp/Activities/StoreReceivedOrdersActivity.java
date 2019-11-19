@@ -232,6 +232,7 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                                                 orderModel.setOn_date(on_date);
                                                 orderModel.setPay_method(pay_method);
                                                 orderModel.setBank_thr_ran_id(bank_thr_ran_id);
+                                                orderModel.setComplete_amount_status(complete_amount_status);
                                                 orderModels.add(orderModel);
 
                                             }
@@ -457,8 +458,9 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
             pay_method = orderModels.get(position).getPay_method();
             if (orderModels.get(position) != null) {
                 viewHolder.orderName.setText(orderModels.get(position).getPr_title());
-                viewHolder.orderQuantity.setText(orderModels.get(position).getQuantity());
+                viewHolder.order_no.setText(orderModels.get(position).getProduct_order_id());
                 viewHolder.orderDate.setText(orderModels.get(position).getOrder_date());
+                viewHolder.order_price.setText(orderModels.get(position).getTotalprice());
                 if (order_status.equalsIgnoreCase("0")) {
                     viewHolder.confirm_order_btn.setVisibility(View.VISIBLE);
                     viewHolder.cancel_orderbtn.setVisibility(View.VISIBLE);
@@ -754,7 +756,7 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            TextView orderName, orderQuantity, orderDate, orderStatus;
+            TextView orderName, orderQuantity, orderDate, orderStatus,order_price,order_no;
             Button add_payment_btn, confirm_order_btn,view_invoice_btn;
             Button cancel_orderbtn;
 
@@ -768,6 +770,9 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                 confirm_order_btn = (Button) view.findViewById(R.id.confirm_order_btn);
                 cancel_orderbtn = (Button) view.findViewById(R.id.cancel_orderbtn);
                 view_invoice_btn = (Button) view.findViewById(R.id.view_invoice_btn);
+                order_price = (TextView) view.findViewById(R.id.order_price);
+                order_no = (TextView) view.findViewById(R.id.order_no);
+
             }
         }
     }

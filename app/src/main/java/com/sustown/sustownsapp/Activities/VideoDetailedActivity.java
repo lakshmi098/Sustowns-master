@@ -47,8 +47,37 @@ public class VideoDetailedActivity extends YouTubeBaseActivity {
         backPress = (ImageView) findViewById(R.id.backarrow);
         text_Contetnt = (TextView) findViewById(R.id.text_content);
         text_Contetnt.setText(content_detailed);
-
         youTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_player);
+        onInitializedListener = new YouTubePlayer.OnInitializedListener(){
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+//                youTubePlayer.loadVideo(video);
+                String youtubeID = video.replace("https://www.youtube.com/embed/", "");
+                youTubePlayer.loadVideo(youtubeID);
+
+                youTubePlayer.play();
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+            }
+        };
+        play_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                play_btn.setVisibility(View.GONE);
+                youTubePlayerView.initialize(API,onInitializedListener);
+            }
+        });
+        backPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+    public void Video(){
         onInitializedListener = new YouTubePlayer.OnInitializedListener(){
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
@@ -66,19 +95,8 @@ public class VideoDetailedActivity extends YouTubeBaseActivity {
             }
         };
 
-        play_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                play_btn.setVisibility(View.GONE);
-                youTubePlayerView.initialize(API,onInitializedListener);
-            }
-        });
-        backPress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
     }
+
+
 
 }

@@ -261,8 +261,19 @@
                     android:id="@+id/checkbox_agree"
                     android:layout_marginTop="5dp"
                     android:visibility="gone"
-                    android:text="By clicking here,you agreed to the Terms and Conditions"
+                    android:text="By clicking here,you agreed to the"
                     android:textColor="@color/black"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Terms and Conditions"
+                    android:textColor="@color/btn_background_color"
+                    android:layout_marginLeft="30dp"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    android:id="@+id/terms_conditions_text"
+                    android:layout_gravity="left"/>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

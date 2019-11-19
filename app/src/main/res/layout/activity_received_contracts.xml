@@ -164,7 +164,7 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/post_prod_name"
                             android:text="product name"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:maxLines="3"
                             android:textColor="@color/black"
                             android:textSize="14dp" />
@@ -178,7 +178,7 @@
                             android:layout_width="120dp"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
-                            android:text="Deliver Location"
+                            android:text="Delivery Location"
                             android:textColor="@color/black"
                             android:textSize="14dp" />
                         <TextView
@@ -193,7 +193,7 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/delivery_location"
                             android:text="hyderabad"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:gravity="right"
                             android:maxLines="3"
                             android:textColor="@color/black"
@@ -225,7 +225,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/post_validity"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:text="quote"
                             android:maxLines="3"
                             android:textColor="@color/black"
@@ -258,11 +258,43 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/category"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:text="quote"
                             android:textColor="@color/black"
                             android:textSize="14dp" />
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="3dp">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text="Status"
+                            android:textStyle="bold"
+                            android:textColor="@color/btn_background_color"
+                            android:textSize="14dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text=":"
+                            android:textColor="@color/btn_background_color"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/status_received_contracts"
+                            android:layout_marginLeft="5dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/btn_background_color"
+                            android:textSize="14dp" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -298,6 +330,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
+        android:visibility="gone"
         android:layout_marginLeft="5dp">
 
         <include layout="@layout/activity_product_reviews" />

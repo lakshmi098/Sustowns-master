@@ -75,14 +75,14 @@ public class ShippingAddressActivity extends AppCompatActivity {
     String countryStr, mobile, countryStrBilling, order_id, title, id, quantity, price;
     String name, company_name, email, first_name, last_name, address1, address2, state, town, pincode, fax, country_st, user_id, selectedRadioBtn;
     String[] country = {"India", "Algeria", "USA", "UK"};
-    RadioButton radioButton;
-    RadioGroup radioGroup;
+    RadioButton radioButton,cards_checkbox,netbanking_checkbox,upi_checkbox,payumoney_checkbox;
+    RadioGroup radioGroup,payu_radigroup;
     ProgressDialog progressDialog;
     CheckBox checkbox, checkbox_agree;
     Integer selectedId;
     Realm realm;
     LinearLayout ll_bank_details, ll_payment_gateway_temscond, ll_logistics_tems_conditions, ll_vendor_tems_conditions;
-    TextView acc_name, acc_no, acc_ifsccode, acc_address,terms_conditions, acc_note,name_payment,email_payment,phone_payment,total_items_txt,total_amount_txt;;
+    TextView paybybank_orderstatus,acc_name, acc_no, acc_ifsccode, acc_address,terms_conditions, acc_note,name_payment,email_payment,phone_payment,total_items_txt,total_amount_txt;;
     ArrayList<AddToCartModel> addToCartModels;
     String billing_company, billing_email, billing_fname, billing_lname, billing_address1, billing_address2, billing_postalcode,
             billing_state, billing_town, billing_mobile, billing_fax;
@@ -105,6 +105,7 @@ public class ShippingAddressActivity extends AppCompatActivity {
     EditText note_orders;
     WebServices webServices;
     Helper helper;
+    LinearLayout ll_payu_options;
     String bankCode,mihpayid,mode,status,txnid ,amount,net_amount_debit,firstname,phone,hash,payment_source,PG_TYPE,bank_ref_num;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,11 +172,20 @@ public class ShippingAddressActivity extends AppCompatActivity {
         pincode_address = (EditText) findViewById(R.id.pincode_address);
         fax_address = (EditText) findViewById(R.id.fax_address);
         ll_bank_details = (LinearLayout) findViewById(R.id.ll_bank_details);
+        ll_payu_options = (LinearLayout) findViewById(R.id.ll_payu_options);
         acc_name = (TextView) findViewById(R.id.bank_account_name);
         acc_no = (TextView) findViewById(R.id.bank_account_no);
         acc_ifsccode = (TextView) findViewById(R.id.bank_ifsccode);
         acc_address = (TextView) findViewById(R.id.branch_address);
         acc_note = (TextView) findViewById(R.id.note_bank);
+        paybybank_orderstatus = (TextView) findViewById(R.id.paybybank_orderstatus);
+        paybybank_orderstatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ShippingAddressActivity.this,StoreReceivedOrdersActivity.class);
+                startActivity(i);
+            }
+        });
         terms_conditions = (TextView) findViewById(R.id.terms_conditions);
         terms_conditions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,18 +212,6 @@ public class ShippingAddressActivity extends AppCompatActivity {
             }
         });
         checkbox_agree = (CheckBox) findViewById(R.id.checkbox_agree);
-/*
-        checkbox_agree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-
-                } else {
-
-                }
-            }
-        });
-*/
         checkbox = (CheckBox) findViewById(R.id.checkbox);
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -233,6 +231,11 @@ public class ShippingAddressActivity extends AppCompatActivity {
                 }
             }
         });
+        cards_checkbox = (RadioButton) findViewById(R.id.cards_checkbox);
+        netbanking_checkbox = (RadioButton) findViewById(R.id.netbanking_checkbox);
+        upi_checkbox = (RadioButton) findViewById(R.id.upi_checkbox);
+        payumoney_checkbox = (RadioButton) findViewById(R.id.payumoney_checkbox);
+
         company_billing = (EditText) findViewById(R.id.company_billing);
         email_billing = (EditText) findViewById(R.id.email_billing);
         first_name_billing = (EditText) findViewById(R.id.first_name_billing);
@@ -247,12 +250,28 @@ public class ShippingAddressActivity extends AppCompatActivity {
 
 
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        payu_radigroup = (RadioGroup) findViewById(R.id.payu_radigroup);
         payu_radiobutton = (RadioButton) findViewById(R.id.pay_u_radiobtn);
         paybank_radiobtn = (RadioButton) findViewById(R.id.paybank_radiobtn);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
-                    case R.id.pay_u_radiobtn:
+                    case R.id.cards_checkbox:
+                        ll_bank_details.setVisibility(View.GONE);
+                        // do operations specific to this selection
+                        paymentType = "online";
+                        break;
+                    case R.id.netbanking_checkbox:
+                        ll_bank_details.setVisibility(View.GONE);
+                        // do operations specific to this selection
+                        paymentType = "online";
+                        break;
+                    case R.id.upi_checkbox:
+                        ll_bank_details.setVisibility(View.GONE);
+                        // do operations specific to this selection
+                        paymentType = "online";
+                        break;
+                    case R.id.payumoney_checkbox:
                         ll_bank_details.setVisibility(View.GONE);
                         // do operations specific to this selection
                         paymentType = "online";
@@ -266,8 +285,6 @@ public class ShippingAddressActivity extends AppCompatActivity {
                 }
             }
         });
-      /*  shipping = (Button) findViewById(R.id.shipping_btn);
-        biling = (Button) findViewById(R.id.billing_btn);*/
         backarrow = (ImageView) findViewById(R.id.backarrow);
         place_order_btn = (Button) findViewById(R.id.place_order_btn);
         spinner_country_billing = (Spinner) findViewById(R.id.spinner_country_billing);

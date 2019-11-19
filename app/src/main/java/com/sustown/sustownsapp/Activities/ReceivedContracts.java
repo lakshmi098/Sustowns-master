@@ -33,6 +33,7 @@ import com.sustown.sustownsapp.Models.ReceivedContractModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -47,7 +48,7 @@ public class ReceivedContracts extends AppCompatActivity {
     ImageView received_head_image,backarrow;
     TextView contract_name,post_prod_name,delivery_location,post_validity,posted_on,category,uploaded_documents,description_received_dialog;
     RecyclerView recyclerview_receivedorders;
-    TextView uploaded_documents_link,product_name;
+    TextView uploaded_documents_link,product_name,status_received_contracts;
     ReceivedContractsAdapter receivedOrdersAdapter;
     String[] ProdName = {"Eggs"};
     RatingBar ratingBarSubmit;
@@ -60,6 +61,7 @@ public class ReceivedContracts extends AppCompatActivity {
     String id1,user_id1,job_id,description,attachImage,appattachment,approve_status,contractname,job_name,user_id,contractor_id;
     PreferenceUtils preferenceUtils;
     Intent intent;
+    String user_id_quote;
     public static final String URL9 = "http://www.appsapk.com/downloading/latest/UC-Browser.apk";
 
     @Override
@@ -85,6 +87,7 @@ public class ReceivedContracts extends AppCompatActivity {
         uploaded_documents = (TextView) findViewById(R.id.uploaded_documents);
         received_head_image = (ImageView) findViewById(R.id.received_head_image);
         contract_name = (TextView) findViewById(R.id.contract_name);
+        status_received_contracts = (TextView) findViewById(R.id.status_received_contracts);
         category = (TextView) findViewById(R.id.category);
         post_prod_name = (TextView) findViewById(R.id.post_prod_name);
         delivery_location = (TextView) findViewById(R.id.delivery_location);
@@ -249,6 +252,7 @@ public class ReceivedContracts extends AppCompatActivity {
                                                 String end_date = jsonObject.getString("end_date");
                                                 contractname = jsonObject.getString("contractname");
                                                 status = jsonObject.getString("status");
+                                                contractor_id = jsonObject.getString("contractor_id");
                                                 String image = jsonObject.getString("image");
                                                 String attachment = jsonObject.getString("attachment");
                                                 String job_location = jsonObject.getString("job_location");
@@ -338,50 +342,71 @@ public class ReceivedContracts extends AppCompatActivity {
                                                 }
                                             }
                                             JSONArray quoteArray = root.getJSONArray("jobquate");
-                                            for (int i = 0; i < quoteArray.length(); i++) {
-                                                JSONObject quoteObj = quoteArray.getJSONObject(i);
-                                                String id2 = quoteObj.getString("id");
-                                                String job_id1 = quoteObj.getString("job_id");
-                                                String user_id_quote = quoteObj.getString("user_id");
-                                                String instant_amount = quoteObj.getString("instant_amount");
-                                                String payment = quoteObj.getString("payment");
-                                                String currency = quoteObj.getString("currency");
-                                               //String status = quoteObj.getString("status");
-                                                String bus_name = quoteObj.getString("bus_name");
-                                                String busi_detail = quoteObj.getString("busi_detail");
-                                                String banner_image = quoteObj.getString("banner_image");
-                                                String bid = quoteObj.getString("bid");
-                                                String phone = quoteObj.getString("phone");
-                                                String fullname = quoteObj.getString("fullname");
-                                                String email = quoteObj.getString("email");
-                                                String city = quoteObj.getString("city");
-                                                String country = quoteObj.getString("country");
-                                                String avg = quoteObj.getString("avg");
-                                                String count = quoteObj.getString("count");
+                                            if(quoteArray.length()>0) {
+                                                for (int i = 0; i < quoteArray.length(); i++) {
+                                                    JSONObject quoteObj = quoteArray.getJSONObject(i);
+                                                    String id2 = quoteObj.getString("id");
+                                                    String job_id1 = quoteObj.getString("job_id");
+                                                    user_id_quote = quoteObj.getString("user_id");
+                                                    String instant_amount = quoteObj.getString("instant_amount");
+                                                    String payment = quoteObj.getString("payment");
+                                                    String currency = quoteObj.getString("currency");
+                                                    //String status = quoteObj.getString("status");
+                                                    String bus_name = quoteObj.getString("bus_name");
+                                                    String busi_detail = quoteObj.getString("busi_detail");
+                                                    String banner_image = quoteObj.getString("banner_image");
+                                                    String bid = quoteObj.getString("bid");
+                                                    String phone = quoteObj.getString("phone");
+                                                    String fullname = quoteObj.getString("fullname");
+                                                    String email = quoteObj.getString("email");
+                                                    String city = quoteObj.getString("city");
+                                                    String country = quoteObj.getString("country");
+                                                    String avg = quoteObj.getString("avg");
+                                                    String count = quoteObj.getString("count");
+                                                    status_received_contracts.setText("No");
 
-                                                ReceivedContractModel receivedContractModel = new ReceivedContractModel();
-                                                receivedContractModel.setId(id2);
-                                                receivedContractModel.setJob_id(job_id1);
-                                                receivedContractModel.setUser_id(user_id_quote);
-                                                receivedContractModel.setInstant_amount(instant_amount);
-                                                receivedContractModel.setPayment(payment);
-                                                receivedContractModel.setCurrency(currency);
-                                                receivedContractModel.setStatus(status);
-                                                receivedContractModel.setBus_name(bus_name);
-                                                receivedContractModel.setBusi_detail(busi_detail);
-                                                receivedContractModel.setBanner_image(banner_image);
-                                                receivedContractModel.setBid(bid);
-                                                receivedContractModel.setPhone(phone);
-                                                receivedContractModel.setFullname(fullname);
-                                                receivedContractModel.setEmail(email);
-                                                receivedContractModel.setCity(city);
-                                                receivedContractModel.setCountry(country);
-                                                receivedContractModel.setAvg(avg);
-                                                receivedContractModel.setCount(count);
-                                                receivedContractModel.setDescription(description);
-                                                receivedContractModel.setImage(attachImage);
-                                                receivedContractModel.setAppattachment(appattachment);
-                                                receivedContractModels.add(receivedContractModel);
+                                                    ReceivedContractModel receivedContractModel = new ReceivedContractModel();
+                                                    receivedContractModel.setId(id2);
+                                                    receivedContractModel.setJob_id(job_id1);
+                                                    receivedContractModel.setUser_id(user_id_quote);
+                                                    receivedContractModel.setInstant_amount(instant_amount);
+                                                    receivedContractModel.setPayment(payment);
+                                                    receivedContractModel.setCurrency(currency);
+                                                    receivedContractModel.setStatus(status);
+                                                    receivedContractModel.setBus_name(bus_name);
+                                                    receivedContractModel.setBusi_detail(busi_detail);
+                                                    receivedContractModel.setBanner_image(banner_image);
+                                                    receivedContractModel.setBid(bid);
+                                                    receivedContractModel.setPhone(phone);
+                                                    receivedContractModel.setFullname(fullname);
+                                                    receivedContractModel.setEmail(email);
+                                                    receivedContractModel.setCity(city);
+                                                    receivedContractModel.setCountry(country);
+                                                    receivedContractModel.setAvg(avg);
+                                                    receivedContractModel.setCount(count);
+                                                    receivedContractModel.setDescription(description);
+                                                    receivedContractModel.setImage(attachImage);
+                                                    receivedContractModel.setAppattachment(appattachment);
+                                                    receivedContractModels.add(receivedContractModel);
+                                                }
+                                            }else {
+                                                if (contractor_id.equalsIgnoreCase(user_id_quote)) {
+                                                    if (status.equalsIgnoreCase("1")) {
+                                                        status_received_contracts.setText("Selected");
+                                                    } else if (status.equalsIgnoreCase("2")|| status.equalsIgnoreCase("6") || status.equalsIgnoreCase("7")) {
+                                                        status_received_contracts.setText("work in process");
+                                                    } else if (status.equalsIgnoreCase("3")) {
+                                                        status_received_contracts.setText("Completed");
+                                                    } else if (status.equalsIgnoreCase("5")) {
+                                                        status_received_contracts.setText("Approved");
+                                                    }
+                                                }else{
+                                                    if (status.equalsIgnoreCase("0")) {
+                                                        status_received_contracts.setText("Quoted");
+                                                    } else if (status.equalsIgnoreCase("5")){
+                                                        status_received_contracts.setText("Approved");
+                                                    }
+                                                }
                                             }
                                                 JSONArray businessbadgesArray = root.getJSONArray("businessbadges");
                                                 for (int j = 0; j < businessbadgesArray.length(); j++) {

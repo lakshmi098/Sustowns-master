@@ -71,10 +71,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PaymentContractsActvity  extends AppCompatActivity {
-    ImageView backarrow, savearrow,close_payment_dialog;
+    ImageView backarrow,close_payment_dialog;
     PreferenceUtils preferenceUtils;
-    Spinner spinner_country, spinner_country_billing;
-    Button place_order_btn, pay_now_btn;
+    Button pay_now_btn;
     String countryStr, mobile, countryStrBilling, order_id, title, id, quantity, price;
     String name, company_name, email, first_name, last_name, address1, address2, state, town, pincode, fax, country_st, user_id, selectedRadioBtn;
     String[] country = {"India", "Algeria", "USA", "UK"};
@@ -83,22 +82,15 @@ public class PaymentContractsActvity  extends AppCompatActivity {
     ProgressDialog progressDialog;
     CheckBox checkbox, checkbox_agree;
     Integer selectedId;
-    LinearLayout ll_bank_details, ll_order_placed_text;
-    TextView acc_name, acc_no, acc_ifsccode, acc_address, acc_note,name_payment,email_payment,phone_payment,total_items_txt,total_amount_txt;;
-    ArrayList<AddToCartModel> myList;
+    LinearLayout ll_bank_details, ll_order_placed_text,ll_payment;
     RadioButton paybank_radiobtn, payu_radiobutton;
-    String paymentType = "",userName,userEmail,userMobile,totalAmount,totalItems,PayUorderid;
+    String paymentType = "",userName,userEmail,userMobile;
     CardView received_orders_cardview;
-
     private String merchantKey = "swpahz", salt = "h7dXPGlF", transactionId, userCredentials;
     // These will hold all the payment parameters
     private PaymentParams mPaymentParams;
-    // This sets the configuration
     private PayuConfig payuConfig;
-    // Used when generating hash from SDK
     private PayUChecksum checksum;
-    EditText note_orders;
-    WebServices webServices;
     Helper helper;
     String amountStr,jobQuoteId,quoteId,jobId;
     TextView my_orders_text;
@@ -143,6 +135,7 @@ public class PaymentContractsActvity  extends AppCompatActivity {
         quoteId = getIntent().getStringExtra("QuotedId");
         jobId = getIntent().getStringExtra("JobId");
         received_orders_cardview = (CardView) findViewById(R.id.received_orders_cardview);
+        ll_payment = (LinearLayout) findViewById(R.id.ll_payment);
         ll_order_placed_text = (LinearLayout) findViewById(R.id.ll_order_placed_text);
         ll_bank_details = (LinearLayout) findViewById(R.id.ll_bank_details);
         pay_now_btn = (Button) findViewById(R.id.pay_now_btn);
@@ -470,7 +463,7 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                             if (success.equalsIgnoreCase("1")) {
                                 progressDialog.dismiss();
                                 Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
-                                received_orders_cardview.setVisibility(View.GONE);
+                                ll_payment.setVisibility(View.GONE);
                                 ll_order_placed_text.setVisibility(View.VISIBLE);
                                /* Intent i = new Intent(context, StoreReceivedOrdersActivity.class);
                                 context.startActivity(i);*/
@@ -534,8 +527,10 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                             if (success.equalsIgnoreCase("1")) {
                                 progressDialog.dismiss();
                                 Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
-                                received_orders_cardview.setVisibility(View.VISIBLE);
-                                ll_order_placed_text.setVisibility(View.GONE);
+                                Intent i = new Intent(PaymentContractsActvity.this,ReceivedContracts.class);
+                                startActivity(i);
+                                /*ll_payment.setVisibility(View.VISIBLE);
+                                ll_order_placed_text.setVisibility(View.GONE);*/
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();

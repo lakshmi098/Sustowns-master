@@ -141,27 +141,27 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
                 viewHolder.payment_btn.setVisibility(View.VISIBLE);
                 viewHolder.approve_btn.setVisibility(View.GONE);
                 viewHolder.confirm_contract.setVisibility(View.GONE);
-                viewHolder.received_status.setVisibility(View.GONE);
+                viewHolder.ll_contractstatus.setVisibility(View.GONE);
             }else if(status.equalsIgnoreCase("0")){
                 viewHolder.payment_btn.setVisibility(View.GONE);
                 viewHolder.approve_btn.setVisibility(View.VISIBLE);
                 viewHolder.confirm_contract.setVisibility(View.GONE);
-                viewHolder.received_status.setVisibility(View.GONE);
+                viewHolder.ll_contractstatus.setVisibility(View.GONE);
             }else if(status.equalsIgnoreCase("2")){
                 viewHolder.payment_btn.setVisibility(View.GONE);
                 viewHolder.approve_btn.setVisibility(View.GONE);
                 viewHolder.confirm_contract.setVisibility(View.VISIBLE);
-                viewHolder.received_status.setVisibility(View.GONE);
+                viewHolder.ll_contractstatus.setVisibility(View.GONE);
             }else if(status.equalsIgnoreCase("3")){
                 viewHolder.payment_btn.setVisibility(View.GONE);
                 viewHolder.approve_btn.setVisibility(View.GONE);
                 viewHolder.confirm_contract.setVisibility(View.GONE);
-                viewHolder.received_status.setVisibility(View.VISIBLE);
+                viewHolder.ll_contractstatus.setVisibility(View.VISIBLE);
             }else{
                 viewHolder.payment_btn.setVisibility(View.GONE);
                 viewHolder.approve_btn.setVisibility(View.GONE);
                 viewHolder.confirm_contract.setVisibility(View.GONE);
-                viewHolder.received_status.setVisibility(View.GONE);
+                viewHolder.ll_contractstatus.setVisibility(View.GONE);
             }
             viewHolder.received_orders_payment.setText(receivedContractModels.get(position).getPayment());
             viewHolder.received_contract_amount.setText(receivedContractModels.get(position).getCurrency()+" "+receivedContractModels.get(position).getInstant_amount());
@@ -501,7 +501,7 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
                 received_contract_city,received_contract_phone,received_contract_country,uploaded_document;
         RatingBar ratingBar;
         Button approve_btn,payment_btn,confirm_contract;
-        LinearLayout ll_busi_address;
+        LinearLayout ll_busi_address,ll_contractstatus;
         public ViewHolder(View view) {
             super(view);
             receivedorder_image = (ImageView) view.findViewById(R.id.receivedorder_image);
@@ -526,6 +526,7 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
             ll_busi_address = (LinearLayout) view.findViewById(R.id.ll_busi_address);
             ll_order_placed_text = (LinearLayout) view.findViewById(R.id.ll_order_placed_text);
             received_orders_cardview = (CardView) view.findViewById(R.id.received_orders_cardview);
+            ll_contractstatus = (LinearLayout) view.findViewById(R.id.ll_contractstatus);
         }
     }
 }

@@ -43,6 +43,7 @@ public class VideosFragment extends Fragment {
     VideoAdapter videoAdapter;
     ProgressDialog progressDialog;
     PreferenceUtils preferenceUtils;
+
     public VideosFragment() {
         // Required empty public constructor
     }

@@ -92,6 +92,7 @@
                     android:layout_gravity="center"
                     android:padding="5dp"
                     android:text="ProductName"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
@@ -133,7 +134,7 @@
                                 android:layout_height="wrap_content"
                                 android:padding="5dp"
                                 android:text="Price"
-                                android:textColor="#FE980F"
+                                android:textColor="@color/black"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -150,8 +151,9 @@
                                 android:ellipsize="end"
                                 android:maxLength="18"
                                 android:padding="5dp"
+                                android:textStyle="bold"
                                 android:text="INR 500"
-                                android:textColor="#FE980F"
+                                android:textColor="@color/black"
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -166,7 +168,7 @@
                                 android:layout_height="wrap_content"
                                 android:padding="5dp"
                                 android:text="Quantity"
-                                android:textColor="#FE980F"
+                                android:textColor="@color/black"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -739,6 +741,15 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/added_tocart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Added To Cart"
+                        android:visibility="gone"
+                        android:textColor="@color/yellow"
+                        android:textSize="16sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -798,6 +809,15 @@
                         android:visibility="gone" />
 
                 </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reviews"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/reviews_count"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/review_recyclerview"
@@ -813,6 +833,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
+                    android:visibility="gone"
                     android:layout_marginLeft="5dp">
 
                     <include layout="@layout/activity_product_reviews" />

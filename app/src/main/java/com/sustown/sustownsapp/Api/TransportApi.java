@@ -26,6 +26,9 @@ public interface TransportApi {
     @GET(DZ_URL.ADD_TRANSPORT)
     Call<JsonElement> addTransportService(@Query("invoice_id") String invoice_id, @Query("order_id") String order_id, @Query("pickupdatefrom") String pickupdatefrom, @Query("pickupdateto") String pickupdateto);
 
+    @GET(DZ_URL.ADD_TRANSPORT_PROD_DETAILS)
+    Call<JsonElement> getAddTransportProductDetails(@Query("invoice") String invoice,@Query("orderid") String orderid);
+
     @GET(DZ_URL.GET_KMS_BASED_PINCODES)
     Call<JsonElement> getKmsBasePincodes(@Query("pickup") String pickup, @Query("drop") String drop, @Query("kilometerprice") String kilometerprice);
 
@@ -37,6 +40,9 @@ public interface TransportApi {
     @POST(DZ_URL.GET_TRANSPORT_RECEIVED_ORDERS)
     Call<JsonObject> getTransportReceivedOrders(@Body TransportOrdersModelObj transportOrdersModel1);
 
+    @GET(DZ_URL.GET_TRANSPORT_ORDERDETAILS_LIST)
+    Call<JsonElement> getTransportOrdersDetails(@Query("orid") String orid,@Query("serid") String serid);
+
     @GET
     Call<JsonObject> getBuyerTransportDetails(@Url String url);
 
@@ -46,9 +52,10 @@ public interface TransportApi {
     @GET(DZ_URL.GET_VEHICLE_TYPE)
     Call<JsonElement> getVehicleType(@Query(("trans")) String trans);
 
-    @GET(DZ_URL.GET_TRANSPORT_BOOK_SERVICE)
-    Call<JsonElement> getTransportBookService(@Query(("invoice_id")) String invoice_id, @Query(("order_id")) String order_id, @Query(("uid")) String uid, @Query(("trans_userid")) String trans_userid, @Query(("service_id")) String service_id,
-                                              @Query(("charge_perkm")) String charge_perkm, @Query(("mincharge_km")) String mincharge_km, @Query(("totalpricetransport")) String totalpricetransport);
+    @GET(DZ_URL.TRANSPORT_REQUEST_QUOTE)
+    Call<JsonElement> transportRequestQuote(@Query(("user_id")) String user_id, @Query(("invoice")) String invoice, @Query(("order_ranid")) String order_ranid, @Query(("service_id")) String service_id, @Query(("trans_userid")) String trans_userid,
+                                              @Query(("pick_date")) String pick_date, @Query(("qchrg_km")) String qchrg_km, @Query(("qminchrg_km")) String qminchrg_km,@Query("totalpricetransport") String totalpricetransport,
+                                              @Query("qchrg_km_full_load") String qchrg_km_full_load,@Query("qminchrg_km_full_load") String qminchrg_km_full_load,@Query("total_charge_full_load") String total_charge_full_load,@Query("manual_automatic") String manual_automatic);
 
 
     @GET(DZ_URL.CANCEL_BOOKING)

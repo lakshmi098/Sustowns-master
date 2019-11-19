@@ -47,7 +47,8 @@
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:text="Product1"
-                        android:textColor="@color/black"
+                        android:textColor="@color/btn_background_color"
+                        android:textStyle="bold"
                         android:textSize="16sp" />
 
                     <LinearLayout
@@ -57,11 +58,11 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="120dp"
+                            android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
                             android:text="Product name"
-                            android:textColor="@color/appcolor"
+                            android:textColor="@color/black"
                             android:textSize="14dp" />
 
                         <TextView
@@ -75,11 +76,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:layout_weight="1"
                             android:maxLines="10"
                             android:hint="Eggs"
-                            android:textColor="@color/appcolor"
+                            android:textColor="@color/black"
                             android:textSize="14dp" />
 
                         <ImageView
@@ -97,11 +98,11 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="120dp"
+                            android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
                             android:text="Quantity"
-                            android:textColor="@color/appcolor"
+                            android:textColor="@color/black"
                             android:textSize="14dp" />
 
                         <TextView
@@ -115,11 +116,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:layout_weight="1"
                             android:maxLines="3"
                             android:hint="01"
-                            android:textColor="@color/appcolor"
+                            android:textColor="@color/black"
                             android:textSize="14dp" />
 
                         <ImageView
@@ -137,7 +138,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="120dp"
+                            android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
                             android:text="Quote Before"
@@ -155,7 +156,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:layout_weight="1"
                             android:maxLines="5"
                             android:hint="01"
@@ -177,11 +178,11 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="120dp"
+                            android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
                             android:text="Buyer Name"
-                            android:textColor="@color/appcolor"
+                            android:textColor="@color/black"
                             android:textSize="14dp" />
 
                         <TextView
@@ -195,54 +196,53 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:layout_weight="1"
                             android:maxLines="5"
                             android:hint="name"
-                            android:textColor="@color/appcolor"
+                            android:textColor="@color/black"
                             android:textSize="14dp" />
 
                     </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_below="@+id/ll_bid"
-                        android:background="@color/white"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="120dp"
-                            android:layout_height="wrap_content"
-                            android:maxLines="1"
-                            android:text="Delivery Location"
-                            android:textColor="@color/appcolor"
-                            android:textSize="14dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textColor="@color/black" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@+id/remove_item"
-                            android:id="@+id/bid_location"
-                            android:layout_marginLeft="10dp"
-                            android:text="location"
-                            android:gravity="right"
-                            android:maxLines="15"
-                            android:textColor="@color/appcolor"
-                            android:textSize="14dp" />
-
-                    </LinearLayout>
-
                 </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_below="@+id/ll_bid"
+                android:background="@color/white"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="Delivery Location"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  :"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/remove_item"
+                    android:id="@+id/bid_location"
+                    android:layout_marginLeft="10dp"
+                    android:text="location"
+                    android:gravity="right"
+                    android:maxLines="15"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -255,7 +255,7 @@
                     android:layout_marginRight="10dp"
                     android:text="Customer Details : "
                     android:layout_marginLeft="15dp"
-                    android:textColor="@color/appcolor"
+                    android:textColor="@color/btn_background_color"
                     android:textSize="16sp" />
 
                 <LinearLayout
@@ -285,10 +285,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/cust_det_fullname"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:hint="full name"
                         android:maxLines="5"
-                        android:gravity="right"
                         android:textColor="@color/black"
                         android:textSize="14dp" />
 
@@ -320,10 +319,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/cust_det_phno"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:hint="12356545"
                         android:maxLines="2"
-                        android:gravity="right"
                         android:textColor="@color/black"
                         android:textSize="14dp" />
 
@@ -355,8 +353,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/cust_det_emailid"
-                        android:layout_marginLeft="10dp"
-                        android:gravity="right"
+                        android:layout_marginLeft="5dp"
                         android:maxLines="10"
                         android:textColor="@color/black"
                         android:textSize="14dp" />
@@ -389,8 +386,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/cust_det_city"
-                        android:layout_marginLeft="10dp"
-                        android:gravity="right"
+                        android:layout_marginLeft="5dp"
                         android:maxLines="15"
                         android:hint="hyderabad"
                         android:textColor="@color/black"
@@ -403,7 +399,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
-                    android:layout_gravity="right">
+                    android:layout_gravity="center">
 
                 <Button
                     android:layout_width="wrap_content"

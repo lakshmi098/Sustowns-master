@@ -35,6 +35,8 @@ public class PoultryProductsModel {
     private String days;
     private String pr_sku;
     private String weight_unit;
+    private String country_name;
+    private String city_name;
     private String imagepath;
 
     public String getId() {
@@ -299,6 +301,22 @@ public class PoultryProductsModel {
 
     public void setWeight_unit(String weight_unit) {
         this.weight_unit = weight_unit;
+    }
+
+    public String getCountry_name() {
+        return country_name;
+    }
+
+    public void setCountry_name(String country_name) {
+        this.country_name = country_name;
+    }
+
+    public String getCity_name() {
+        return city_name;
+    }
+
+    public void setCity_name(String city_name) {
+        this.city_name = city_name;
     }
 
     public String getImagepath() {

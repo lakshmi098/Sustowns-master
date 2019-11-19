@@ -5,11 +5,14 @@ import android.content.Context;
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.sustownsapp.R;
@@ -76,16 +79,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 }
             });
 */
+
             final boolean isExpanded = position == mExpandedPosition;
             viewHolder.description_news_full.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-            viewHolder.read_more_btn.setActivated(isExpanded);
+            viewHolder.description_news_full.setSelected(true);
             if(isExpanded){
                 viewHolder.read_more_btn.setVisibility(View.GONE);
                 viewHolder.description_news.setVisibility(View.GONE);
                 viewHolder.description_news_full.setText("Description :  " + Html.fromHtml(newsModels.get(position).getDescription()));
-            }else{
+            }
+            else{
                 viewHolder.read_more_btn.setVisibility(View.VISIBLE);
                 viewHolder.description_news.setVisibility(View.VISIBLE);
+
             }
             viewHolder.read_more_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -121,6 +127,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         TextView title,description_news,date_news,description_news_full,category_news;
         Button read_more_btn;
         ImageView news_image;
+        ScrollView scrollable;
 
         public ViewHolder(View view) {
             super(view);
@@ -131,6 +138,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             description_news_full = (TextView) view.findViewById(R.id.description_news_full);
             category_news = (TextView) view.findViewById(R.id.category_news);
             news_image = (ImageView) view.findViewById(R.id.news_image);
+            scrollable = (ScrollView) view.findViewById(R.id.childScroll);
+            description_news_full.setOnTouchListener(new View.OnTouchListener() {
+
+                public boolean onTouch(View v, MotionEvent event) {
+                    // Disallow the touch request for parent scroll on touch of child view
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+            description_news_full.setMovementMethod(new ScrollingMovementMethod());
+
 
         }
     }

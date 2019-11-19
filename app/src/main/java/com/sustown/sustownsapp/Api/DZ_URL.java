@@ -85,17 +85,19 @@ public interface DZ_URL {
     String APPROVE_QUOTE_RECEIVED_CONTRACT = "Postcontractservice/quoteapprovestat";
     String GET_RECEIVED_CONTRACTS = "Postcontractservice/Quoteapp";
     String CONFIRM_QUOTE_RECEIVED_CONTRACT = "Postcontractservice/completequotestatus";
-    String MAKE_PAYMENT_BANK_APPROVE = "https://www.sustowns.com/Postcontractservice/quoteapprove/";
+    String MAKE_PAYMENT_BANK_APPROVE = "Postcontractservice/quoteapprove/";
 
     String TRANSPORT_REGISTRATION = "transportservices/addtransportvendor";
     String GET_TRANS_SERVICES = "transportservices/myservices";
-    String ADD_TRANSPORT = "https://www.dev.sustowns.com/Transportservices/get_transport_req";
+    // dev services(18-11-19)
+    String ADD_TRANSPORT = "Transportservices/get_transport_req";
+    String ADD_TRANSPORT_PROD_DETAILS = "Freight/productdetails_app/";
     //String ADD_TRANSPORT = "Transportservices/get_transport_req";
     String GET_TRANSPORT_TYPE = "Transportservices/transtypelist/";
     String GET_VEHICLE_TYPE = "Transportservices/vehicletypelist/";
     String POST_TRANSPORT_VENDOR_CONFIRM = "freight/transportVendorConfirmOrder";
     String GET_TRANSPORT_DETAILS_LIST = "freight/transportBuyerTransportList/";
-    String GET_TRANSPORT_BOOK_SERVICE = "freight/bookservice_ap";
+    String TRANSPORT_REQUEST_QUOTE = "Transportservices/add_transdetails_req";
     String CANCEL_BOOKING = "freight/transportcancel_byvendor";
     String ADD_SERVICE = "transportservices/addservice";
     String GET_CART_LIST_SERVER = "Sustownsservice/viewcart/?";
@@ -121,6 +123,8 @@ public interface DZ_URL {
     String ADD_TO_CART = "Sustownsservice/AddtoCart";
     String GET_CATEGORIES_LIST = "Sustownsservice/get_categeory";
     String GET_TRANSPORT_RECEIVED_ORDERS = "Sustownsservice/get_received_orders";
+    String GET_TRANSPORT_ORDERDETAILS_LIST = "Transportservices/productdetails/";
+  //  String GET_TRANSPORT_RECEIVED_ORDERS ="https://www.dev.sustowns.com/Sustownsservice/get_received_orders";
     String GET_KMS_BASED_PINCODES = "Transportservices/sendquote/";
   //  String GET_FILTER_CATEGORIES = "http://dev2.sustowns.com/Sustownsservice/getproductcategories";
    // String GET_FILTER_PRODUCTLIST = "http://dev2.sustowns.com/Sustownsservice/productslist";

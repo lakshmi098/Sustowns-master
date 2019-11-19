@@ -256,7 +256,7 @@ public class TransportDetailsActivity extends AppCompatActivity implements DataL
         try {
             final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TransportDetailsActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.alert_transport_view_details, null);
+            View dialogView = inflater.inflate(R.layout.alert_transport_view_details1, null);
             dialogBuilder.setView(dialogView);
 
             TextView invoice_no = dialogView.findViewById(R.id.invoice_no);

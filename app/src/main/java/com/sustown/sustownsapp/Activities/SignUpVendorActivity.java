@@ -49,6 +49,7 @@ public class SignUpVendorActivity extends AppCompatActivity {
     PreferenceUtils preferenceUtils;
     CheckBox checkbox_agree;
     ImageView close_icon,close_icon1;
+    TextView terms_conditions_text;
     LinearLayout ll_payment_gateway_temscond,ll_logistics_tems_conditions,ll_vendor_tems_conditions;
 
     @Override
@@ -83,6 +84,7 @@ public class SignUpVendorActivity extends AppCompatActivity {
                     selectedSector = parent.getItemAtPosition(position).toString();
                     if(selectedSector.equalsIgnoreCase("General")){
                         checkbox_agree.setVisibility(View.VISIBLE);
+                        terms_conditions_text.setVisibility(View.VISIBLE);
                         checkbox_agree.setChecked(false);
                         checkbox_agree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
@@ -122,11 +124,12 @@ public class SignUpVendorActivity extends AppCompatActivity {
 
                     }else if(selectedSector.equalsIgnoreCase("Poultry")){
                         checkbox_agree.setVisibility(View.VISIBLE);
+                        terms_conditions_text.setVisibility(View.VISIBLE);
                         checkbox_agree.setChecked(false);
                         checkbox_agree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if(isChecked){
+                                /*if(isChecked){
                                     final Dialog customdialog = new Dialog(SignUpVendorActivity.this);
                                     customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     customdialog.setContentView(R.layout.terms_conditions_dialog);
@@ -155,44 +158,19 @@ public class SignUpVendorActivity extends AppCompatActivity {
                                     customdialog.show();
                                 }else{
 
-                                }
+                                }*/
                             }
                         });
 
                     }else if(selectedSector.equalsIgnoreCase("Transport")){
                         checkbox_agree.setVisibility(View.VISIBLE);
+                        terms_conditions_text.setVisibility(View.VISIBLE);
                         checkbox_agree.setChecked(false);
-
                         checkbox_agree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                 if(isChecked){
-                                    final Dialog customdialog = new Dialog(SignUpVendorActivity.this);
-                                    customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                    customdialog.setContentView(R.layout.terms_conditions_dialog);
-                                    customdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-                                    customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
-                                    ll_payment_gateway_temscond = (LinearLayout) customdialog.findViewById(R.id.ll_payment_gateway_temscond);
-                                    ll_logistics_tems_conditions = (LinearLayout) customdialog.findViewById(R.id.ll_logistics_tems_conditions);
-                                    ll_vendor_tems_conditions = (LinearLayout) customdialog.findViewById(R.id.ll_vendor_tems_conditions);
-                                    ll_payment_gateway_temscond.setVisibility(View.GONE);
-                                    ll_logistics_tems_conditions.setVisibility(View.VISIBLE);
-                                    ll_vendor_tems_conditions.setVisibility(View.GONE);
-                                    close_icon = (ImageView) customdialog.findViewById(R.id.close_icon);
-                                    close_icon.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            customdialog.dismiss();
-                                        }
-                                    });
-                                    close_dialog = (Button) customdialog.findViewById(R.id.close_dialog);
-                                    close_dialog.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            customdialog.dismiss();
-                                        }
-                                    });
-                                    customdialog.show();
+
                                 }else{
 
                                 }
@@ -201,12 +179,45 @@ public class SignUpVendorActivity extends AppCompatActivity {
 
                     }else{
                         checkbox_agree.setVisibility(View.GONE);
+                        terms_conditions_text.setVisibility(View.GONE);
                     }
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
 
+                }
+            });
+            terms_conditions_text = (TextView) findViewById(R.id.terms_conditions_text);
+            terms_conditions_text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Dialog customdialog = new Dialog(SignUpVendorActivity.this);
+                    customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    customdialog.setContentView(R.layout.terms_conditions_dialog);
+                    customdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                    customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
+                    ll_payment_gateway_temscond = (LinearLayout) customdialog.findViewById(R.id.ll_payment_gateway_temscond);
+                    ll_logistics_tems_conditions = (LinearLayout) customdialog.findViewById(R.id.ll_logistics_tems_conditions);
+                    ll_vendor_tems_conditions = (LinearLayout) customdialog.findViewById(R.id.ll_vendor_tems_conditions);
+                    ll_payment_gateway_temscond.setVisibility(View.GONE);
+                    ll_logistics_tems_conditions.setVisibility(View.VISIBLE);
+                    ll_vendor_tems_conditions.setVisibility(View.GONE);
+                    close_icon = (ImageView) customdialog.findViewById(R.id.close_icon);
+                    close_icon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            customdialog.dismiss();
+                        }
+                    });
+                    close_dialog = (Button) customdialog.findViewById(R.id.close_dialog);
+                    close_dialog.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            customdialog.dismiss();
+                        }
+                    });
+                    customdialog.show();
                 }
             });
             name_signup.setFocusableInTouchMode(false);
@@ -286,7 +297,7 @@ public class SignUpVendorActivity extends AppCompatActivity {
                     country = country_signup.getText().toString().trim();
 
                     emailPattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-                    if ((fullname.equals("")) || (mobile.equals("") || (userName.equals("")) ||
+                            if ((fullname.equals("")) || (mobile.equals("") || (userName.equals("")) ||
                             (email.equals("")) || (password.equals("")) || (country.equals("")))) {
                         Toast.makeText(SignUpVendorActivity.this, "Please Fill Empty Fields", Toast.LENGTH_LONG).show();
                     } else if (!password.equalsIgnoreCase(confirm_password)) {
@@ -295,6 +306,7 @@ public class SignUpVendorActivity extends AppCompatActivity {
                     else if ((email.matches(emailPattern)) && (password.length() > 5) && (password.length() < 15)) {
                         if(selectedSector.equalsIgnoreCase("select sector")){
                             checkbox_agree.setVisibility(View.GONE);
+                            terms_conditions_text.setVisibility(View.GONE);
                             Toast.makeText(SignUpVendorActivity.this, "Please select sector", Toast.LENGTH_SHORT).show();
                         }else {
                             if (checkbox_agree.isChecked()) {

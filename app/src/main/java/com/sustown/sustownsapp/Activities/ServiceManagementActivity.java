@@ -472,8 +472,8 @@ public class ServiceManagementActivity extends AppCompatActivity {
                     MaxLoad = max_load_service.getText().toString().trim();
                     Lendth = length_service.getText().toString().trim();
                     Width = width_service.getText().toString().trim();
-
-                    if (service_name_edit.getText().toString().isEmpty() || loadArrayList.isEmpty() || actionValue.isEmpty() || MinLoad.isEmpty() || MaxLoad.isEmpty() || Lendth.isEmpty()
+                    if(!isUpdate){
+                    if (transportId.isEmpty() || vehicleId.isEmpty()|| service_name_edit.getText().toString().isEmpty() || loadArrayList.isEmpty() || actionValue.isEmpty() || MinLoad.isEmpty() || MaxLoad.isEmpty() || Lendth.isEmpty()
                     || Width.isEmpty() || height_service.getText().toString().isEmpty() || bodyTypeStr.equalsIgnoreCase("Choose Type")) {
                         Toast.makeText(ServiceManagementActivity.this, "All fields are mandatory.", Toast.LENGTH_SHORT).show();
                     }
@@ -487,20 +487,17 @@ public class ServiceManagementActivity extends AppCompatActivity {
                             unitFullDisplayList.get(position).getCharge().isEmpty() ||unitFullDisplayList.get(position).getMax_load().isEmpty() ||unitDisplayList.get(position).getMin_charge().isEmpty()){
                         Toast.makeText(ServiceManagementActivity.this, "All fields are mandatory.", Toast.LENGTH_SHORT).show();
                     }*/
-                    else if (!isUpdate) {
-                        if( transportId.isEmpty() || vehicleId.isEmpty()){
-                            Toast.makeText(ServiceManagementActivity.this, "All fields are mandatory.", Toast.LENGTH_SHORT).show();
-                        }else {
+                    else {
                             setAddServiceJsonObject();
                         }
-                    }else{
+                    }else {
                         ll_contracts.setVisibility(View.GONE);
                         ll_add_service.setVisibility(View.VISIBLE);
                         recycler_view_myservices.setVisibility(View.GONE);
                         addservice_btn.setVisibility(View.GONE);
-                       // Toast.makeText(ServiceManagementActivity.this, "editttttttttt", Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(ServiceManagementActivity.this, "editttttttttt", Toast.LENGTH_SHORT).show();
                         editServiceJsonObject();
-                }
+                    }
 
             }
         });
@@ -1695,8 +1692,8 @@ public class ServiceManagementActivity extends AppCompatActivity {
                 jsonObj.put("trans_ser_langitude", String.valueOf(MapsActivity.lon));
                 jsonObj.put("transport_address", "10");
                 jsonObj.put("legal_address", "10");
-                jsonObj.put("sourcelocation", MapsActivity.from_address_txt.getText().toString().trim());
-                jsonObj.put("deslocation", MapsActivity.to_address_edit.getText().toString());
+                jsonObj.put("sourcelocation", "");
+                jsonObj.put("deslocation", "");
                 jsonObj.put("type", "105");
                 jsonObj.put("trans_ser_org_latitude", String.valueOf(MapsActivity.fromLatLon.latitude));
                 jsonObj.put("trans_ser_org_langitude", String.valueOf(MapsActivity.fromLatLon.longitude));

@@ -362,6 +362,21 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             });
             imageview = (CircleImageView) findViewById(R.id.imageview);
             spinner_sample_price = (Spinner) findViewById(R.id.spinner_sample_price);
+            ArrayAdapter sampleprice = new ArrayAdapter(this, android.R.layout.simple_spinner_item, price);
+            sampleprice.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_sample_price.setAdapter(sampleprice);
+            spinner_sample_price.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    sample_price_str = parent.getItemAtPosition(position).toString();
+                    // preferenceUtils.saveString(PreferenceUtils.SAMPLE_CURRENCY,sample_price_str);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
             // spinner general packing size
             spinner_packing_size_general = (Spinner) findViewById(R.id.spinner_packing_size_general);
             ArrayAdapter size = new ArrayAdapter(this, android.R.layout.simple_spinner_item, packingSize);
@@ -808,6 +823,8 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                     ll_addproduct_general.setVisibility(View.GONE);
                     ll_contracts.setVisibility(View.GONE);
                     add_product_store.setVisibility(View.GONE);
+                    address_txt_map.setText("Choose From Map");
+                    address_txt_map.setTextColor(getResources().getColor(R.color.appcolor));
                    // getCurrencyList();
                     TitleStr = "Add Product";
                     title_store.setText(TitleStr);
@@ -824,7 +841,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                             eggs_type.equalsIgnoreCase("select eggs type")||unit_edit.getText().toString().isEmpty() ||
                             unit_sp_st.equalsIgnoreCase("select unit") || price_edittext.getText().toString().isEmpty()) {
                         Toast.makeText(StoreMyProductsActivity.this, "Please fill Mandatory fields", Toast.LENGTH_SHORT).show();
-                    }else if(imagesList.get(position).getIsPrimary().equalsIgnoreCase("")){
+                    }else if(imagesList.size() == 0 || imagesList.get(position).getIsPrimary().equalsIgnoreCase("no")){
                         Toast.makeText(StoreMyProductsActivity.this, "Required! Please Select Atleast One Image", Toast.LENGTH_SHORT).show();
                     }
                     else if(Product_Address_Map.isEmpty()) {

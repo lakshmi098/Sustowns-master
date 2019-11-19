@@ -50,7 +50,7 @@ public class AddTransportActivity extends AppCompatActivity {
             seller_location_transport, drop_location_transport;
     Button pickupfrom_date, pickupto_date, request_transport_btn;
     String[] type = {"Road"};
-    String[] name = {"Oganic Eggs", "Agro Eggs", "White Eggs"};
+    String[] name = {"Organic Eggs", "Agro Eggs", "White Eggs"};
     String freight_type_st, orderId, invoiceNo;
     PreferenceUtils preferenceUtils;
     private Calendar cal;
@@ -65,7 +65,7 @@ public class AddTransportActivity extends AppCompatActivity {
     ImageView backarrow;
     Intent intent;
     ProgressDialog progressDialog;
-    String pickupDateFrom = "", pickupDateto = "";
+    String pickupDateFrom = "", pickupDateto = "",user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +85,7 @@ public class AddTransportActivity extends AppCompatActivity {
 
     private void initializeValues() {
         preferenceUtils = new PreferenceUtils(AddTransportActivity.this);
+        user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
         intent = getIntent();
         orderId = intent.getStringExtra("OrderId");
         invoiceNo = intent.getStringExtra("InvoiceNo");
@@ -164,7 +165,7 @@ public class AddTransportActivity extends AppCompatActivity {
                     finish();
                 }
             });
-            getAddTransportServices();
+            getAddTransportProductDetails();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -254,6 +255,121 @@ public class AddTransportActivity extends AppCompatActivity {
         progressDialog.setCancelable(true);
         progressDialog.show();
     }
+    public void getAddTransportProductDetails() {
+        progressdialog();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DZ_URL.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final TransportApi service = retrofit.create(TransportApi.class);
+
+        Call<JsonElement> callRetrofit = null;
+        callRetrofit = service.getAddTransportProductDetails(invoiceNo, orderId);
+        //  callRetrofit = service.addTransportService("978905357041119", "22001186", "2019-11-08", "2019-11-09");
+        callRetrofit.enqueue(new Callback<JsonElement>() {
+
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        progressDialog.dismiss();
+                        System.out.println("----------------------------------------------------");
+                        Log.d("Call request", call.request().toString());
+                        Log.d("Call request header", call.request().headers().toString());
+                        Log.d("Response raw header", response.headers().toString());
+                        Log.d("Response raw", String.valueOf(response.raw().body()));
+                        Log.d("Response code", String.valueOf(response.code()));
+
+                        System.out.println("----------------------------------------------------");
+
+                        if (response.body().toString() != null) {
+
+                            if (response != null) {
+                                String searchResponse = response.body().toString();
+                                Log.d("Categeries", "response  >>" + searchResponse.toString());
+
+                                if (searchResponse != null) {
+                                    JSONObject root = null;
+                                    try {
+                                        root = new JSONObject(searchResponse);
+                                        //   String message = root.getString("message");
+                                        String status = root.getString("status");
+                                        if (status.equalsIgnoreCase("success")) {
+                                            JSONObject jsonObject = root.getJSONObject("productdetails");
+                                            String pr_catid = jsonObject.getString("pr_catid");
+                                            String title = jsonObject.getString("title");
+                                            String pr_title = jsonObject.getString("pr_title");
+                                            String pr_weight_unit = jsonObject.getString("pr_weight_unit");
+                                            String unit_code = jsonObject.getString("unit_code");
+                                            String pr_packtype = jsonObject.getString("pr_packtype");
+                                            String product_order_id = jsonObject.getString("product_order_id");
+                                            String invoice_no = jsonObject.getString("invoice_no");
+                                            String pay_zipcode = jsonObject.getString("pay_zipcode");
+                                            String pay_country = jsonObject.getString("pay_country");
+                                            String seller_country = jsonObject.getString("seller_country");
+                                            String seller_zipcode = jsonObject.getString("seller_zipcode");
+                                            category_transport.setText(title);
+                                            product_name_transport.setText(pr_title);
+                                            weight_transport.setText(pr_weight_unit);
+                                            packingtype_transport.setText(pr_packtype);
+                                            seller_country_transport.setText(seller_country);
+                                            drop_country_transport.setText("India");
+                                            seller_location_transport.setText(seller_zipcode);
+                                            drop_location_transport.setText(pay_zipcode);
+
+                                            try {
+                                                JSONObject requestObj = root.getJSONObject("exist_transport_req");
+                                                if (requestObj != null) {
+                                                    String id = requestObj.getString("id");
+                                                    pickupDateFrom = requestObj.getString("pick_date");
+                                                    pickupDateto = requestObj.getString("pick_dateto");
+                                                    request_transport_btn.setVisibility(View.GONE);
+                                                    ll_transport_services.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    request_transport_btn.setVisibility(View.VISIBLE);
+                                                    ll_transport_services.setVisibility(View.GONE);
+                                                }
+                                            }catch (Exception e){
+
+                                            }
+                                            if(pickupDateFrom.isEmpty() || pickupDateto.isEmpty()){
+                                                pickupfrom_date.setText("From Date");
+                                                pickupto_date.setText("To Date");
+                                            }else {
+                                                pickupfrom_date.setText(pickupDateFrom);
+                                                pickupto_date.setText(pickupDateto);
+                                                getAddTransportServices();
+                                            }
+                                            progressDialog.dismiss();
+                                        } else {
+                                            progressDialog.dismiss();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    progressDialog.dismiss();
+                                }
+
+                            }
+                        }
+                    } else {
+                        //  Toast.makeText(CartActivity.this, "Cart is not added", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+//                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+    }
+
 
     public void getAddTransportServices() {
         progressdialog();
@@ -265,8 +381,8 @@ public class AddTransportActivity extends AppCompatActivity {
         final TransportApi service = retrofit.create(TransportApi.class);
 
         Call<JsonElement> callRetrofit = null;
-//        callRetrofit = service.addTransportService(invoiceNo, orderId, pickupDateFrom, pickupDateto);
-          callRetrofit = service.addTransportService("978905357041119", "22001186", "2019-11-08", "2019-11-09");
+        callRetrofit = service.addTransportService(invoiceNo, orderId, pickupDateFrom, pickupDateto);
+        //  callRetrofit = service.addTransportService("978905357041119", "22001186", "2019-11-08", "2019-11-09");
         callRetrofit.enqueue(new Callback<JsonElement>() {
 
             @Override
@@ -306,24 +422,6 @@ public class AddTransportActivity extends AppCompatActivity {
                                             String buyer_pin = jsonObject.getString("buyer_pin");
                                             String pickupfrom = jsonObject.getString("pickupfromdate");
                                             String pickuptodate = jsonObject.getString("pickuptodate");
-                                            if (pickupfrom.isEmpty()) {
-                                                request_transport_btn.setVisibility(View.VISIBLE);
-                                                ll_transport_services.setVisibility(View.GONE);
-                                            } else {
-                                                request_transport_btn.setVisibility(View.GONE);
-                                                ll_transport_services.setVisibility(View.VISIBLE);
-                                            }
-
-                                            category_transport.setText(product_category);
-                                            product_name_transport.setText(product_name);
-                                            weight_transport.setText(weight);
-                                            packingtype_transport.setText(packing_type);
-                                            seller_country_transport.setText(seller_country);
-                                            //drop_country_transport.setText();
-                                            seller_location_transport.setText(seller_pin);
-                                            drop_location_transport.setText(buyer_pin);
-                                            pickupfrom_date.setText(pickupfrom);
-                                            pickupto_date.setText(pickuptodate);
                                             String getkms = root.getString("getkms");
                                             transportServicesList = new ArrayList<>();
                                             JSONArray servicesArray = root.getJSONArray("transport_services");
@@ -470,7 +568,7 @@ public class AddTransportActivity extends AppCompatActivity {
         addTransportAdapter.notifyDataSetChanged();
     }
 
-    public void bookNow(final int position, final AddTransportAdapter.ViewHolder viewHolder) {
+    public void sendRequestQuote(final int position, final AddTransportAdapter.ViewHolder viewHolder) {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DZ_URL.BASE_URL)
@@ -480,9 +578,12 @@ public class AddTransportActivity extends AppCompatActivity {
         TransportApi service = retrofit.create(TransportApi.class);
 
         Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getTransportBookService(invoiceNo, orderId, transportServicesList.get(position).getTransport_user(),
-               transportServicesList.get(position).getTransport_user(), transportServicesList.get(position).getService_id(), transportServicesList.get(position).getFull_charge_perkm(),
-                transportServicesList.get(position).getFull_minimum_charge(), transportServicesList.get(position).getFull_total_price());
+        callRetrofit = service.transportRequestQuote(user_id,invoiceNo, orderId,"102","502","25-11-2019","30","400",
+                "5607","0","0","0","manual");
+     /*   callRetrofit = service.transportRequestQuote(user_id,invoiceNo, orderId, transportServicesList.get(position).getService_id(),
+               transportServicesList.get(position).getTransport_user(),pickupDateFrom,transportServicesList.get(position).getPartial_charge_perkm(),transportServicesList.get(position).getPartial_minimum_charge(),
+                transportServicesList.get(position).getPartial_total_price(), transportServicesList.get(position).getFull_charge_perkm(),transportServicesList.get(position).getFull_minimum_charge(),
+                transportServicesList.get(position).getFull_total_price(),"manual");*/
         callRetrofit.enqueue(new Callback<JsonElement>() {
 
             @Override
@@ -501,15 +602,17 @@ public class AddTransportActivity extends AppCompatActivity {
                                         root = new JSONObject(searchResponse);
                                         //   String message = root.getString("message");
                                         String status = root.getString("status");
+                                        String data = root.getString("data");
                                         if (status.equalsIgnoreCase("success")) {
                                             progressDialog.dismiss();
-                                            Toast.makeText(AddTransportActivity.this, "Booking Exist", Toast.LENGTH_SHORT).show();
-                                            try {
+                                            Toast.makeText(AddTransportActivity.this, data, Toast.LENGTH_SHORT).show();
+                                          /*  try {
                                                 addTransportAdapter.updateBookSuccess(position, viewHolder);
                                             }catch (Exception e){
                                                 e.printStackTrace();
-                                            }
+                                            }*/
                                         } else {
+                                            Toast.makeText(AddTransportActivity.this, data, Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
                                         }
                                     } catch (JSONException e) {
