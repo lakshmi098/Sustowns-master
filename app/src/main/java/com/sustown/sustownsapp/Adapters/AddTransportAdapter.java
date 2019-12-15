@@ -45,6 +45,7 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
     SparseBooleanArray mSelectedItem;
     Boolean isCancel;
     final String URL2,URL9;
+    LinearLayout ll_full,ll_partial;
 
     public AddTransportAdapter(Context context, List<TransportServicesModel> transportServicesModels) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -67,82 +68,24 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
     public void onBindViewHolder(final AddTransportAdapter.ViewHolder viewHolder, final int position) {
 
         viewHolder.service_name.setText(transportServiceList.get(position).getService_name());
-//        viewHolder.ratingBarProduct.setRating(Float.parseFloat(transportServiceList.get(position).getRating()));
+//      viewHolder.ratingBarProduct.setRating(Float.parseFloat(transportServiceList.get(position).getRating()));
         viewHolder.minimum_charge_Service.setText(transportServiceList.get(position).getPartial_minimum_charge());
         viewHolder.total_Price_service.setText(transportServiceList.get(position).getPartial_total_price());
         booking_status = transportServiceList.get(position).getTransport_booking_status();
-     /*   if(booking_status.equalsIgnoreCase("")){
-            if (mSelectedItem.get(position) && !isCancel) {
-                viewHolder.book_service_btn.setVisibility(View.VISIBLE);
-                viewHolder.book_service_btn.setText("Cancel Booking");
-            } else if (isCancel) {
-                viewHolder.book_service_btn.setVisibility(View.VISIBLE);
-                viewHolder.book_service_btn.setText("Book Now");
-            } else {
-                viewHolder.book_service_btn.setVisibility(View.GONE);
-            }
-                viewHolder.cancel_booking_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    viewHolder.cancel_booking_btn.setVisibility(View.GONE);
-                    viewHolder.book_service_btn.setVisibility(View.VISIBLE);
-                }
-            });
-        } else if (booking_status.equalsIgnoreCase("0")) {
-            if (mSelectedItem.get(position) && !isCancel) {
-                viewHolder.book_service_btn.setVisibility(View.VISIBLE);
-                viewHolder.book_service_btn.setText("Cancel Booking");
-            } else if (isCancel) {
-                viewHolder.book_service_btn.setVisibility(View.VISIBLE);
-                viewHolder.book_service_btn.setText("Book Now");
-            } else {
-                viewHolder.book_service_btn.setVisibility(View.GONE);
-            }
-            viewHolder.cancel_booking_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((AddTransportActivity) context).cancelBooking(position);
-                    viewHolder.cancel_booking_btn.setVisibility(View.GONE);
-                    viewHolder.book_service_btn.setVisibility(View.VISIBLE);
-                }
-            });
-        }else if(booking_status.equalsIgnoreCase("1")){
-            viewHolder.cancelled_text.setText("Cancelled");
-            viewHolder.cancelled_text.setVisibility(View.VISIBLE);
-            viewHolder.book_service_btn.setVisibility(View.GONE);
-        }else if(booking_status.equalsIgnoreCase("2")){
-            viewHolder.ll_pay_vehicle.setVisibility(View.VISIBLE);
-            viewHolder.book_service_btn.setVisibility(View.GONE);
-            viewHolder.pay_now.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((TransportDetailsActivity) context).payOrder(position);
-                }
-            });
-            viewHolder.vehicle_details.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((TransportDetailsActivity) context).contactDetails(position);
-                }
-            });
-        }*/
-       /* if (mSelectedItem.get(position) && !isCancel) {
+        if(booking_status.equalsIgnoreCase("") && transportServiceList.get(position).getManual_automatic().equalsIgnoreCase("null")){
             viewHolder.book_service_btn.setVisibility(View.VISIBLE);
-            viewHolder.book_service_btn.setText("Cancel Booking");
-        } else if (isCancel) {
+        }else if(booking_status.equalsIgnoreCase("0") && transportServiceList.get(position).getManual_automatic().equalsIgnoreCase("automatic")){
+           viewHolder.text_status.setVisibility(View.VISIBLE);
+            viewHolder.text_status.setText("Service Request Sent");
+            viewHolder.book_service_btn.setVisibility(View.GONE);
+        }else if(booking_status.equalsIgnoreCase("0") && transportServiceList.get(position).getManual_automatic().equalsIgnoreCase("manual")){
             viewHolder.book_service_btn.setVisibility(View.VISIBLE);
-            viewHolder.book_service_btn.setText("Book Now");
-        } else {
+        }
+        else{
+            viewHolder.text_status.setVisibility(View.VISIBLE);
+            viewHolder.text_status.setText("Process");
             viewHolder.book_service_btn.setVisibility(View.GONE);
         }
-
-        viewHolder.cancel_booking_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewHolder.cancel_booking_btn.setVisibility(View.GONE);
-                viewHolder.book_service_btn.setVisibility(View.VISIBLE);
-            }
-        });*/
         viewHolder.viewservice_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,19 +110,32 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
                 fulltotal_price = (TextView) customdialog.findViewById(R.id.fulltotal_price);
                 docs = (TextView) customdialog.findViewById(R.id.docs);
                 close_dialog = (Button) customdialog.findViewById(R.id.close_dialog);
-
+                ll_partial = (LinearLayout) customdialog.findViewById(R.id.ll_partial);
+                ll_full = (LinearLayout) customdialog.findViewById(R.id.ll_full);
                 transport_vendor_name.setText(transportServiceList.get(position).getTransport_vendor_name());
                 transport_service_name.setText(transportServiceList.get(position).getService_name());
                 transport_distance.setText(transportServiceList.get(position).getDistance());
                 transport_type.setText(transportServiceList.get(position).getTransport_type());
                 vehicle_type.setText(transportServiceList.get(position).getVehicle_type());
                 load_type.setText(transportServiceList.get(position).getLoad_type());
-                charge_per_km.setText(transportServiceList.get(position).getPartial_charge_perkm());
-                minimum_charge.setText(transportServiceList.get(position).getPartial_minimum_charge());
-                total_price.setText(transportServiceList.get(position).getPartial_total_price());
-                fullcharge_per_km.setText(transportServiceList.get(position).getFull_charge_perkm());
-                fullminimum_charge.setText(transportServiceList.get(position).getFull_minimum_charge());
-                fulltotal_price.setText(transportServiceList.get(position).getFull_total_price());
+                if(transportServiceList.get(position).getPartial_charge_perkm().isEmpty()||transportServiceList.get(position).getPartial_minimum_charge().isEmpty()||
+                        transportServiceList.get(position).getPartial_total_price().isEmpty()){
+
+                }else {
+                    ll_partial.setVisibility(View.VISIBLE);
+                    charge_per_km.setText(transportServiceList.get(position).getPartial_charge_perkm());
+                    minimum_charge.setText(transportServiceList.get(position).getPartial_minimum_charge());
+                    total_price.setText(transportServiceList.get(position).getPartial_total_price());
+                }
+                if(transportServiceList.get(position).getFull_charge_perkm().isEmpty()||transportServiceList.get(position).getFull_minimum_charge().isEmpty()||
+                        transportServiceList.get(position).getFull_total_price().isEmpty()){
+
+                }else{
+                    ll_full.setVisibility(View.VISIBLE);
+                    fullcharge_per_km.setText(transportServiceList.get(position).getFull_charge_perkm());
+                    fullminimum_charge.setText(transportServiceList.get(position).getFull_minimum_charge());
+                    fulltotal_price.setText(transportServiceList.get(position).getFull_total_price());
+                }
                 docs.setText(transportServiceList.get(position).getDocs());
                 docs.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -202,8 +158,6 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
                         downloadManager.enqueue(request);
                     }
                 });
-
-
                 close_dialog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -223,15 +177,10 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
                 }
             }
         });
-
-
     }
     public void removeAt(int position) {
         //  notifyDataSetChanged();
     }
-
-
-
     @Override
     public int getItemCount() {
         return transportServiceList.size();
@@ -249,7 +198,7 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView service_name, category_service, minimum_charge_Service, total_Price_service,cancelled_text;
+        TextView service_name, text_status, minimum_charge_Service, total_Price_service,cancelled_text;
         Button book_service_btn, cancel_booking_btn,pay_now,vehicle_details,viewservice_details;
         LinearLayout ll_pay_vehicle;
         RatingBar ratingBarProduct;
@@ -267,6 +216,7 @@ public class AddTransportAdapter extends RecyclerView.Adapter<AddTransportAdapte
             pay_now = (Button) view.findViewById(R.id.pay_now);
             vehicle_details = (Button) view.findViewById(R.id.vehicle_details);
             viewservice_details = (Button)view.findViewById(R.id.viewservice_details);
+            text_status = (TextView) view.findViewById(R.id.text_status);
 
         }
     }

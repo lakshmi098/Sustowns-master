@@ -25,6 +25,7 @@ public class ReceivedContractModel {
     private String image;
     private String appattachment;
     private String approve_status;
+    private String bidid;
 
     public String getId() {
         return id;
@@ -208,5 +209,13 @@ public class ReceivedContractModel {
 
     public void setApprove_status(String approve_status) {
         this.approve_status = approve_status;
+    }
+
+    public String getBidid() {
+        return bidid;
+    }
+
+    public void setBidid(String bidid) {
+        this.bidid = bidid;
     }
 }

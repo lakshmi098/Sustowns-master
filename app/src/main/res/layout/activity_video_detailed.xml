@@ -39,13 +39,13 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="match_parent"
         android:id="@+id/play_video"
         android:background="@color/white">
 
         <com.google.android.youtube.player.YouTubePlayerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:visibility="visible"
             android:layout_centerHorizontal="true"
             android:id="@+id/youtube_player"
@@ -79,6 +79,7 @@
         android:layout_height="match_parent"
         android:padding="5dp"
         android:layout_margin="5dp"
+        android:visibility="gone"
         android:background="@drawable/squre_corner_with_white_color">
 
         <ScrollView

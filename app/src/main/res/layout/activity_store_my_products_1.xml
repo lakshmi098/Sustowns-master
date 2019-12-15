@@ -442,7 +442,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Packing Type"
+                            android:text="Packing Type *"
                             android:textColor="@color/black"
                             android:textSize="16sp" />
 
@@ -725,7 +725,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Receive Offers for this listing"
+                            android:text="Receive Offers for this listing *"
                             android:textColor="@color/black"
                             android:textSize="16sp" />
 
@@ -819,7 +819,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Discount Start Date"
+                                android:text="Discount Start Date *"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 
@@ -850,7 +850,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Discount End Date"
+                                android:text="Discount End Date *"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 
@@ -1058,7 +1058,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Sample Packing Type"
+                                android:text="Sample Packing Type "
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 

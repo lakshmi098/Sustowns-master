@@ -3,7 +3,9 @@ package com.sustown.sustownsapp.Activities;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -71,7 +73,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PaymentContractsActvity  extends AppCompatActivity {
-    ImageView backarrow,close_payment_dialog;
+    ImageView backarrow,close_payment_dialog,close_send_quote;
     PreferenceUtils preferenceUtils;
     Button pay_now_btn;
     String countryStr, mobile, countryStrBilling, order_id, title, id, quantity, price;
@@ -82,8 +84,8 @@ public class PaymentContractsActvity  extends AppCompatActivity {
     ProgressDialog progressDialog;
     CheckBox checkbox, checkbox_agree;
     Integer selectedId;
-    LinearLayout ll_bank_details, ll_order_placed_text,ll_payment;
-    RadioButton paybank_radiobtn, payu_radiobutton;
+    LinearLayout ll_bank_details, ll_order_placed_text,ll_payment,ll_quote_received_details,linearlayout;
+    RadioButton paybank_radiobtn, cards_checkbox,netbanking_checkbox,upi_checkbox,payumoney_checkbox;
     String paymentType = "",userName,userEmail,userMobile;
     CardView received_orders_cardview;
     private String merchantKey = "swpahz", salt = "h7dXPGlF", transactionId, userCredentials;
@@ -92,8 +94,8 @@ public class PaymentContractsActvity  extends AppCompatActivity {
     private PayuConfig payuConfig;
     private PayUChecksum checksum;
     Helper helper;
-    String amountStr,jobQuoteId,quoteId,jobId;
-    TextView my_orders_text;
+    String amountStr,jobQuoteId,quoteId,jobId,logisticsStr,orderRandId,serviceId,transportId,KmRangeStr,ChargePerKmStr,makeOfferIdStr;
+    TextView my_orders_text,km_range,charge_per_km,total_charge,amount_tobe_paid;
     String bankCode,mihpayid,mode,status,txnid ,amount,net_amount_debit,firstname,phone,hash,payment_source,PG_TYPE,bank_ref_num;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,38 @@ public class PaymentContractsActvity  extends AppCompatActivity {
         jobQuoteId = getIntent().getStringExtra("JobQuoteId");
         quoteId = getIntent().getStringExtra("QuotedId");
         jobId = getIntent().getStringExtra("JobId");
+        logisticsStr = getIntent().getStringExtra("Logistics");
+        orderRandId = getIntent().getStringExtra("OrderRandId");
+        serviceId = getIntent().getStringExtra("ServiceId");
+        transportId = getIntent().getStringExtra("TransportId");
+        KmRangeStr =  getIntent().getStringExtra("KmRange");
+        ChargePerKmStr = getIntent().getStringExtra("ChargePerKm");
+        makeOfferIdStr = getIntent().getStringExtra("makeOfferId");
+        linearlayout = (LinearLayout) findViewById(R.id.linearlayout);
+        ll_quote_received_details = (LinearLayout) findViewById(R.id.ll_quote_received_details);
+        close_payment_dialog = (ImageView)findViewById(R.id.close_payment_dialog);
+        close_send_quote = (ImageView) findViewById(R.id.close_send_quote);
+        km_range = (TextView) findViewById(R.id.km_range);
+        charge_per_km = (TextView) findViewById(R.id.charge_per_km);
+        total_charge = (TextView) findViewById(R.id.total_charge);
+        amount_tobe_paid = (TextView) findViewById(R.id.amount_tobe_paid);
+        if(logisticsStr.equalsIgnoreCase("1")){
+            ll_quote_received_details.setVisibility(View.VISIBLE);
+            close_payment_dialog.setVisibility(View.GONE);
+            km_range.setText(KmRangeStr);
+            charge_per_km.setText(ChargePerKmStr);
+            total_charge.setText(amountStr);
+            amount_tobe_paid.setText(amountStr);
+        }else if(logisticsStr.equalsIgnoreCase("0")){
+            ll_quote_received_details.setVisibility(View.GONE);
+            close_payment_dialog.setVisibility(View.VISIBLE);
+        }else if(logisticsStr.equalsIgnoreCase("2")){
+            ll_quote_received_details.setVisibility(View.GONE);
+            close_payment_dialog.setVisibility(View.VISIBLE);
+        }else if(logisticsStr.equalsIgnoreCase("Offers")){
+            ll_quote_received_details.setVisibility(View.GONE);
+            close_payment_dialog.setVisibility(View.VISIBLE);
+        }
         received_orders_cardview = (CardView) findViewById(R.id.received_orders_cardview);
         ll_payment = (LinearLayout) findViewById(R.id.ll_payment);
         ll_order_placed_text = (LinearLayout) findViewById(R.id.ll_order_placed_text);
@@ -155,9 +189,21 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                                     sweetAlertDialog.dismissWithAnimation();
                                     // PayuBiz
-                                    makePaymentBank();
-                                    setParameter();
-                                    generateHashFromSDK(mPaymentParams, salt);
+                                    if(logisticsStr.equalsIgnoreCase("1")){
+                                        setParameter();
+                                        generateHashFromSDK(mPaymentParams, salt);
+                                    }else if(logisticsStr.equalsIgnoreCase("0")) {
+                                        makePaymentBank();
+                                        setParameter();
+                                        generateHashFromSDK(mPaymentParams, salt);
+                                    }else if(logisticsStr.equalsIgnoreCase("2")){
+                                        setParameter();
+                                        generateHashFromSDK(mPaymentParams, salt);
+                                    }else if(logisticsStr.equalsIgnoreCase("Offers")){
+                                        makeOfferPaymentBank();
+                                        setParameter();
+                                        generateHashFromSDK(mPaymentParams, salt);
+                                    }
 
                                 }
                             }, new SweetAlertDialog.OnSweetClickListener() {
@@ -172,7 +218,16 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                                     sweetAlertDialog.dismissWithAnimation();
-                                    makePaymentBank();
+                                    if(logisticsStr.equalsIgnoreCase("1")){
+                                        setJsonbject();
+                                    }else if(logisticsStr.equalsIgnoreCase("0")) {
+                                        makePaymentBank();
+                                    }else if(logisticsStr.equalsIgnoreCase("2")){
+                                        setJsonbject();
+                                    }else if(logisticsStr.equalsIgnoreCase("Offers")){
+                                        makeOfferPaymentBank();
+                                    }
+
                                 }
                             }, new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
@@ -184,12 +239,30 @@ public class PaymentContractsActvity  extends AppCompatActivity {
             }
         });
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-        payu_radiobutton = (RadioButton) findViewById(R.id.pay_u_radiobtn);
+        cards_checkbox = (RadioButton) findViewById(R.id.cards_checkbox);
+        netbanking_checkbox = (RadioButton) findViewById(R.id.netbanking_checkbox);
+        upi_checkbox = (RadioButton) findViewById(R.id.upi_checkbox);
+        payumoney_checkbox = (RadioButton) findViewById(R.id.payumoney_checkbox);
         paybank_radiobtn = (RadioButton) findViewById(R.id.pay_by_bank_radiobtn);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
-                    case R.id.pay_u_radiobtn:
+                    case R.id.cards_checkbox:
+                        ll_bank_details.setVisibility(View.GONE);
+                        // do operations specific to this selection
+                        paymentType = "online";
+                        break;
+                    case R.id.netbanking_checkbox:
+                        ll_bank_details.setVisibility(View.GONE);
+                        // do operations specific to this selection
+                        paymentType = "online";
+                        break;
+                    case R.id.upi_checkbox:
+                        ll_bank_details.setVisibility(View.GONE);
+                        // do operations specific to this selection
+                        paymentType = "online";
+                        break;
+                    case R.id.payumoney_checkbox:
                         ll_bank_details.setVisibility(View.GONE);
                         // do operations specific to this selection
                         paymentType = "online";
@@ -206,19 +279,29 @@ public class PaymentContractsActvity  extends AppCompatActivity {
         my_orders_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(PaymentContractsActvity.this,MyContractOrdersActivity.class);
-                startActivity(i);
+                if(logisticsStr.equalsIgnoreCase("1")){
+                    Intent i = new Intent(PaymentContractsActvity.this,LogisticsOrdersActivity.class);
+                    startActivity(i);
+                }else if(logisticsStr.equalsIgnoreCase("0")) {
+                    Intent i = new Intent(PaymentContractsActvity.this, MyContractOrdersActivity.class);
+                    i.putExtra("PurchasedOrders","0");
+                    i.putExtra("Message","");
+                    startActivity(i);
+                }
             }
         });
-        close_payment_dialog = (ImageView)findViewById(R.id.close_payment_dialog);
         close_payment_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-      /*  shipping = (Button) findViewById(R.id.shipping_btn);
-        biling = (Button) findViewById(R.id.billing_btn);*/
+        close_send_quote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     public void progressdialog() {
@@ -238,7 +321,7 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                 .build();
         PostContractsApi service = retrofit.create(PostContractsApi.class);
         Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.makePaymentByBank(user_id,"instant",amountStr,quoteId,jobQuoteId,paymentType);
+        callRetrofit = service.makePaymentByBank(user_id, "instant", amountStr, quoteId, jobQuoteId, paymentType, jobId);
         callRetrofit.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -247,7 +330,8 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                 System.out.println("----------------------------------------------------");
                 Log.d("Call request", call.request().toString());
                 Log.d("Call request header", call.request().headers().toString());
-                Log.d("Response raw header", response.headers().toString());
+                Log.d(
+                        "Response raw header", response.headers().toString());
                 Log.d("Response raw", String.valueOf(response.raw().body()));
                 Log.d("Response code", String.valueOf(response.code()));
                 System.out.println("----------------------------------------------------");
@@ -270,11 +354,14 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                                         progressDialog.dismiss();
                                     String message = root.getString("message");
                                     if(paymentType.equalsIgnoreCase("online")){
-                                        Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                                      //  Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
                                     }else {
-                                        Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(PaymentContractsActvity.this, "Thank you for Choosing Pay by Bank Option and further process to Check My Orders", Toast.LENGTH_SHORT).show();
                                         Intent i = new Intent(PaymentContractsActvity.this, MyContractOrdersActivity.class);
+                                        i.putExtra("Message","Thank you for Choosing Pay by Bank Option and further process to Check My Orders");
+                                        i.putExtra("PurchasedOrders","1");
                                         startActivity(i);
+                                        progressDialog.dismiss();
                                     }
                                 } else if (success.equalsIgnoreCase("0")) {
                                     if (progressDialog.isShowing())
@@ -300,8 +387,503 @@ public class PaymentContractsActvity  extends AppCompatActivity {
             }
         });
     }
+    public void makeOfferPaymentBank() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("userid", user_id);
+            jsonObj.put("action", paymentType);
+            jsonObj.put("makeofferid",makeOfferIdStr);
 
+            androidNetworkingMakeOfferPayment(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingMakeOfferPayment(JSONObject jsonObject){
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Checkoutservice/makepayment/")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            JSONObject jsonObject1 = response.getJSONObject("response");
+                            String message = jsonObject1.getString("message");
+                            String success = jsonObject1.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+                                if(paymentType.equalsIgnoreCase("online")){
+                                   // Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                                }else {
+                                    Snackbar snackbar = Snackbar
+                                            .make(linearlayout,"Thank you for Choosing Pay by Bank Option and further process to Check My Orders", Snackbar.LENGTH_LONG);
+                                    snackbar.show();
+                                    Intent i = new Intent(PaymentContractsActvity.this, StoreOffersActivity.class);
+                                    i.putExtra("Message", "Thank you for Choosing Pay by Bank Option and further process to Check My Orders");
+                                    i.putExtra("SentOffers", "1");
+                                    startActivity(i);
+                                   // progressDialog.dismiss();
+                                }
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
 
+    public void setJsonbject() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("user_id", user_id);
+            jsonObj.put("order_ran", orderRandId);
+            jsonObj.put("service_id",serviceId);
+            jsonObj.put("action","bank");
+
+            androidNetworkingpayByBank(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingpayByBank(JSONObject jsonObject){
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Transportservices/transportbankpayment/")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            String message = response.getString("message");
+                            String success = response.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                Snackbar snackbar = Snackbar
+                                        .make(linearlayout,"Thank you for Choosing Pay by Bank Option and further process to Check My Orders", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                                if(progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                Intent i = new Intent(PaymentContractsActvity.this, LogisticsOrdersActivity.class);
+                                i.putExtra("Message","Thank you for Choosing Pay by Bank Option and further process to Check My Orders");
+                                startActivity(i);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setPayUSuccess() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("userid", user_id);
+            jsonObj.put("txnid",txnid);
+            jsonObj.put("job_id",jobId);
+            jsonObj.put("quotedid",quoteId);
+            jsonObj.put("pay_type","instant");
+            jsonObj.put("jobquatid",jobQuoteId);
+            jsonObj.put("amount",amount);
+            jsonObj.put("mode",mode);
+            jsonObj.put("mihpayid",mihpayid);
+            jsonObj.put("firstname",preferenceUtils.getStringFromPreference(PreferenceUtils.FULL_NAME,""));
+            jsonObj.put("country","India");
+            jsonObj.put("email",preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL,""));
+            jsonObj.put("phone",preferenceUtils.getStringFromPreference(PreferenceUtils.MOBILE,""));
+            jsonObj.put("bankcode",bankCode);
+            jsonObj.put("PG_TYPE",PG_TYPE);
+            jsonObj.put("bank_ref_num",bank_ref_num);
+            androidNetworkingPayUSuccess(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingPayUSuccess(JSONObject jsonObject) {
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Postcontractservice/quotepayuSuccess/")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            JSONObject responseObj = response.getJSONObject("response");
+                            String message = responseObj.getString("message");
+                            String success = responseObj.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                if(progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, "", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(PaymentContractsActvity.this, ReceivedContracts.class);
+                               // i.putExtra("Message","");
+                               // i.putExtra("PurchasedOrders","1");
+                                startActivity(i);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setPayUFailure() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("userid", user_id);
+            jsonObj.put("txnid",txnid);
+            jsonObj.put("job_id",jobId);
+            jsonObj.put("quotedid",quoteId);
+            jsonObj.put("pay_type","instant");
+            jsonObj.put("jobquatid",jobQuoteId);
+            jsonObj.put("amount",amount);
+            jsonObj.put("mode","");
+            jsonObj.put("mihpayid","");
+            jsonObj.put("firstname",preferenceUtils.getStringFromPreference(PreferenceUtils.FULL_NAME,""));
+            jsonObj.put("country","India");
+            jsonObj.put("email",preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL,""));
+            jsonObj.put("phone",preferenceUtils.getStringFromPreference(PreferenceUtils.MOBILE,""));
+            jsonObj.put("bankcode","");
+            jsonObj.put("PG_TYPE","");
+            jsonObj.put("bank_ref_num","");
+            androidNetworkingPayUFailure(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingPayUFailure(JSONObject jsonObject) {
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Postcontractservice/quotepayuFailure/")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            JSONObject responseObj = response.getJSONObject("response");
+                            String message = responseObj.getString("message");
+                            String success = responseObj.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                if(progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                Intent i = new Intent(PaymentContractsActvity.this,ReceivedContracts.class);
+                                i.putExtra("Message","");
+                                startActivity(i);
+                               // Toast.makeText(PaymentContractsActvity.this, message,Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+                                /*ll_payment.setVisibility(View.VISIBLE);
+                                ll_order_placed_text.setVisibility(View.GONE);*/
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setPayULogisticsSuccess() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("userid", user_id);
+            jsonObj.put("txnid",txnid);
+            jsonObj.put("order_ran",orderRandId);
+            jsonObj.put("service_id",serviceId);
+            jsonObj.put("amount",amount);
+            jsonObj.put("transport_id",transportId);
+            jsonObj.put("mode",mode);
+            jsonObj.put("mihpayid",mihpayid);
+            jsonObj.put("PG_TYPE",PG_TYPE);
+            jsonObj.put("bank_ref_num",bank_ref_num);
+            jsonObj.put("bankcode",bankCode);
+            androidNetworkingLogisticsPayUSuccess(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingLogisticsPayUSuccess(JSONObject jsonObject) {
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Transportservices/transportpayuSuccess")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            JSONObject responseObj = response.getJSONObject("response");
+                            String message = responseObj.getString("message");
+                            String success = responseObj.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, "", Toast.LENGTH_SHORT).show();
+                                ll_payment.setVisibility(View.GONE);
+                                Intent i = new Intent(PaymentContractsActvity.this, LogisticsOrdersActivity.class);
+                                i.putExtra("Message","");
+                                startActivity(i);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setPayUFailureLogistics() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("userid", user_id);
+            jsonObj.put("txnid",txnid);
+            jsonObj.put("order_ran",orderRandId);
+            jsonObj.put("service_id",serviceId);
+            jsonObj.put("amount",amount);
+            jsonObj.put("transport_id",transportId);
+            jsonObj.put("mode",mode);
+            jsonObj.put("mihpayid",mihpayid);
+            jsonObj.put("PG_TYPE",PG_TYPE);
+            jsonObj.put("bank_ref_num",bank_ref_num);
+            jsonObj.put("bankcode",bankCode);
+            androidNetworkingPayUFailureLogistics(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingPayUFailureLogistics(JSONObject jsonObject) {
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Transportservices/transportpayuFailure")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            JSONObject responseObj = response.getJSONObject("response");
+                            String message = responseObj.getString("message");
+                            String success = responseObj.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                if(progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                               // Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(PaymentContractsActvity.this,ReceivedContracts.class);
+                                i.putExtra("Message","");
+                                startActivity(i);
+                                /*ll_payment.setVisibility(View.VISIBLE);
+                                ll_order_placed_text.setVisibility(View.GONE);*/
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setPayUMakeOfferSuccess() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("userid", user_id);
+            jsonObj.put("txnid",txnid);
+            jsonObj.put("amount",amount);
+            jsonObj.put("mode",mode);
+            jsonObj.put("mihpayid",mihpayid);
+            jsonObj.put("discount","");
+            jsonObj.put("net_amount",amount);
+            jsonObj.put("makeofferid",makeOfferIdStr);
+            jsonObj.put("firstname",preferenceUtils.getStringFromPreference(PreferenceUtils.FULL_NAME,""));
+            jsonObj.put("email",preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL,""));
+            jsonObj.put("phone",preferenceUtils.getStringFromPreference(preferenceUtils.MOBILE,""));
+            jsonObj.put("PG_TYPE",PG_TYPE);
+            jsonObj.put("bank_ref_num",bank_ref_num);
+            jsonObj.put("bankcode",bankCode);
+            androidNetworkingMakeOfferPayUSuccess(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingMakeOfferPayUSuccess(JSONObject jsonObject) {
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Checkoutservice/makeofpayuSuccess/")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            JSONObject responseObj = response.getJSONObject("response");
+                            String message = responseObj.getString("message");
+                            String success = responseObj.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                if(progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, "", Toast.LENGTH_SHORT).show();
+                                ll_payment.setVisibility(View.GONE);
+                                Intent i = new Intent(PaymentContractsActvity.this, StoreOffersActivity.class);
+                                i.putExtra("Message","");
+                                i.putExtra("SentOffers","1");
+                                startActivity(i);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setPayUMakeOfferFailure() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("userid", user_id);
+            jsonObj.put("txnid",txnid);
+            jsonObj.put("amount",amount);
+            jsonObj.put("mode",mode);
+            jsonObj.put("mihpayid",mihpayid);
+            jsonObj.put("discount","");
+            jsonObj.put("net_amount",amount);
+            jsonObj.put("makeofferid",makeOfferIdStr);
+            jsonObj.put("firstname",preferenceUtils.getStringFromPreference(PreferenceUtils.FULL_NAME,""));
+            jsonObj.put("email",preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL,""));
+            jsonObj.put("phone",preferenceUtils.getStringFromPreference(preferenceUtils.MOBILE,""));
+            jsonObj.put("PG_TYPE",PG_TYPE);
+            jsonObj.put("bank_ref_num",bank_ref_num);
+            jsonObj.put("bankcode",bankCode);
+            androidNetworkingMakeOfferPayUFailure(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingMakeOfferPayUFailure(JSONObject jsonObject) {
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Checkoutservice/makeofpayuFailure/")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            JSONObject responseObj = response.getJSONObject("response");
+                            String message = responseObj.getString("message");
+                            String success = responseObj.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                if(progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                // Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                                ll_payment.setVisibility(View.GONE);
+                                Intent i = new Intent(PaymentContractsActvity.this, StoreOffersActivity.class);
+                                i.putExtra("Message","");
+                                i.putExtra("SentOffers","1");
+                                startActivity(i);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
     public void setParameter() {
         mPaymentParams = new PaymentParams();
         mPaymentParams.setKey(merchantKey);
@@ -396,22 +978,18 @@ public class PaymentContractsActvity  extends AppCompatActivity {
             if ((postData = calculateHash(key, PayuConstants.EDIT_USER_CARD, var1, salt)) != null && postData.getCode() == PayuErrors.NO_ERROR)
                 payuHashes.setEditCardHash(postData.getResult());
         }
-
         if (mPaymentParams.getOfferKey() != null) {
             postData = calculateHash(key, PayuConstants.OFFER_KEY, mPaymentParams.getOfferKey(), salt);
             if (postData.getCode() == PayuErrors.NO_ERROR) {
                 payuHashes.setCheckOfferStatusHash(postData.getResult());
             }
         }
-
         if (mPaymentParams.getOfferKey() != null && (postData = calculateHash(key, PayuConstants.CHECK_OFFER_STATUS, mPaymentParams.getOfferKey(), salt)) != null && postData.getCode() == PayuErrors.NO_ERROR) {
             payuHashes.setCheckOfferStatusHash(postData.getResult());
         }
-
         // we have generated all the hases now lest launch sdk's ui
         launchSdkUI(payuHashes);
     }
-
     private PostData calculateHash(String key, String command, String var1, String salt) {
         checksum = null;
         checksum = new PayUChecksum();
@@ -421,136 +999,8 @@ public class PaymentContractsActvity  extends AppCompatActivity {
         checksum.setSalt(salt);
         return checksum.getHash();
     }
-    public void setPayUSuccess() {
-        try {
-            JSONObject jsonObj = new JSONObject();
-            jsonObj.put("userid", user_id);
-            jsonObj.put("txnid",txnid);
-            jsonObj.put("job_id",jobId);
-            jsonObj.put("quotedid",quoteId);
-            jsonObj.put("pay_type","instant");
-            jsonObj.put("jobquatid",jobQuoteId);
-            jsonObj.put("amount",amount);
-            jsonObj.put("mode",mode);
-            jsonObj.put("mihpayid",mihpayid);
-            jsonObj.put("firstname",preferenceUtils.getStringFromPreference(PreferenceUtils.FULL_NAME,""));
-            jsonObj.put("country","India");
-            jsonObj.put("email",preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL,""));
-            jsonObj.put("phone",preferenceUtils.getStringFromPreference(PreferenceUtils.MOBILE,""));
-            jsonObj.put("bankcode",bankCode);
-            jsonObj.put("PG_TYPE",PG_TYPE);
-            jsonObj.put("bank_ref_num",bank_ref_num);
-            androidNetworkingPayUSuccess(jsonObj);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void androidNetworkingPayUSuccess(JSONObject jsonObject) {
-        progressdialog();
-        AndroidNetworking.post("https://www.sustowns.com/Postcontractservice/quotepayuSuccess/")
-                .addJSONObjectBody(jsonObject) // posting java object
-                .setTag("test")
-                .setPriority(Priority.HIGH)
-                .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("Response", "JSON : " + response);
-                        try {
-                            JSONObject responseObj = response.getJSONObject("response");
-                            String message = responseObj.getString("message");
-                            String success = responseObj.getString("success");
-                            if (success.equalsIgnoreCase("1")) {
-                                progressDialog.dismiss();
-                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
-                                ll_payment.setVisibility(View.GONE);
-                                ll_order_placed_text.setVisibility(View.VISIBLE);
-                               /* Intent i = new Intent(context, StoreReceivedOrdersActivity.class);
-                                context.startActivity(i);*/
-                            } else {
-                                progressDialog.dismiss();
-                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            progressDialog.dismiss();
-                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
 
-                    @Override
-                    public void onError(ANError error) {
-                        Log.d("Error", "ANError : " + error);
-                        progressDialog.dismiss();
-                    }
-                });
-    }
-    public void setPayUFailure() {
-        try {
-            JSONObject jsonObj = new JSONObject();
-            jsonObj.put("userid", user_id);
-            jsonObj.put("txnid",txnid);
-            jsonObj.put("job_id",jobId);
-            jsonObj.put("quotedid",quoteId);
-            jsonObj.put("pay_type","instant");
-            jsonObj.put("jobquatid",jobQuoteId);
-            jsonObj.put("amount",amount);
-            jsonObj.put("mode","");
-            jsonObj.put("mihpayid","");
-            jsonObj.put("firstname",preferenceUtils.getStringFromPreference(PreferenceUtils.FULL_NAME,""));
-            jsonObj.put("country","India");
-            jsonObj.put("email",preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL,""));
-            jsonObj.put("phone",preferenceUtils.getStringFromPreference(PreferenceUtils.MOBILE,""));
-            jsonObj.put("bankcode","");
-            jsonObj.put("PG_TYPE","");
-            jsonObj.put("bank_ref_num","");
-            androidNetworkingPayUFailure(jsonObj);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void androidNetworkingPayUFailure(JSONObject jsonObject) {
-        progressdialog();
-        AndroidNetworking.post("https://www.sustowns.com/Postcontractservice/quotepayuFailure/")
-                .addJSONObjectBody(jsonObject) // posting java object
-                .setTag("test")
-                .setPriority(Priority.HIGH)
-                .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("Response", "JSON : " + response);
-                        try {
-                            JSONObject responseObj = response.getJSONObject("response");
-                            String message = responseObj.getString("message");
-                            String success = responseObj.getString("success");
-                            if (success.equalsIgnoreCase("1")) {
-                                progressDialog.dismiss();
-                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(PaymentContractsActvity.this,ReceivedContracts.class);
-                                startActivity(i);
-                                /*ll_payment.setVisibility(View.VISIBLE);
-                                ll_order_placed_text.setVisibility(View.GONE);*/
-                            } else {
-                                progressDialog.dismiss();
-                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            progressDialog.dismiss();
-                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onError(ANError error) {
-                        Log.d("Error", "ANError : " + error);
-                        progressDialog.dismiss();
-                    }
-                });
-    }
     public void launchSdkUI(PayuHashes payuHashes) {
-
         mPaymentParams.setHash(payuHashes.getPaymentHash());
         Intent intent = new Intent(this, PayUBaseActivity.class);
         intent.putExtra(PayuConstants.PAYU_CONFIG, payuConfig);
@@ -596,12 +1046,29 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 sweetAlertDialog.dismissWithAnimation();
-                                setPayUSuccess();
+                                if(logisticsStr.equalsIgnoreCase("1")){
+                                    setPayULogisticsSuccess();
+                                }else if(logisticsStr.equalsIgnoreCase("0")) {
+                                    setPayUSuccess();
+                                }else if(logisticsStr.equalsIgnoreCase("2")){
+                                    setPayULogisticsSuccess();
+                                }else if(logisticsStr.equalsIgnoreCase("Offers")){
+                                    setPayUMakeOfferSuccess();
+                                }
                                 //Write the next set of code in the success
                             }
                         });
             } else {
-                setPayUFailure();
+                if(logisticsStr.equalsIgnoreCase("1")){
+                    setPayUFailureLogistics();
+                }else if(logisticsStr.equalsIgnoreCase("0")) {
+                    setPayUFailure();
+                }else if(logisticsStr.equalsIgnoreCase("2")){
+                    setPayUFailureLogistics();
+                }else if(logisticsStr.equalsIgnoreCase("Offers")){
+                    setPayUMakeOfferFailure();
+                }
+               // setPayUFailure();
                 // Toast.makeText(this, getString(R.string.could_not_receive_data), Toast.LENGTH_LONG).show();
             }
         }

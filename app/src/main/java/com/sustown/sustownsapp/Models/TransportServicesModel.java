@@ -25,12 +25,13 @@ public class TransportServicesModel {
     String transport_user;
     String transport_booking_status;
     String buyer_uid;
+    String manual_automatic;
 
     public TransportServicesModel(String transport_vendor_name, String service_name, String service_pincode,String distance,String service_area_radius,String radius_extended,String type_of_radius,String category, String rating, String transport_type, String vehicle_type, String load_type, String distance_inkms,
                                   String partial_charge_perkm,String partial_minimum_charge,
                                   String partial_total_price,String full_charge_perkm,
                                   String full_minimum_charge,String full_total_price,String docs,
-                                  String service_id,String transport_user, String transport_booking_status,String buyer_uid) {
+                                  String service_id,String transport_user, String transport_booking_status,String buyer_uid,String manual_automatic) {
         this.transport_vendor_name = transport_vendor_name;
         this.service_name = service_name;
         this.service_pincode = service_pincode;
@@ -55,6 +56,7 @@ public class TransportServicesModel {
         this.service_id = service_id;
         this.transport_booking_status = transport_booking_status;
         this.buyer_uid = buyer_uid;
+        this.manual_automatic = manual_automatic;
     }
 
     public String getTransport_user() {
@@ -248,5 +250,13 @@ public class TransportServicesModel {
 
     public void setDocs(String docs) {
         this.docs = docs;
+    }
+
+    public String getManual_automatic() {
+        return manual_automatic;
+    }
+
+    public void setManual_automatic(String manual_automatic) {
+        this.manual_automatic = manual_automatic;
     }
 }

@@ -82,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Button btn_map_save_add;
     ImageView pointer, map_img_back, map_img_search;
     Helper helper;
-    String mapType = "", activityName = "";
+    String mapType = "", activityName = "",ServiceExtendRadius="",ServiceRadius="",PointSourceLoc="",PointDesLoc="";
     ImageView radius_select;
     Polyline greenPolyLine;
     Marker frommarker, tomarker;
@@ -124,7 +124,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         radius_edit = findViewById(R.id.radius_edit);
         extradius_edit = findViewById(R.id.extradius_edit);
         radius_select = findViewById(R.id.radius_select);
-
+       /* if(ServiceRadius.equalsIgnoreCase("null") || ServiceRadius.isEmpty()||ServiceExtendRadius.equalsIgnoreCase("null")||
+        ServiceExtendRadius.isEmpty()||PointSourceLoc.equalsIgnoreCase("null")||PointSourceLoc.isEmpty()||PointDesLoc.equalsIgnoreCase("null")||PointDesLoc.isEmpty()){
+            radius_edit.setText("");
+            extradius_edit.setText("");
+            from_address_txt.setText("");
+            to_address_edit.setText("");
+        }else {
+            radius_edit.setText(ServiceRadius);
+            extradius_edit.setText(ServiceExtendRadius);
+            from_address_txt.setText(PointSourceLoc);
+            to_address_edit.setText(PointDesLoc);
+        }*/
         // Map
         SupportMapFragment supportMapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.current_location);
@@ -147,8 +158,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (getIntent() != null && getIntent().getStringExtra("activity") != null) {
             activityName = getIntent().getStringExtra("activity");
             mapType = getIntent().getStringExtra("type");
+            ServiceRadius = getIntent().getStringExtra("ServiceRadius");
+            ServiceExtendRadius = getIntent().getStringExtra("ServiceExtendRadius");
+            PointSourceLoc = getIntent().getStringExtra("PointSourceLoc");
+            PointDesLoc = getIntent().getStringExtra("PointDesLoc");
         }
-
         if (mapType.equalsIgnoreCase("p2p")) {
             // For map type point to point
             location_txt_add_layout.setVisibility(View.GONE);
@@ -160,6 +174,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             location_from_add_layout.setVisibility(View.VISIBLE);
             location_to_add_layout.setVisibility(View.VISIBLE);
+            if(PointSourceLoc.equalsIgnoreCase("null")||PointSourceLoc.isEmpty() || PointDesLoc.isEmpty()||PointDesLoc.equalsIgnoreCase("null")){
+
+            }else{
+                from_address_txt.setText(PointSourceLoc);
+                to_address_edit.setText(PointDesLoc);
+            }
 
         } else if (mapType.equalsIgnoreCase("radius")) {
             // For map type radius
@@ -195,6 +215,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 locationSettingsChecker();
             }
+          /*  if(ServiceRadius.equalsIgnoreCase("null") || ServiceRadius.isEmpty()){
+
+            }else{
+                radius_edit.setText(ServiceRadius);
+                extradius_edit.setText(ServiceExtendRadius);
+                //showCircleRadius1();
+            }*/
         }
     }
 
@@ -226,17 +253,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap1.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                if (mapType.equalsIgnoreCase("radius") || mapType.equalsIgnoreCase("none")) {
+                if (mapType.equalsIgnoreCase("none")) {
                     lat = cameraPosition.target.latitude;
                     lon = cameraPosition.target.longitude;
                     address = (helper.getCompleteAddressString(cameraPosition.target.latitude, cameraPosition.target.longitude)).getAddressLine(0);
                     pincode = (helper.getCompleteAddressString(cameraPosition.target.latitude, cameraPosition.target.longitude)).getPostalCode();
                     map_address_txt.setText(address);
                     map_address_edit.setText(address);
-                    preferenceUtils.saveString(PreferenceUtils.LATITUDE,String.valueOf(lat));
-                    preferenceUtils.saveString(PreferenceUtils.LONGITUDE,String.valueOf(lon));
+                    preferenceUtils.saveString(PreferenceUtils.LATITUDE, String.valueOf(lat));
+                    preferenceUtils.saveString(PreferenceUtils.LONGITUDE, String.valueOf(lon));
+
+                }else if (mapType.equalsIgnoreCase("radius")) {
+                    lat = cameraPosition.target.latitude;
+                    lon = cameraPosition.target.longitude;
+                    address = (helper.getCompleteAddressString(cameraPosition.target.latitude, cameraPosition.target.longitude)).getAddressLine(0);
+                    pincode = (helper.getCompleteAddressString(cameraPosition.target.latitude, cameraPosition.target.longitude)).getPostalCode();
+                    map_address_txt.setText(address);
+                    map_address_edit.setText(address);
+                    preferenceUtils.saveString(PreferenceUtils.LATITUDE, String.valueOf(lat));
+                    preferenceUtils.saveString(PreferenceUtils.LONGITUDE, String.valueOf(lon));
+                    if(ServiceRadius.equalsIgnoreCase("null") || ServiceRadius.isEmpty()){
+
+                    }else{
+                        radius_edit.setText(ServiceRadius);
+                        extradius_edit.setText(ServiceExtendRadius);
+                        showCircleRadius1();
+                    }
+                } else if (mapType.equalsIgnoreCase("p2p")) {
+                    if (PointSourceLoc.equalsIgnoreCase("null") || PointSourceLoc.isEmpty() || PointDesLoc.isEmpty() || PointDesLoc.equalsIgnoreCase("null")) {
+
+                    } else {
+                        from_address_txt.setText(PointSourceLoc);
+                        to_address_edit.setText(PointDesLoc);
+                        googleMap1.moveCamera(CameraUpdateFactory.newLatLng(helper.getLocationFromAddress(MapsActivity.this, PointSourceLoc)));
+                        fromLatLon = helper.getLocationFromAddress(MapsActivity.this, PointSourceLoc);
+                        from_address_txt.setText(PointSourceLoc);
+                        fromPincode = (helper.getCompleteAddressString(fromLatLon.latitude, fromLatLon.longitude)).getPostalCode();
+
+                        if (frommarker != null) {
+                            // frommarker.remove();
+                        }
+                        frommarker = googleMap1.addMarker(new MarkerOptions().position(fromLatLon).title(PointSourceLoc));
+                        frommarker.showInfoWindow();
+                        toLatLon = helper.getLocationFromAddress(MapsActivity.this, PointDesLoc);
+                        toPincode = (helper.getCompleteAddressString(toLatLon.latitude, toLatLon.longitude)).getPostalCode();
+                        to_address_edit.setText(PointDesLoc);
+                        if (tomarker != null) {
+                            //tomarker.remove();
+                        }
+                        tomarker = googleMap1.addMarker(new MarkerOptions().position(toLatLon).title(PointDesLoc));
+                        tomarker.showInfoWindow();
+                        googleMap1.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                                .target(toLatLon)
+                                .zoom(10)
+                                .bearing(30)
+                                .tilt(45)
+                                .build()));
+
+                        drawPolyLine();
+                    }
                 }
-            }
+                }
+
         });
 
     }
@@ -290,6 +368,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     ProductDetailsActivity.Product_Detail_Address_Map = map_address_txt.getText().toString();
                 } else if(activityName.equalsIgnoreCase("productContract")){
                     MyProductContractActivity.Product_Detail_Address_Map = map_address_txt.getText().toString();
+                } else if(activityName.equalsIgnoreCase("service")){
+                    AddShippingServices.ServiceRadiusIn = radius_edit.getText().toString();
+                    AddShippingServices.ServiceExtRadius = extradius_edit.getText().toString();
+                    AddShippingServices.P2pSource = from_address_txt.getText().toString();
+                    AddShippingServices.P2pDes = to_address_edit.getText().toString();
+                }else if(activityName.equalsIgnoreCase("service1")){
+                    ServiceManagementActivity.ServiceRadiusIn = radius_edit.getText().toString();
+                    ServiceManagementActivity.ServiceExtRadius = extradius_edit.getText().toString();
+                    ServiceManagementActivity.P2pSource = from_address_txt.getText().toString();
+                    ServiceManagementActivity.P2pDes = to_address_edit.getText().toString();
                 }
                 finish();
                 break;
@@ -316,7 +404,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .build(this);
         startActivityForResult(intent, code);
     }
-
     private void showCircleRadius() {
         if (circle != null) {
             circle.remove();
@@ -333,6 +420,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .strokeWidth(5)
                     .fillColor(getResources().getColor(R.color.radius_color))
                     .radius(Double.parseDouble(radius_edit.getText().toString()) * 1000)); //For converting the miles to meters
+        }
+    }
+    private void showCircleRadius1() {
+        if (circle != null) {
+           // circle.remove();
+            circle = googleMap1.addCircle(new CircleOptions()
+                    .center(new LatLng(lat, lon))
+                    .strokeColor(getResources().getColor(R.color.appcolor))
+                    .strokeWidth(5)
+                    .fillColor(getResources().getColor(R.color.radius_color))
+                    .radius(Double.parseDouble(ServiceRadius) * 1000));
+        } else {
+            circle = googleMap1.addCircle(new CircleOptions()
+                    .center(new LatLng(lat, lon))
+                    .strokeColor(getResources().getColor(R.color.appcolor))
+                    .strokeWidth(5)
+                    .fillColor(getResources().getColor(R.color.radius_color))
+                    .radius(Double.parseDouble(ServiceRadius) * 1000)); //For converting the miles to meters
         }
     }
 
@@ -395,8 +500,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (resultCode == RESULT_OK) {
                     Place place = Autocomplete.getPlaceFromIntent(data);
                     fromLatLon = helper.getLocationFromAddress(MapsActivity.this, place.getName());
-                    from_address_txt.setText(place.getName());
-
+                        from_address_txt.setText(place.getName());
                     fromPincode = (helper.getCompleteAddressString(fromLatLon.latitude, fromLatLon.longitude)).getPostalCode();
 
                     if (frommarker != null) {
@@ -419,8 +523,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Place place = Autocomplete.getPlaceFromIntent(data);
                     toLatLon = helper.getLocationFromAddress(MapsActivity.this, place.getName());
                     toPincode = (helper.getCompleteAddressString(toLatLon.latitude, toLatLon.longitude)).getPostalCode();
-                    to_address_edit.setText(place.getName());
-
+                        to_address_edit.setText(place.getName());
                     if (tomarker != null) {
                         tomarker.remove();
                     }

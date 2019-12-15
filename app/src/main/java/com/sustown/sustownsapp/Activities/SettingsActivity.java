@@ -48,6 +48,8 @@ public class SettingsActivity extends AppCompatActivity {
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(SettingsActivity.this,MainActivity.class);
+                startActivity(i);
                 finish();
             }
         });

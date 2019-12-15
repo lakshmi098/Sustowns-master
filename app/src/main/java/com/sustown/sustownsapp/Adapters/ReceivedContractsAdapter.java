@@ -2,9 +2,12 @@ package com.sustown.sustownsapp.Adapters;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -72,7 +75,7 @@ import static android.support.v4.app.ActivityCompat.startActivityForResult;
 public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContractsAdapter.ViewHolder> {
     Context context;
     LayoutInflater inflater;
-    String user_email,user_id,user_role,job_id,contractor_id,bid_id,status,paymentType,Instantamount,job_quote_id,jodId,quoted_id;
+    String user_email,user_id,user_role,job_id,contractor_id,bid_id,status,paymentType,Instantamount,job_quote_id,jobId,quoted_id;
     PreferenceUtils preferenceUtils;
     ArrayList<ReceivedContractModel> receivedContractModels;
     ProgressDialog progressDialog;
@@ -93,6 +96,7 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
     String bankCode,mihpayid,mode,txnid ,amount,email,net_amount_debit,firstname,phone,hash,payment_source,PG_TYPE,bank_ref_num;
     CardView received_orders_cardview;
     LinearLayout ll_order_placed_text;
+    final String URL2,URL9;
 
     public ReceivedContractsAdapter(Context context, ArrayList<ReceivedContractModel> receivedContractModels) {
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -107,6 +111,8 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
         payuConfig = new PayuConfig();
         payuConfig.setEnvironment(environment);
         mPaymentParams = new PaymentParams();
+        URL2 = "http://www.appsapk.com/downloading/latest/WeChat-6.5.7.apk";
+        URL9 = "http://www.appsapk.com/downloading/latest/UC-Browser.apk";
     }
 
     @Override
@@ -180,112 +186,22 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
                 Instantamount = receivedContractModels.get(position).getInstant_amount();
                 job_quote_id = receivedContractModels.get(position).getId();
                 quoted_id = receivedContractModels.get(position).getUser_id();
-                jodId = receivedContractModels.get(position).getJob_id();
+                jobId = receivedContractModels.get(position).getJob_id();
                 Intent i = new Intent(context, PaymentContractsActvity.class);
                 i.putExtra("Amount",Instantamount);
                 i.putExtra("JobQuoteId",job_quote_id);
                 i.putExtra("QuotedId",quoted_id);
-                i.putExtra("JobId",jodId);
-
+                i.putExtra("JobId",jobId);
+                i.putExtra("Logistics","0");
                 context.startActivity(i);
             }
         });
-/*
-        viewHolder.payment_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Instantamount = receivedContractModels.get(position).getInstant_amount();
-                job_quote_id = receivedContractModels.get(position).getId();
-                quoted_id = receivedContractModels.get(position).getUser_id();
-                jodId = receivedContractModels.get(position).getJob_id();
-                final Dialog customdialog = new Dialog(context);
-                customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customdialog.setContentView(R.layout.payment_dialog);
-                customdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-                customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
-
-                pay_now_btn = (Button) customdialog.findViewById(R.id.pay_now_btn);
-                ll_bank_details = (LinearLayout) customdialog.findViewById(R.id.ll_bank_details);
-                close_payment_dialog = (ImageView) customdialog.findViewById(R.id.close_payment_dialog);
-                radioGroup = (RadioGroup) customdialog.findViewById(R.id.radioGroup);
-                payu_radiobutton = (RadioButton) customdialog.findViewById(R.id.pay_u_radiobtn);
-                paybank_radiobtn = (RadioButton) customdialog.findViewById(R.id.pay_by_bank_radiobtn);
-                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        switch (checkedId) {
-                            case R.id.pay_u_radiobtn:
-                                ll_bank_details.setVisibility(View.GONE);
-                                // do operations specific to this selection
-                                paymentType = "online";
-                                break;
-                            case R.id.pay_by_bank_radiobtn:
-                                ll_bank_details.setVisibility(View.VISIBLE);
-                                paymentType = "bank";
-                                // do operations specific to this selection
-                                break;
-                        }
-                    }
-                });
-                pay_now_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        selectedId = radioGroup.getCheckedRadioButtonId();
-                        radioButton = (RadioButton) customdialog.findViewById(selectedId);
-                        // selectedRadioBtn = radioButton.getText().toString();
-                        if (selectedId < 0) {
-                            Toast.makeText(context, "Please Select Payment Method", Toast.LENGTH_SHORT).show();
-                        } else if (paymentType.equalsIgnoreCase("online")) {
-                            helper.showDialog((Activity) context, SweetAlertDialog.WARNING_TYPE, "", "Do you want to continue with online payment?",
-                                    new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.dismissWithAnimation();
-                                            // PayuBiz
-                                            makePaymentBank();
-                                            Intent i = new Intent(context, ContractsPaymentActivity.class);
-                                            context.startActivity(i);
-
-                                        }
-                                    }, new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.dismissWithAnimation();
-                                        }
-                                    });
-                        } else {
-                            //setJsonObject();
-                            helper.showDialog((Activity) context, SweetAlertDialog.WARNING_TYPE, "", "Do you want to continue with pay by bank?",
-                                    new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.dismissWithAnimation();
-                                            makePaymentBank();
-                                        }
-                                    }, new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.dismissWithAnimation();
-                                        }
-                                    });
-                        }
-                    }
-                });
-                close_payment_dialog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        customdialog.dismiss();
-                    }
-                });
-                customdialog.show();
-            }
-        });
-*/
 
         viewHolder.approve_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 job_id = receivedContractModels.get(position).getJob_id();
-                bid_id = receivedContractModels.get(position).getId();
+                bid_id = receivedContractModels.get(position).getBidid();
                 contractor_id = receivedContractModels.get(position).getUser_id();
                 helper.showDialog((Activity) context, SweetAlertDialog.WARNING_TYPE, "", "Are you sure you want to Approve the contract..?",
                         new SweetAlertDialog.OnSweetClickListener() {
@@ -309,7 +225,7 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
             public void onClick(View v) {
                 job_id = receivedContractModels.get(position).getJob_id();
                 contractor_id = receivedContractModels.get(position).getUser_id();
-                bid_id = receivedContractModels.get(position).getId();
+                bid_id = receivedContractModels.get(position).getBidid();
                 helper.showDialog((Activity) context, SweetAlertDialog.WARNING_TYPE, "", "Are you sure you want to Confirm the contract..?",
                         new SweetAlertDialog.OnSweetClickListener() {
                             @Override
@@ -324,9 +240,29 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
                                 sweetAlertDialog.dismissWithAnimation();
                             }
                         });
-
             }
         });
+        viewHolder.ll_downloaddocument.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri= Uri.parse(URL9);
+                DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
+                        DownloadManager.Request.NETWORK_MOBILE);
+                Toast.makeText(context, "File Downloading...", Toast.LENGTH_SHORT).show();
+// set title and description
+                request.setTitle("Data Download");
+                request.setDescription("Android Data download using DownloadManager.");
+                request.allowScanningByMediaScanner();
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//set the local destination for download file to a path within the application's external files directory
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"downloadfileName");
+                request.setMimeType("*/*");
+                downloadManager.enqueue(request);
+            }
+        });
+
 /*
         my_orders_text.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -501,7 +437,7 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
                 received_contract_city,received_contract_phone,received_contract_country,uploaded_document;
         RatingBar ratingBar;
         Button approve_btn,payment_btn,confirm_contract;
-        LinearLayout ll_busi_address,ll_contractstatus;
+        LinearLayout ll_busi_address,ll_contractstatus,ll_downloaddocument;
         public ViewHolder(View view) {
             super(view);
             receivedorder_image = (ImageView) view.findViewById(R.id.receivedorder_image);
@@ -527,6 +463,7 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
             ll_order_placed_text = (LinearLayout) view.findViewById(R.id.ll_order_placed_text);
             received_orders_cardview = (CardView) view.findViewById(R.id.received_orders_cardview);
             ll_contractstatus = (LinearLayout) view.findViewById(R.id.ll_contractstatus);
+            ll_downloaddocument = (LinearLayout) view.findViewById(R.id.ll_downloaddocument);
         }
     }
 }

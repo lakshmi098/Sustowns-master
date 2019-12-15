@@ -380,6 +380,10 @@ public class AvailableBadges extends AppCompatActivity {
                                         }
                                         preferenceUtils.saveString(PreferenceUtils.BadgeImage,image_url);
                                     }
+                                    JSONArray categoryArray = root.getJSONArray("category");
+                                    for (int i4 = 0; i4 < businessbadges.length(); i4++) {
+                                        JSONObject categoryObj = businessbadges.getJSONObject(i4);
+                                    }
 
                                     if (progressDialog.isShowing())
                                         progressDialog.dismiss();

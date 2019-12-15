@@ -96,10 +96,10 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
+                            android:layout_height="0.1dp"
                             android:layout_marginLeft="25dp"
                             android:layout_marginRight="10dp"
-                            android:background="#B8B3B3" />
+                            android:background="@color/black" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -145,18 +145,22 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
+                            android:layout_height="0.1dp"
                             android:layout_marginLeft="25dp"
                             android:layout_marginRight="10dp"
-                            android:background="#B8B3B3" />
+                            android:background="@color/black" />
                     </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="20dp"
+                    android:id="@+id/ll_contract_orders"
+                    android:paddingBottom="0dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="20dp"
-                        android:id="@+id/ll_contract_orders"
-                        android:paddingBottom="20dp">
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="15dp"
@@ -190,21 +194,69 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginLeft="25dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginRight="10dp"
-                        android:background="#B8B3B3" />
+                        android:background="@color/black" />
+                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_logistic_orders"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="20dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/myrequest" />
+                            <TextView
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_toRightOf="@+id/myrequest"
+                                android:layout_weight="1"
+                                android:text="Logistic Orders"
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
+                            <ImageView
+                                android:layout_width="10dp"
+                                android:layout_height="15dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_toRightOf="@+id/textrequest"
+                                android:layout_weight="1"
+                                android:src="@drawable/backarrow" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginLeft="25dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@color/black" />
+                    </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/ll_transport_orders"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp">
+                            >
 
                             <ImageView
                                 android:layout_width="15dp"
@@ -239,7 +291,8 @@
                             android:layout_height="0.5dp"
                             android:layout_marginLeft="25dp"
                             android:layout_marginRight="10dp"
-                            android:background="#B8B3B3" />
+                            android:layout_marginTop="20dp"
+                            android:background="@color/black" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -279,9 +332,16 @@
                                 android:layout_toRightOf="@+id/textrequest"
                                 android:layout_weight="1"
                                 android:src="@drawable/backarrow" />
-
-
                         </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginLeft="25dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="0dp"
+                            android:visibility="gone"
+                            android:background="@color/black" />
+
                     </LinearLayout>
 
                     <LinearLayout

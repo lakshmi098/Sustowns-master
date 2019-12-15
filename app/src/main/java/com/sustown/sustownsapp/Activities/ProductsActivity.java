@@ -58,19 +58,16 @@ import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 public class ProductsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private static final Integer[] images = {R.drawable.simg3, R.drawable.simg9, R.drawable.simg5, R.drawable.simg9, R.drawable.simg3, R.drawable.simg5, R.drawable.simg9, R.drawable.simg3};
     public static String username, useremail;
@@ -80,7 +77,7 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
     ImageView filter_icon, cart_img;
     LinearLayout navigation;
     EditText search_et;
-    TextView home_text, news_text, store_text, contracts_text, market_text, empty, price_text, not_available, btn_clear;
+    TextView home_text, news_text, store_text,cart_count, contracts_text, market_text, empty, price_text, not_available, btn_clear;
     LinearLayout location_tv;
     ProgressDialog progressDialog;
     String search_st, locationTypeStr, l_type = "", continent_values, country_radiobtn, continenetIds;
@@ -120,7 +117,7 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
     HashMap<String, List<String>> subSubCatHash;
-    String catId,catTitle,catSlug,subCatId,subCatTitle,subCatSlug,subSubCatId,subSubCatTitle,subSubCatSlug,minPrice = "",maxPrice = "";
+    String cartcount,user_id,catSlug,subCatId,subCatTitle,subCatSlug,subSubCatId,subSubCatTitle,subSubCatSlug,minPrice = "",maxPrice = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,8 +129,8 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         preferenceUtils = new PreferenceUtils(ProductsActivity.this);
         username = preferenceUtils.getStringFromPreference(PreferenceUtils.UserName, "");
         useremail = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL, "");
+        user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
         helper = new Helper(this);
-
         products_list = (GridView) findViewById(R.id.products_list);
         home = (LinearLayout) findViewById(R.id.ll_home);
         news = (LinearLayout) findViewById(R.id.ll_news);
@@ -156,6 +153,7 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
        // seekBar = (RangeSeekBar) findViewById(R.id.rangeSeekbar);
         not_available = (TextView) findViewById(R.id.not_available);
         price_text = (TextView) findViewById(R.id.price_text);
+        cart_count = (TextView) findViewById(R.id.cart_count);
         category_exp_list = (ExpandableListView) findViewById(R.id.category_exp_list);
         // selected item is expanding and others are collapsed in expandable listview
         category_exp_list.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -580,6 +578,7 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
             public void onClick(View v) {
                 contracts_text.setTextColor(getResources().getColor(R.color.appcolor));
                 Intent i = new Intent(ProductsActivity.this, BidContractsActivity.class);
+                i.putExtra("Processed","0");
                 startActivity(i);
             }
         });
@@ -599,9 +598,8 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark);
-
-        //  hideAndShowItems();
         getPoultryProducts();
+        cartCount();
     }
 
     @Override
@@ -611,10 +609,13 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         search_et.setFocusableInTouchMode(false);
         mSwipeRefreshLayout.setRefreshing(false);
         getPoultryProducts();
+        cartCount();
     }
 
     @Override
     public void onBackPressed() {
+        Intent i = new Intent(ProductsActivity.this,MainActivity.class);
+        startActivity(i);
         finish();
        /* Intent intent = new Intent(ProductsActivity.this,MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -695,6 +696,7 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                                                 String zipcode = jsonObject.getString("zipcode");
                                                 String pr_gweight = jsonObject.getString("pr_gweight");
                                                 String pr_gweight_unit = jsonObject.getString("pr_gweight_unit");
+                                                String shipingprovide = jsonObject.getString("shipingprovide");
                                                 String days = jsonObject.getString("days");
                                                 String pr_sku = jsonObject.getString("pr_sku");
                                                 String weight_unit = jsonObject.getString("weight_unit");
@@ -762,7 +764,7 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
             public void onFailure(Call<JsonElement> call, Throwable t) {
                 Log.d("Error Call", ">>>>" + call.toString());
                 Log.d("Error", ">>>>" + t.toString());
-                //  Toast.makeText(ProductsActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductsActivity.this, "Some thing went wrong!Please try again later", Toast.LENGTH_SHORT).show();
                 helper.stopShimmer(shimmer_grid_container);
             }
         });
@@ -825,10 +827,12 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                                             String pr_currency = Obj.getString("pr_currency");
                                             String pr_min = Obj.getString("pr_min");
                                             String pr_weight = Obj.getString("pr_weight");
-                                            String pr_weight_unit = Obj.getString("pr_weight_unit");
+                                            String pr_weight_unit = Obj.getString("weight_unit");
                                             String job_location = Obj.getString("job_location");
                                             String state = Obj.getString("state");
                                             String country = Obj.getString("country");
+                                            String country_name = Obj.getString("country_name");
+                                            String city_name = Obj.getString("city_name");
                                             preferenceUtils.saveString(PreferenceUtils.PRO_ID, "");
 
                                             SearchProductsModel poultryProductsModel = new SearchProductsModel();
@@ -841,8 +845,8 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                                             poultryProductsModel.setPr_weight(pr_weight);
                                             poultryProductsModel.setImagepath(pr_image);
                                             poultryProductsModel.setPr_image(pr_image);
-                                            poultryProductsModel.setCountry(country);
-                                            poultryProductsModel.setState(state);
+                                            poultryProductsModel.setCountry_name(country_name);
+                                            poultryProductsModel.setCity_name(city_name);
                                             poultryProductsModel.setJob_location(job_location);
                                             searchProductsModels.add(poultryProductsModel);
                                         }
@@ -1425,8 +1429,64 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
             public void onFailure(Call<JsonElement> call, Throwable t) {
                 Log.d("Error Call", ">>>>" + call.toString());
                 Log.d("Error", ">>>>" + t.toString());
-                //  Toast.makeText(ProductsActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductsActivity.this, "Some thing went wrong!Please try again later", Toast.LENGTH_SHORT).show();
                 helper.stopShimmer(shimmer_grid_container);
+            }
+        });
+    }
+    public void cartCount() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DZ_URL.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserApi service = retrofit.create(UserApi.class);
+        Call<JsonElement> callRetrofit = null;
+        callRetrofit = service.cartCount(user_id);
+        callRetrofit.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        Log.d("Success Call", ">>>>" + call);
+                        Log.d("Success Call ", ">>>>" + response.body().toString());
+                        System.out.println("----------------------------------------------------");
+                        Log.d("Call request", call.request().toString());
+                        Log.d("Call request header", call.request().headers().toString());
+                        Log.d("Response raw header", response.headers().toString());
+                        Log.d("Response raw", String.valueOf(response.raw().body()));
+                        Log.d("Response code", String.valueOf(response.code()));
+                        System.out.println("----------------------------------------------------");
+                        if (response.body().toString() != null) {
+                            if (response != null) {
+                                String searchResponse = response.body().toString();
+                                Log.d("Reg", "Response  >>" + searchResponse.toString());
+                                if (searchResponse != null) {
+                                    JSONObject root = null;
+                                    try {
+                                        root = new JSONObject(searchResponse);
+                                        String success = root.getString("success");
+                                        //   message = root.getString("message");
+                                        if (success.equalsIgnoreCase("1")) {
+                                            cartcount = root.getString("cartcount");
+                                            cart_count.setText(cartcount);
+                                        }else{
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+                Log.d("Error Call", ">>>>" + call.toString());
+                Log.d("Error", ">>>>" + t.toString());
+                //Toast.makeText(MainActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -1441,8 +1501,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
             Toast.makeText(this, "There are no sub categories.", Toast.LENGTH_SHORT).show();
         }
     }
-
-
     //  My Services Adapter
     public class FilterCategoryAdapter extends RecyclerView.Adapter<FilterCategoryAdapter.ViewHolder> {
         Context context;
@@ -1453,7 +1511,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         ProgressDialog progressDialog;
         private SparseBooleanArray mSelectedItemsCatIds;
         private int lastCheckedPosition = -1;
-
         public FilterCategoryAdapter(Context context, List<String> categories, SparseBooleanArray mSelectedItemsCatIds) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.context = context;
@@ -1463,14 +1520,12 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         public FilterCategoryAdapter(){
             //Empty Constructor
         }
-
         @Override
         public FilterCategoryAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.categories_list, viewGroup, false);
             //  product_sale_activity.onItemClick(i);
             return new FilterCategoryAdapter.ViewHolder(view);
         }
-
         @Override
         public void onBindViewHolder(final FilterCategoryAdapter.ViewHolder viewHolder, final int position) {
             viewHolder.category_text.setText(categories.get(position));
@@ -1493,32 +1548,13 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                     }
                 }
             });
-/*
-            viewHolder.category_text.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    for (int i = 0; i < categories.size(); i++) {
-                        if (viewHolder.category_text.isChecked()) {
-                            selectedCategory = viewHolder.category_text.getText().toString();
-                            // viewHolder.category_text.
-                            // Toast.makeText(context, "Checked :" + categories[position], Toast.LENGTH_SHORT).show();
-                            mSelectedItemsCatIds.put(position, true);
-                        } else {
-                            mSelectedItemsCatIds.delete(position);
-                        }
-                    }
-                }
-            });
-*/
         }
         @Override
         public int getItemCount() {
             return categories.size();
         }
-
         public class ViewHolder extends RecyclerView.ViewHolder {
             CheckBox category_text;
-
             public ViewHolder(View view) {
                 super(view);
                 category_text = (CheckBox) view.findViewById(R.id.category_text);
@@ -1537,7 +1573,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
             }
         }
     }
-
     public class FilterListTypeAdapter extends RecyclerView.Adapter<FilterListTypeAdapter.ViewHolder> {
         Context context;
         LayoutInflater inflater;
@@ -1548,8 +1583,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         ProgressDialog progressDialog;
         SparseBooleanArray mSelectedItemsListIds;
         private int lastCheckedPosition = -1;
-
-
         public FilterListTypeAdapter(Context context, String[] categories, SparseBooleanArray mSelectedItemsListIds) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.context = context;
@@ -1559,14 +1592,12 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         public FilterListTypeAdapter(){
             //Empty Constructor
         }
-
         @Override
         public FilterListTypeAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_type_item, viewGroup, false);
             //  product_sale_activity.onItemClick(i);
             return new FilterListTypeAdapter.ViewHolder(view);
         }
-
         @Override
         public void onBindViewHolder(final FilterListTypeAdapter.ViewHolder viewHolder, final int position) {
             viewHolder.category_text.setText(categories[position]);
@@ -1589,11 +1620,9 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         public int getItemCount() {
             return categories.length;
         }
-
         public class ViewHolder extends RecyclerView.ViewHolder {
             CheckBox category_text;
             LinearLayout ll_categories;
-
             public ViewHolder(View view) {
                 super(view);
                 category_text = view.findViewById(R.id.category_text);
@@ -1612,7 +1641,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
             }
         }
     }
-
     public class FilterContinentAdapter extends RecyclerView.Adapter<FilterContinentAdapter.ViewHolder> {
         Context context;
         LayoutInflater inflater;
@@ -1634,14 +1662,12 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         public FilterContinentAdapter(){
             //Empty Constructor
         }
-
         @Override
         public FilterContinentAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_type_item, viewGroup, false);
             //  product_sale_activity.onItemClick(i);
             return new FilterContinentAdapter.ViewHolder(view);
         }
-
         @Override
         public void onBindViewHolder(final FilterContinentAdapter.ViewHolder viewHolder, final int position) {
 
@@ -1696,7 +1722,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
             }
         }
     }
-
     public class FilterCountryAdapter extends RecyclerView.Adapter<FilterCountryAdapter.ViewHolder> {
         Context context;
         LayoutInflater inflater;
@@ -1717,7 +1742,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         public FilterCountryAdapter(){
             //Empty Constructor
         }
-
         @Override
         public FilterCountryAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.continents_filter_item, viewGroup, false);
@@ -1744,15 +1768,12 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                 }
             });
         }
-
         @Override
         public int getItemCount() {
             return countryModels.size();
         }
-
         public class ViewHolder extends RecyclerView.ViewHolder {
             RadioButton country_radiobtn;
-
             public ViewHolder(View view) {
                 super(view);
                 country_radiobtn = view.findViewById(R.id.country_radiobtn);
@@ -1764,14 +1785,11 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                         //i have a suggestion to add notifyDataSetChanged();
                         notifyItemRangeChanged(0, countryModels.size());//blink list problem
                         notifyDataSetChanged();
-
                     }
                 });
-
             }
         }
     }
-
     public class FilterStatesAdapter extends RecyclerView.Adapter<FilterStatesAdapter.ViewHolder> {
         Context context;
         LayoutInflater inflater;
@@ -1781,8 +1799,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         ProgressDialog progressDialog;
         SparseBooleanArray mSelectedStates;
         ArrayList<String> selectedStates = new ArrayList<>();
-
-
         public FilterStatesAdapter(Context context, ArrayList<StateModel> stateModels, SparseBooleanArray mSelectedStates) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.context = context;
@@ -1792,14 +1808,12 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         public FilterStatesAdapter(){
             //Empty Constructor
         }
-
         @Override
         public FilterStatesAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_type_item, viewGroup, false);
             //  product_sale_activity.onItemClick(i);
             return new FilterStatesAdapter.ViewHolder(view);
         }
-
         @Override
         public void onBindViewHolder(final FilterStatesAdapter.ViewHolder viewHolder, final int position) {
             viewHolder.continent_text.setText(stateModels.get(position).getState_name());
@@ -1822,7 +1836,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                 }
             });
         }
-
         public String getStateIds() {
             if(selectedStates != null ||!selectedStates.isEmpty()) {
                 return selectedStates.toString().replace("[", "").replace("]", "");

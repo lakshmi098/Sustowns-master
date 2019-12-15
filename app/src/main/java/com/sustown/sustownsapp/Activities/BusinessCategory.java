@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +30,14 @@ import com.google.gson.JsonObject;
 import com.sustown.sustownsapp.Api.BusinessProfileApi;
 import com.sustown.sustownsapp.Api.DZ_URL;
 import com.sustown.sustownsapp.Models.BusinessCategoryModel;
+import com.sustown.sustownsapp.Models.BusinessCategoryModel1;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,6 +55,7 @@ public class BusinessCategory extends AppCompatActivity {
     String user_id,buss_id;
     private RecyclerView.Adapter mAdapter;
     ArrayList<BusinessCategoryModel> businessCategoryModels;
+    ArrayList<BusinessCategoryModel1> businessCategoryModel1s;
     public static ArrayList<String> selectable_name = new ArrayList<>();
     public static ArrayList<String> selectable_id = new ArrayList<>();
     @Override
@@ -193,7 +197,7 @@ public class BusinessCategory extends AppCompatActivity {
                                             businessCategoryModels = new ArrayList<>();
                                             for (int i1 = 0; i1 < categorydetails.length(); i1++) {
                                                 JSONObject jsonObject3 = categorydetails.getJSONObject(i1);
-                                                String id = jsonObject3.getString("id");
+                                            /*    String id = jsonObject3.getString("id");
                                                 String categoryid = jsonObject3.getString("categoryid");
                                                 String title = jsonObject3.getString("title");
 
@@ -203,10 +207,10 @@ public class BusinessCategory extends AppCompatActivity {
                                                 businessCategoryModel.setId(id);
                                                 businessCategoryModel.setCategoryid(categoryid);
                                                 businessCategoryModel.setTitle(title);
-                                                businessCategoryModels.add(businessCategoryModel);
+                                                businessCategoryModels.add(businessCategoryModel);*/
                                             }
-                                            businessManageCategoryAdapter = new BusinessManageCategoryAdapter(BusinessCategory.this, businessCategoryModels);
-                                            recyclerview_manage_category.setAdapter(businessManageCategoryAdapter);
+                                          /*  businessManageCategoryAdapter = new BusinessManageCategoryAdapter(BusinessCategory.this, businessCategoryModels);
+                                            recyclerview_manage_category.setAdapter(businessManageCategoryAdapter);*/
                                             //businessManageCategoryAdapter.notifyDataSetChanged();
 
                                             JSONArray imagegallery = root.getJSONArray("imagegallery");
@@ -218,6 +222,19 @@ public class BusinessCategory extends AppCompatActivity {
                                             for (int i3 = 0; i3 < businessbadges.length(); i3++) {
                                                 JSONObject image = businessbadges.getJSONObject(i3);
                                             }
+                                            businessCategoryModel1s = new ArrayList<>();
+                                            JSONArray categoryArray = root.getJSONArray("category");
+                                            for (int p = 0; p < categoryArray.length(); p++) {
+                                                JSONObject categoryObj = categoryArray.getJSONObject(p);
+                                                String id = categoryObj.getString("id");
+                                                String title = categoryObj.getString("title");
+                                                BusinessCategoryModel1 businessCategoryModel1 = new BusinessCategoryModel1();
+                                                businessCategoryModel1.setId(id);
+                                                businessCategoryModel1.setTitle(title);
+                                                businessCategoryModel1s.add(businessCategoryModel1);
+                                            }
+                                            businessManageCategoryAdapter = new BusinessManageCategoryAdapter(BusinessCategory.this, businessCategoryModel1s);
+                                            recyclerview_manage_category.setAdapter(businessManageCategoryAdapter);
                                         } else if (success.equalsIgnoreCase("0")) {
                                             message = root.getString("message");
                                             if (progressDialog.isShowing())
@@ -262,7 +279,7 @@ public class BusinessCategory extends AppCompatActivity {
                     for (int i = 0; i < selectable_id.size(); i++) {
                         JsonObject object = new JsonObject();
                         object.addProperty("user_id", user_id);
-                        object.addProperty("cat_id", businessCategoryModels.get(i).getCategoryid());
+                        object.addProperty("cat_id",selectable_id.get(i));
                         object.addProperty("buss_id", buss_id);
                         categoryArray.add(object);
                     }
@@ -328,20 +345,17 @@ public class BusinessCategory extends AppCompatActivity {
                     }
                 });
             }
-
-
             public class BusinessManageCategoryAdapter extends RecyclerView.Adapter<BusinessManageCategoryAdapter.ViewHolder> {
                 //    public static HashMap<Integer, String> issuehashmap = new HashMap<>();
-                ArrayList<BusinessCategoryModel> arrayList;
+                ArrayList<BusinessCategoryModel1> businessCategoryModel1s1;
                 Context context;
                 PreferenceUtils preferenceUtils;
                 private int adapterPosition = -1;
 
-                public BusinessManageCategoryAdapter(Context context, ArrayList<BusinessCategoryModel> arrayListIssues) {
+                public BusinessManageCategoryAdapter(Context context, ArrayList<BusinessCategoryModel1> businessCategoryModel1s1) {
                     this.context = context;
-                    this.arrayList = arrayListIssues;
+                    this.businessCategoryModel1s1 = businessCategoryModel1s1;
                 }
-
                 @NonNull
                 @Override
                 public BusinessManageCategoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -353,38 +367,34 @@ public class BusinessCategory extends AppCompatActivity {
                 @Override
                 public void onBindViewHolder(@NonNull final BusinessManageCategoryAdapter.ViewHolder holder, final int position) {
                     preferenceUtils = new PreferenceUtils(context);
-                    holder.issuesCheck.setText(arrayList.get(position).getTitle());
-
-                    if (selectable_id.contains(arrayList.get(position).getCategoryid())) {
+                    holder.issuesCheck.setText(businessCategoryModel1s1.get(position).getTitle());
+                    if (selectable_id.contains(businessCategoryModel1s1.get(position).getId())) {
                         System.out.println("Account found");
                         holder.issuesCheck.setChecked(true);
                     }
-
                     holder.issuesCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             Log.e("onCheckedChanged: ", "" + isChecked);
                             if (isChecked) {
                                 // holder.issuesCheck.setChecked(false);
-                                if (selectable_id.contains(arrayList.get(position).getCategoryid())) {
+                                if (selectable_id.contains(businessCategoryModel1s1.get(position).getId())) {
                                     System.out.println("Account found");
                                 } else {
                                     System.out.println("Account not found");
-                                    selectable_id.add(arrayList.get(position).getCategoryid());
-                                    selectable_name.add(arrayList.get(position).getTitle());
+                                    selectable_id.add(businessCategoryModel1s1.get(position).getId());
+                                    selectable_name.add(businessCategoryModel1s1.get(position).getTitle());
                                 }
                             } else {
-                                selectable_id.remove(arrayList.get(position).getCategoryid());
-                                selectable_name.remove(arrayList.get(position).getTitle());
+                                selectable_id.remove(businessCategoryModel1s1.get(position).getId());
+                                selectable_name.remove(businessCategoryModel1s1.get(position).getTitle());
                             }
                         }
                     });
-
                 }
-
                 @Override
                 public int getItemCount() {
-                    return arrayList.size();
+                    return businessCategoryModel1s1.size();
                 }
 
                 class ViewHolder extends RecyclerView.ViewHolder {
@@ -392,7 +402,7 @@ public class BusinessCategory extends AppCompatActivity {
 
                     public ViewHolder(View itemView) {
                         super(itemView);
-                        issuesCheck = (CheckBox) itemView.findViewById(R.id.checkbox);
+                        issuesCheck = (CheckBox) itemView.findViewById(R.id.issuesCheck);
                     }
                 }
             }

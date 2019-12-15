@@ -26,6 +26,7 @@ import com.google.gson.JsonElement;
 import com.sustown.sustownsapp.Adapters.CartAdapter;
 import com.sustown.sustownsapp.Api.CartApi;
 import com.sustown.sustownsapp.Api.DZ_URL;
+import com.sustown.sustownsapp.Api.UserApi;
 import com.sustown.sustownsapp.Api.WebServices;
 import com.sustown.sustownsapp.Models.AddToCartModel;
 import com.sustown.sustownsapp.Models.CartServerModel;
@@ -63,7 +64,7 @@ public class CartActivity extends AppCompatActivity implements DataListener {
     ProgressDialog progressDialog;
     ArrayList<AddToCartModel> addToCartModels = new ArrayList<>();
     Realm realm;
-    TextView home_text, news_text, store_text, contracts_text, market_text, cart_total_amount,remove_all_items,cart_shoplink,update_cart;
+    TextView home_text, news_text,cart_title,store_text, contracts_text, market_text, cart_total_amount,remove_all_items,cart_shoplink,update_cart;
     WebServices webServices;
     Helper helper;
     List<CartServerModel> cartServerList;
@@ -97,7 +98,6 @@ public class CartActivity extends AppCompatActivity implements DataListener {
         recyclerview_cart = (RecyclerView) findViewById(R.id.recyclerview_cart);
         LinearLayoutManager lManager = new LinearLayoutManager(CartActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerview_cart.setLayoutManager(lManager);
-
         home = (LinearLayout) findViewById(R.id.ll_home);
         news = (LinearLayout) findViewById(R.id.ll_news);
         store = (LinearLayout) findViewById(R.id.ll_store);
@@ -123,17 +123,10 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                 startActivity(i);
             }
         });
-        backarrow = (ImageView) findViewById(R.id.backarrow);
-        backarrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         remove_all_items.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                helper.showDialog(CartActivity.this, SweetAlertDialog.WARNING_TYPE, "", "Do you want to clear the cart?",
+                helper.showDialog(CartActivity.this, SweetAlertDialog.WARNING_TYPE, "Clear the Cart", "Do you want to clear cart?",
                         new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -184,6 +177,7 @@ public class CartActivity extends AppCompatActivity implements DataListener {
             public void onClick(View v) {
                 contracts_text.setTextColor(getResources().getColor(R.color.appcolor));
                 Intent i = new Intent(CartActivity.this, BidContractsActivity.class);
+                i.putExtra("Processed","0");
                 startActivity(i);
             }
         });
@@ -195,9 +189,20 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                 startActivity(i);
             }
         });
-
+        backarrow = (ImageView) findViewById(R.id.backarrowcart);
+        backarrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        cart_title = (TextView) findViewById(R.id.cart_title);
+        cartCount();
     }
-
+    @Override
+    public void onBackPressed() {
+        finish();
+        }
     private void initializeValues() {
         preferenceUtils = new PreferenceUtils(CartActivity.this);
         username = preferenceUtils.getStringFromPreference(PreferenceUtils.UserName, "");
@@ -209,7 +214,6 @@ public class CartActivity extends AppCompatActivity implements DataListener {
         helper = new Helper(CartActivity.this);
         realm = Realm.getDefaultInstance();
     }
-
     private void getCartlist() {
         progressdialog();
         if (realm.isInTransaction())
@@ -260,6 +264,68 @@ public class CartActivity extends AppCompatActivity implements DataListener {
        // Toast.makeText(CartActivity.this, "Product is removed!", Toast.LENGTH_SHORT).show();
     }
 */
+public void cartCount() {
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(DZ_URL.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    UserApi service = retrofit.create(UserApi.class);
+
+    Call<JsonElement> callRetrofit = null;
+    callRetrofit = service.cartCount(user_id);
+
+    callRetrofit.enqueue(new Callback<JsonElement>() {
+        @Override
+        public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+            try {
+                if (response.isSuccessful()) {
+                    Log.d("Success Call", ">>>>" + call);
+                    Log.d("Success Call ", ">>>>" + response.body().toString());
+
+                    System.out.println("----------------------------------------------------");
+                    Log.d("Call request", call.request().toString());
+                    Log.d("Call request header", call.request().headers().toString());
+                    Log.d("Response raw header", response.headers().toString());
+                    Log.d("Response raw", String.valueOf(response.raw().body()));
+                    Log.d("Response code", String.valueOf(response.code()));
+                    System.out.println("----------------------------------------------------");
+
+                    if (response.body().toString() != null) {
+                        if (response != null) {
+                            String searchResponse = response.body().toString();
+                            Log.d("Reg", "Response  >>" + searchResponse.toString());
+
+                            if (searchResponse != null) {
+                                JSONObject root = null;
+                                try {
+                                    root = new JSONObject(searchResponse);
+                                    String success = root.getString("success");
+                                    //   message = root.getString("message");
+                                    if (success.equalsIgnoreCase("1")) {
+                                        String cartcount = root.getString("cartcount");
+                                        cart_title.setText("Cart"+"("+cartcount+")");
+                                    }else{
+
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        @Override
+        public void onFailure(Call<JsonElement> call, Throwable t) {
+            Log.d("Error Call", ">>>>" + call.toString());
+            Log.d("Error", ">>>>" + t.toString());
+            //Toast.makeText(MainActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
+        }
+    });
+}
 
     public void removeFromCart(String itemId, int position) {
         if (realm.isInTransaction())
@@ -423,7 +489,6 @@ public class CartActivity extends AppCompatActivity implements DataListener {
         removePosition = position;
         helper.showLoader(CartActivity.this, "Removing..", "Please wait for a while");
         webServices.getJsonObjectURL("http://dev2.sustowns.com/Sustownsservice/remove_cartforsingle?cart_id="+ cartServerList.get(position).getCart_id());
-
        // webServices.getJsonObjectURL("https://www.sustowns.com/Sustownsservice/remove_cartforsingle/?cart_id=" + cartServerList.get(position).getCart_id());
     }
 
@@ -434,15 +499,12 @@ public class CartActivity extends AppCompatActivity implements DataListener {
         // webServices.getJsonObjectURL("https://www.sustowns.com/Sustownsservice/remove_cartforsingle/?cart_id=" + cartServerList.get(position).getCart_id());
     }
 */
-
-
     public void progresDialog() {
         progressDialog = new ProgressDialog(CartActivity.this);
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
-
     public void getCartListItems() {
         //  user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
         progresDialog();
@@ -452,12 +514,10 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                 .build();
 
         CartApi service = retrofit.create(CartApi.class);
-
         Call<JsonElement> callRetrofit = null;
       //  callRetrofit = service.getCartList("https://www.sustowns.com/Sustownsservice/viewcart/?userid="+user_id);
          callRetrofit = service.getCartList("https://www.sustowns.com/Sustownsservice/viewcart?userid="+user_id);
         callRetrofit.enqueue(new Callback<JsonElement>() {
-
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 System.out.println("----------------------------------------------------");
@@ -466,17 +526,13 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                 Log.d("Response raw header", response.headers().toString());
                 Log.d("Response raw", String.valueOf(response.raw().body()));
                 Log.d("Response code", String.valueOf(response.code()));
-
                 System.out.println("----------------------------------------------------");
-
                 if (response.isSuccessful()) {
                     progressDialog.dismiss();
                     if (response.body().toString() != null) {
-
                         if (response != null) {
                             String searchResponse = response.body().toString();
                             Log.d("Reg", "Response  >>" + searchResponse.toString());
-
                             if (searchResponse != null) {
                                 JSONObject root = null;
                                 try {
@@ -579,7 +635,6 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                                             remove_all_items.setVisibility(View.GONE);
                                            // update_cart.setVisibility(View.GONE);
                                         }
-
                                 }catch(JSONException e){
                                         e.printStackTrace();
                                     }
@@ -591,12 +646,9 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                         Toast.makeText(CartActivity.this, "Cart is empty", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
-
             }
-
-                @Override
+            @Override
                 public void onFailure(Call<JsonElement> call, Throwable t) {
-
                 Log.d("Error Call", ">>>>" + call.toString());
                     Log.d("Error", ">>>>" + t.toString());
                     progressDialog.dismiss();
@@ -604,17 +656,14 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                 }
             });
         }
-
-    public void clearCartItems() {
+        public void clearCartItems() {
         //  user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
         progresDialog();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DZ_URL.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         CartApi service = retrofit.create(CartApi.class);
-
         Call<JsonElement> callRetrofit = null;
         callRetrofit = service.clearCartItems(user_id);
         // callRetrofit = service.getCartList("http://www.deaquatic.com/welcome/cartdetails/1");
@@ -627,17 +676,13 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                 Log.d("Response raw header", response.headers().toString());
                 Log.d("Response raw", String.valueOf(response.raw().body()));
                 Log.d("Response code", String.valueOf(response.code()));
-
                 System.out.println("----------------------------------------------------");
-
                 if (response.isSuccessful()) {
                     progressDialog.dismiss();
                     if (response.body().toString() != null) {
-
                         if (response != null) {
                             String searchResponse = response.body().toString();
                             Log.d("Reg", "Response  >>" + searchResponse.toString());
-
                             if (searchResponse != null) {
                                 JSONObject root = null;
                                 try {
@@ -656,9 +701,7 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                                     }else{
                                         progressDialog.dismiss();
                                         Toast.makeText(CartActivity.this, message, Toast.LENGTH_SHORT).show();
-
                                     }
-
                                 }catch(JSONException e){
                                     e.printStackTrace();
                                 }
@@ -673,7 +716,6 @@ public class CartActivity extends AppCompatActivity implements DataListener {
             }
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
-
                 Log.d("Error Call", ">>>>" + call.toString());
                 Log.d("Error", ">>>>" + t.toString());
                 progressDialog.dismiss();
@@ -681,17 +723,12 @@ public class CartActivity extends AppCompatActivity implements DataListener {
             }
         });
     }
-
-
     public void setJsonObject() {
-
         try {
             JSONObject useridObj = new JSONObject();
             useridObj.put("userid",user_id);
-
             JSONArray quantityArray = new JSONArray();
             for (CartServerModel cartServerModel : cartServerList) {
-
                 JSONObject quantityObject = new JSONObject();
               /*  quantityObject.put("cart_id","763");
                 quantityObject.put("qty","15");*/
@@ -701,7 +738,6 @@ public class CartActivity extends AppCompatActivity implements DataListener {
             }
             useridObj.put("quantityArray",quantityArray);
             Log.e("ProductDetailsArray", ""+useridObj);
-
             androidNetworking(useridObj);
         } catch (Exception e) {
             e.printStackTrace();
@@ -740,9 +776,7 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                         Log.d("Error" , "ANError : "+error);
                     }
                 });
-
     }
-
 /*
     public void updateCartList() {
         //  user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
@@ -751,16 +785,13 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                 .baseUrl(DZ_URL.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         CartApi service = retrofit.create(CartApi.class);
         quantity_edit
         try {
             JSONObject useridObj = new JSONObject();
             useridObj.put("userid","446");
-
             JSONArray quantityArray = new JSONArray();
             for (CartServerModel cartServerModel : cartServerList) {
-
                 JSONObject quantityObject = new JSONObject();
                 quantityObject.put("cart_id",cartServerModel.getCart_id());
                 quantityObject.put("qty",cartServerModel.getQty());
@@ -768,12 +799,10 @@ public class CartActivity extends AppCompatActivity implements DataListener {
             }
             useridObj.put("quantityArray",quantityArray);
             Log.e("ProductDetailsArray", ""+useridObj);
-
-            androidNetworking(customisedObject);
+           androidNetworking(customisedObject);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         Call<JsonElement> callRetrofit = null;
         callRetrofit = service.clearCartItems(user_id);
         callRetrofit.enqueue(new Callback<JsonElement>() {
@@ -785,17 +814,13 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                 Log.d("Response raw header", response.headers().toString());
                 Log.d("Response raw", String.valueOf(response.raw().body()));
                 Log.d("Response code", String.valueOf(response.code()));
-
                 System.out.println("----------------------------------------------------");
-
                 if (response.isSuccessful()) {
                     // progressDialog.dismiss();
                     if (response.body().toString() != null) {
-
-                        if (response != null) {
+                 if (response != null) {
                             String searchResponse = response.body().toString();
                             Log.d("Reg", "Response  >>" + searchResponse.toString());
-
                             if (searchResponse != null) {
                                 JSONObject root = null;
                                 try {
@@ -813,9 +838,7 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                                         // cartAdapter.notifyItemRemoved();
                                     }else{
                                         Toast.makeText(CartActivity.this, message, Toast.LENGTH_SHORT).show();
-
                                     }
-
                                 }catch(JSONException e){
                                     e.printStackTrace();
                                 }
@@ -827,12 +850,9 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                     // Toast.makeText(CartActivity.this, "Cart is empty", Toast.LENGTH_SHORT).show();
                     // progressDialog.dismiss();
                 }
-
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
-
                 Log.d("Error Call", ">>>>" + call.toString());
                 Log.d("Error", ">>>>" + t.toString());
                 //progressDialog.dismiss();
@@ -841,5 +861,4 @@ public class CartActivity extends AppCompatActivity implements DataListener {
         });
     }
 */
-
 }

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -58,11 +59,12 @@ public class ReceivedContracts extends AppCompatActivity {
     CircleImageView uploaded_image;
     ProgressDialog progressDialog;
     ArrayList<ReceivedContractModel> receivedContractModels;
-    String id1,user_id1,job_id,description,attachImage,appattachment,approve_status,contractname,job_name,user_id,contractor_id;
+    String id1,user_id1,job_id,description,image_attach1,description_quote,attachImage_quote,attachImage,appattachment,approve_status,contractname,job_name,user_id,contractor_id;
     PreferenceUtils preferenceUtils;
     Intent intent;
-    String user_id_quote;
+    String user_id_quote,appattachment_quote;
     public static final String URL9 = "http://www.appsapk.com/downloading/latest/UC-Browser.apk";
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,9 +136,9 @@ public class ReceivedContracts extends AppCompatActivity {
                 description_received_dialog = (TextView) customdialog.findViewById(R.id.description_received_dialog);
                 product_name = (TextView) customdialog.findViewById(R.id.product_name);
                 uploaded_image = (CircleImageView) customdialog.findViewById(R.id.uploaded_image);
-                if (prod_image != null && !prod_image.isEmpty()) {
+                if (attachImage != null && !attachImage.isEmpty()) {
                     Picasso.get()
-                            .load(prod_image)
+                            .load(attachImage)
                             .placeholder(R.drawable.no_image_available)
                             .error(R.drawable.no_image_available)
                             .into(uploaded_image);
@@ -183,6 +185,15 @@ public class ReceivedContracts extends AppCompatActivity {
                 customdialog.show();
             }
         });
+        /*swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.appcolor);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getReceivedContractsList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });*/
     }
 
     public void progressdialog() {
@@ -293,7 +304,7 @@ public class ReceivedContracts extends AppCompatActivity {
                                                     approve_status = comattachObj.getString("approve_status");
 
                                                     uploaded_documents.setVisibility(View.VISIBLE);
-                                                    if (attachImage.isEmpty() || attachImage.equalsIgnoreCase(null)) {
+                                                    if (prod_image.isEmpty() || prod_image.equalsIgnoreCase(null)) {
                                                         Picasso.get()
                                                                 .load(R.drawable.no_image_available)
                                                                 .placeholder(R.drawable.no_image_available)
@@ -301,7 +312,7 @@ public class ReceivedContracts extends AppCompatActivity {
                                                                 .into(received_head_image);
                                                     } else {
                                                         Picasso.get()
-                                                                .load(attachImage)
+                                                                .load(prod_image)
                                                                 .placeholder(R.drawable.no_image_available)
                                                                 .error(R.drawable.no_image_available)
                                                                 .into(received_head_image);
@@ -313,37 +324,23 @@ public class ReceivedContracts extends AppCompatActivity {
                                             }catch (Exception e){
                                                 e.printStackTrace();
                                             }
-                                            JSONArray attachArray = root.getJSONArray("attach");
-                                            receivedContractModels = new ArrayList<>();
+                                           /* JSONArray attachArray = root.getJSONArray("attach");
                                             for (int i1 = 0; i1 < attachArray.length(); i1++) {
                                             JSONObject attachObject = attachArray.getJSONObject(i1);
                                                 if (attachObject.length() > 0) {
                                                     id1 = attachObject.getString("id");
                                                     String job_id1 = attachObject.getString("job_id");
                                                     user_id1 = attachObject.getString("user_id");
-                                                    description = attachObject.getString("description");
-                                                    String image_attach1 = attachObject.getString("image");
-                                                    attachImage = busdadgesimg + image_attach1;
-                                                    appattachment = attachObject.getString("appattachment");
+                                                    description_quote = attachObject.getString("description");
+                                                    image_attach1 = attachObject.getString("image");
+                                                    attachImage_quote = busdadgesimg + image_attach1;
+                                                    appattachment_quote = attachObject.getString("appattachment");
                                                     approve_status = attachObject.getString("approve_status");
-                                                   /* if (attachImage.isEmpty() || attachImage.equalsIgnoreCase(null)) {
-                                                        Picasso.get()
-                                                                .load(R.drawable.no_image_available)
-                                                                .placeholder(R.drawable.no_image_available)
-                                                                .error(R.drawable.no_image_available)
-                                                                .into(received_head_image);
-                                                    } else {
-                                                        Picasso.get()
-                                                                .load(attachImage)
-                                                                .placeholder(R.drawable.no_image_available)
-                                                                .error(R.drawable.no_image_available)
-                                                                .into(received_head_image);
-                                                    }*/
                                                 }
-                                            }
+                                            }*/
                                             JSONArray quoteArray = root.getJSONArray("jobquate");
-                                            if(quoteArray.length()>0) {
-                                                for (int i = 0; i < quoteArray.length(); i++) {
+                                            receivedContractModels = new ArrayList<>();
+                                            for (int i = 0; i < quoteArray.length(); i++) {
                                                     JSONObject quoteObj = quoteArray.getJSONObject(i);
                                                     String id2 = quoteObj.getString("id");
                                                     String job_id1 = quoteObj.getString("job_id");
@@ -352,6 +349,12 @@ public class ReceivedContracts extends AppCompatActivity {
                                                     String payment = quoteObj.getString("payment");
                                                     String currency = quoteObj.getString("currency");
                                                     //String status = quoteObj.getString("status");
+                                                String bidid = quoteObj.getString("bidid");
+                                                    description_quote = quoteObj.getString("description");
+                                                    image_attach1 = quoteObj.getString("image");
+                                                    attachImage_quote = busdadgesimg + image_attach1;
+                                                    approve_status = quoteObj.getString("approve_status");
+                                                    appattachment_quote = quoteObj.getString("appattachment");
                                                     String bus_name = quoteObj.getString("bus_name");
                                                     String busi_detail = quoteObj.getString("busi_detail");
                                                     String banner_image = quoteObj.getString("banner_image");
@@ -363,7 +366,6 @@ public class ReceivedContracts extends AppCompatActivity {
                                                     String country = quoteObj.getString("country");
                                                     String avg = quoteObj.getString("avg");
                                                     String count = quoteObj.getString("count");
-                                                    status_received_contracts.setText("No");
 
                                                     ReceivedContractModel receivedContractModel = new ReceivedContractModel();
                                                     receivedContractModel.setId(id2);
@@ -375,8 +377,8 @@ public class ReceivedContracts extends AppCompatActivity {
                                                     receivedContractModel.setStatus(status);
                                                     receivedContractModel.setBus_name(bus_name);
                                                     receivedContractModel.setBusi_detail(busi_detail);
-                                                    receivedContractModel.setBanner_image(banner_image);
                                                     receivedContractModel.setBid(bid);
+                                                    receivedContractModel.setBidid(bidid);
                                                     receivedContractModel.setPhone(phone);
                                                     receivedContractModel.setFullname(fullname);
                                                     receivedContractModel.setEmail(email);
@@ -384,11 +386,13 @@ public class ReceivedContracts extends AppCompatActivity {
                                                     receivedContractModel.setCountry(country);
                                                     receivedContractModel.setAvg(avg);
                                                     receivedContractModel.setCount(count);
-                                                    receivedContractModel.setDescription(description);
-                                                    receivedContractModel.setImage(attachImage);
-                                                    receivedContractModel.setAppattachment(appattachment);
+                                                    receivedContractModel.setImage(attachImage_quote);
+                                                    receivedContractModel.setDescription(description_quote);
+                                                    receivedContractModel.setAppattachment(appattachment_quote);
                                                     receivedContractModels.add(receivedContractModel);
                                                 }
+                                            if(quoteArray.equals("") || quoteArray.length() == 0) {
+                                                status_received_contracts.setText("No Status");
                                             }else {
                                                 if (contractor_id.equalsIgnoreCase(user_id_quote)) {
                                                     if (status.equalsIgnoreCase("1")) {

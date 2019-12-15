@@ -40,7 +40,7 @@ public class ContractOrdersInvoice extends AppCompatActivity {
     RecyclerView recyclerview_invoice_orders;
     PreferenceUtils preferenceUtils;
     Intent intent;
-    String order_id,invoiceNo;
+    String order_id,invoiceNo,StatusStr;
     TextView invoice_no_text,date_order,shipping_name,address_shipping,contact_shipping,total_amount_tv,shipping_charge_tv,bill_name;
     ProgressDialog progressDialog;
     String subtotal,firstname,country,state,address,city,orderstatus,orderdate,orderId,user_role;
@@ -63,6 +63,7 @@ public class ContractOrdersInvoice extends AppCompatActivity {
         intent = getIntent();
         order_id = intent.getStringExtra("OrderId");
         invoiceNo = intent.getStringExtra("InvoiceNo");
+        StatusStr = intent.getStringExtra("Status");
         recyclerview_invoice_orders = (RecyclerView) findViewById(R.id.recyclerview_invoice_orders);
         LinearLayoutManager layoutManager = new LinearLayoutManager(ContractOrdersInvoice.this,LinearLayoutManager.VERTICAL,false);
         recyclerview_invoice_orders.setLayoutManager(layoutManager);
@@ -78,7 +79,6 @@ public class ContractOrdersInvoice extends AppCompatActivity {
         customer_name = (TextView) findViewById(R.id.customer_name);
         customer_email = (TextView) findViewById(R.id.customer_email);
         contact_customer = (TextView) findViewById(R.id.contact_customer);
-
         backarrow = (ImageView) findViewById(R.id.backarrow);
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,7 +203,7 @@ public class ContractOrdersInvoice extends AppCompatActivity {
                                         total_amount_tv.setText(totalprice);
                                         shipping_charge_tv.setText("Free");
                                         if(ContractinvoiceModels != null){
-                                            invoiceDetailsAdapter = new InvoiceDetailsAdapter(ContractOrdersInvoice.this,ContractinvoiceModels);
+                                            invoiceDetailsAdapter = new InvoiceDetailsAdapter(ContractOrdersInvoice.this,ContractinvoiceModels,StatusStr);
                                             recyclerview_invoice_orders.setAdapter(invoiceDetailsAdapter);
                                             invoiceDetailsAdapter.notifyDataSetChanged();
                                         }
@@ -245,15 +245,16 @@ public class ContractOrdersInvoice extends AppCompatActivity {
         LayoutInflater inflater;
         String user_email,pro_id,user_id,user_role,order_status,order_id,pay_method;
         PreferenceUtils preferenceUtils;
-        String[] order;
+        String StatusStr;
         ArrayList<ContractPurchasesModel> orderModels;
         ProgressDialog progressDialog;
         Integer priceInt,qtyInt,totalAmount;
 
-        public InvoiceDetailsAdapter(Context context, ArrayList<ContractPurchasesModel> orderModels) {
+        public InvoiceDetailsAdapter(Context context, ArrayList<ContractPurchasesModel> orderModels,String StatusStr) {
             inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.context = context;
             this.orderModels = orderModels;
+            this.StatusStr = StatusStr;
         }
 
         @Override
@@ -269,13 +270,20 @@ public class ContractOrdersInvoice extends AppCompatActivity {
                 viewHolder.order_name.setText(orderModels.get(position).getJob_name());
                 viewHolder.invoice_price.setText(orderModels.get(position).getTotalprice());
                 viewHolder.order_quantity.setText(orderModels.get(position).getQuantity());
-                if(orderModels.get(position).getOrder_status().equalsIgnoreCase("0")) {
+                if(StatusStr.equalsIgnoreCase("0")) {
+                    viewHolder.order_status.setText("Pending");
+                }else  if(StatusStr.equalsIgnoreCase("1")) {
+                    viewHolder.order_status.setText("Completed");
+                }else{
+                    viewHolder.order_status.setText("Cancelled");
+                }
+              /*  if(orderModels.get(position).getOrder_status().equalsIgnoreCase("0")) {
                     viewHolder.order_status.setText("Pending");
                 }else  if(orderModels.get(position).getOrder_status().equalsIgnoreCase("1")) {
                     viewHolder.order_status.setText("Complete");
                 }else{
                     viewHolder.order_status.setText("Cancel");
-                }
+                }*/
                 viewHolder.invoice_totals.setText(orderModels.get(position).getTotal());
                 Picasso.get()
                         .load(orderModels.get(position).getImage())

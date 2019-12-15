@@ -82,7 +82,6 @@
                 android:maxLength="20"
                 android:maxLines="1"
                 android:padding="3dp"
-                android:text="5000 /"
                 android:textColor="#FF0000"
                 android:textSize="13sp" />
 
@@ -95,7 +94,6 @@
                 android:maxLength="20"
                 android:maxLines="1"
                 android:padding="3dp"
-                android:text="12 pc"
                 android:textColor="#FF0000"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -194,7 +192,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="7dp"
-                android:maxLines="2"
                 android:textColor="@color/black"
                 android:textSize="12dp" />
 

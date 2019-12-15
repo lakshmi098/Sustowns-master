@@ -1,6 +1,7 @@
 package com.sustown.sustownsapp.Activities;
 
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
@@ -48,7 +50,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.sustown.sustownsapp.Activities.FileUtils.getPath;
 
 public class ProductDocumentsActivity extends AppCompatActivity {
-    String imagePath,profileString = "",titleStr,descriptionStr,job_id,bidId;
+    String imagePath,profileString = "",titleStr,descriptionStr,job_id,bidId,documentStr;
     final int CAMERA_CAPTURE = 1;
     final int PICK_IMAGE = 2;
     RelativeLayout rl_capture,rl_gallery;
@@ -66,6 +68,7 @@ public class ProductDocumentsActivity extends AppCompatActivity {
     private static final int PICKFILE_RESULT_CODE = 3;
     Uri returnUri;
     byte[] bytes;
+    final String URL9 = "http://www.appsapk.com/downloading/latest/UC-Browser.apk";
 
     public static String getEncodedImage(Bitmap bitmapImage) {
         ByteArrayOutputStream baos;
@@ -83,7 +86,6 @@ public class ProductDocumentsActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.add_document_dialog);
-
         try {
             preferenceUtils = new PreferenceUtils(ProductDocumentsActivity.this);
             user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
@@ -92,6 +94,7 @@ public class ProductDocumentsActivity extends AppCompatActivity {
             titleStr = getIntent().getStringExtra("Title");
             job_id = getIntent().getStringExtra("JobId");
             bidId = getIntent().getStringExtra("BidId");
+            documentStr = getIntent().getStringExtra("Documents");
 
             title = (TextView) findViewById(R.id.title);
             description_edit = (EditText) findViewById(R.id.description_edit);
@@ -113,6 +116,28 @@ public class ProductDocumentsActivity extends AppCompatActivity {
             title.setText(titleStr);
             approve_doc_text = (TextView) findViewById(R.id.approve_doc_text);
             complete_document = (TextView) findViewById(R.id.complete_document);
+            complete_document.setText(documentStr);
+            complete_document.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uri= Uri.parse(URL9);
+                    DownloadManager downloadManager = (DownloadManager) ProductDocumentsActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
+                            DownloadManager.Request.NETWORK_MOBILE);
+                    Toast.makeText(ProductDocumentsActivity.this, "File Downloading...", Toast.LENGTH_SHORT).show();
+// set title and description
+                    request.setTitle("Data Download");
+                    request.setDescription("Android Data download using DownloadManager.");
+                    request.allowScanningByMediaScanner();
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//set the local destination for download file to a path within the application's external files directory
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"downloadfileName");
+                    request.setMimeType("*/*");
+                    downloadManager.enqueue(request);
+                }
+            });
+
             chooseimage_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -426,9 +451,10 @@ public class ProductDocumentsActivity extends AppCompatActivity {
                                 String message = responseObj.getString("message");
                                 Toast.makeText(ProductDocumentsActivity.this, "Your Quote Submitted Successfully", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(ProductDocumentsActivity.this, BidContractsActivity.class);
+                                i.putExtra("Processed","1");
                                 startActivity(i);
                             } else {
-                                Toast.makeText(ProductDocumentsActivity.this, "Service not added", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProductDocumentsActivity.this, "Quote not submitted", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

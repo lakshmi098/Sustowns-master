@@ -193,30 +193,34 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp">
 
                 <TextView
-                    android:layout_width="150dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Quote Document"
+                    android:text="Quote Document :-"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-                <TextView
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/document_download_img"
+                        android:padding="5dp"/>
+
+                    <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=":"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:id="@+id/quote_document"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/appcolor"
                     android:textSize="16sp" />
+                </LinearLayout>
 
             </LinearLayout>
             <Button
@@ -315,7 +319,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="2dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="150dp"
@@ -323,21 +327,26 @@
                     android:text="Complete Doc"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/document_download_img"
+                        android:padding="5dp"/>
 
-                <TextView
-                    android:id="@+id/complete_document"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:layout_marginLeft="10dp"
-                    android:textColor="@color/appcolor"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/complete_document"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:layout_marginTop="7dp"
+                        android:textColor="@color/appcolor"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
 
             </LinearLayout>
             <LinearLayout

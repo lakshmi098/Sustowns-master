@@ -107,16 +107,19 @@ public class TransportDetailsActivity extends AppCompatActivity implements DataL
                 startActivity(i);
             }
         });
-        getTransportOrdersList();
+       // getTransportOrdersList();
     }
 
+/*
     private void getTransportOrdersList() {
         helper.showLoader(TransportDetailsActivity.this, "Loading", "Please wait for a while...");
 
         webServices.getJsonArray(DZ_URL.GET_TRANSPORT_DETAILS_LIST+user_id);
-       // webServices.getJsonArray(DZ_URL.GET_TRANSPORT_DETAILS_LIST+"445");
+        // webServices.getJsonArray(DZ_URL.GET_TRANSPORT_DETAILS_LIST+"445");
     }
+*/
 
+/*
     @Override
     public void onDataRetrieved(Object data, String whichUrl) {
         try {
@@ -174,6 +177,7 @@ public class TransportDetailsActivity extends AppCompatActivity implements DataL
             e.printStackTrace();
         }
     }
+*/
 
     private void setUpRecyclerView() {
         if(transportReceivedOrdersAdapter == null){
@@ -181,6 +185,11 @@ public class TransportDetailsActivity extends AppCompatActivity implements DataL
             recycler_view_transportorders.setAdapter(transportReceivedOrdersAdapter);
         }
         transportReceivedOrdersAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDataRetrieved(Object data, String whichUrl) {
+
     }
 
     @Override
@@ -195,6 +204,7 @@ public class TransportDetailsActivity extends AppCompatActivity implements DataL
                 });
     }
 
+/*
     public void payOrder(final int position) {
         helper.showPayDialog(TransportDetailsActivity.this, SweetAlertDialog.WARNING_TYPE, "", "Please pay full Amount \n" + transportDetailsList.get(position).getTotal_price()+" /-",
                 new SweetAlertDialog.OnSweetClickListener() {
@@ -211,6 +221,7 @@ public class TransportDetailsActivity extends AppCompatActivity implements DataL
                     }
                 });
     }
+*/
 
     public void contactDetails(int position) {
         try {
@@ -252,6 +263,7 @@ public class TransportDetailsActivity extends AppCompatActivity implements DataL
         }
     }
 
+/*
     public void viewDetails(int position) {
         try {
             final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TransportDetailsActivity.this);
@@ -307,6 +319,7 @@ public class TransportDetailsActivity extends AppCompatActivity implements DataL
             e.printStackTrace();
         }
     }
+*/
 
     public void navigateToBaseActivity(int position) {
         // merchantKey="";
@@ -325,12 +338,12 @@ public class TransportDetailsActivity extends AppCompatActivity implements DataL
          * For Test Environment, merchantKey = please contact mobile.integration@payu.in with your app name and registered email id
          */
         mPaymentParams.setKey(merchantKey);
-        mPaymentParams.setAmount(transportDetailsList.get(position).getTotal_price());
+     /*   mPaymentParams.setAmount(transportDetailsList.get(position).getTotal_price());
         mPaymentParams.setProductInfo(transportDetailsList.get(position).getPr_title());
         mPaymentParams.setFirstName(transportDetailsList.get(position).getDisplay_name());
         mPaymentParams.setEmail(email);
         mPaymentParams.setPhone(transportDetailsList.get(position).getPay_phone());
-
+*/
 
         /*
          * Transaction Id should be kept unique for each transaction.

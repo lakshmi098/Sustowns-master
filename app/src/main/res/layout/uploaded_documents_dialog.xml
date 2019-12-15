@@ -203,14 +203,23 @@
                     android:text="Documents"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/uploaded_documents_link"
-                    android:text="1568110692TEST DOC FOR CONTRACT1.DOCX"
-                    android:textColor="@color/appcolor"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/document_download_img"
+                        android:padding="5dp"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/uploaded_documents_link"
+                        android:textColor="@color/appcolor"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
             </LinearLayout>
 

@@ -60,6 +60,151 @@
             android:layout_margin="10dp">
 
         </android.support.v7.widget.RecyclerView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_square_edges_drawable"
+            android:layout_margin="7dp"
+            android:padding="5dp"
+            android:visibility="gone"
+            android:id="@+id/ll_add_payment">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="110dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="Name"
+                            android:textColor="@color/black" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textColor="@color/black" />
+                    <TextView
+                        android:id="@+id/product_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black" />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Invoice"
+                        android:visibility="gone"
+                        android:textSize="17sp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/appcolor"
+                        android:layout_gravity="right"
+                        android:gravity="right"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:text="Product Code"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:id="@+id/product_code"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:maxLines="1"
+                        android:text="Order Date"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_gravity="left"
+                        android:id="@+id/date"
+                        android:layout_marginLeft="10dp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:maxLines="1"
+                        android:text="Status"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:maxLines="1"
+                        android:id="@+id/order_status_add"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="match_parent"
@@ -68,6 +213,7 @@
             android:id="@+id/total_amount_add_payment"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
@@ -109,6 +255,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/imageView"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
             android:orientation="vertical"
             android:id="@+id/radioGroup">
 
@@ -147,7 +294,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cheque No / Online Transaction ID(Through net banking)"
+                android:text="Cheque No"
+                android:id="@+id/cheque_text"
                 android:textSize="16sp"
                 android:textColor="@color/black"/>
 
@@ -156,7 +304,7 @@
                 android:textSize="16sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"/>
+                android:inputType="number"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -185,13 +333,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Amount"
+                android:visibility="gone"
                 android:textSize="16sp"
                 android:textColor="@color/black"/>
 
-            <EditText
-                android:id="@+id/amount"
+            <TextView
+                android:id="@+id/amount_payment"
                 android:textSize="16sp"
-                android:inputType="numberDecimal"
+                android:text="Amount"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:background="@drawable/app_background_drawble"
+                android:padding="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

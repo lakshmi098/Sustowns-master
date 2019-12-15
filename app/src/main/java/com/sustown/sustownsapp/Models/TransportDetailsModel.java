@@ -1,67 +1,45 @@
 package com.sustown.sustownsapp.Models;
 
 public class TransportDetailsModel {
-    String id;
-    String user_id;
-    String order_id;
-    String product_order_id;
-    String product_id;
     String quantity;
-    String pr_price;
+    String invoice_no;
+    String order_date;
+    String pr_sku;
+    String pr_title;
+    String pr_packtype;
+    String transport_orderid;
+    String order_id;
+    String service_id;
+    String order_ranid;
     String driver_name;
     String driver_number;
     String vehicle_number;
-    String order_ranid;
-    String pr_title;
-    String total_price;
-    String seller_name;
-    String seller_number;
-    String seller_address;
-    String seller_zipcode;
-    String display_name;
-    String pay_phone;
-    String pay_address1;
-    String pay_zipcode;
-    String pr_weight;
-    String pr_packtype;
-    String invoice_number;
-    String order_date;
+    String ntotal_charge;
+    String skm_range;
+    String quote_charge_per_km;
+    String stotal_charge;
+    String trans_status;
+    String manual_automatic;
+    String paytype;
+    String bank_thr_ran_id;
+    String payment_status;
+    String min_charge;
+    String service_name;
 
-    public TransportDetailsModel(String id, String user_id, String order_id, String product_order_id, String product_id, String quantity, String pr_price, String driver_name, String driver_number, String vehicle_number, String order_ranid, String pr_title, String total_price, String order_date,
-                                 String seller_name, String seller_number, String seller_address, String seller_zipcode, String display_name, String pay_phone, String pay_address1, String pay_zipcode, String pr_weight, String pr_packtype, String invoice_number) {
-        this.id = id;
-        this.user_id = user_id;
-        this.order_id = order_id;
-        this.product_order_id = product_order_id;
-        this.product_id = product_id;
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
-        this.pr_price = pr_price;
-        this.driver_name = driver_name;
-        this.driver_number = driver_number;
-        this.vehicle_number = vehicle_number;
-        this.order_ranid = order_ranid;
-        this.pr_title = pr_title;
-        this.total_price = total_price;
-        this.seller_name = seller_name;
-        this.seller_number = seller_number;
-        this.seller_address = seller_address;
-        this.seller_zipcode = seller_zipcode;
-        this.display_name = display_name;
-        this.pay_phone = pay_phone;
-        this.pay_address1 = pay_address1;
-        this.pay_zipcode = pay_zipcode;
-        this.pr_weight = pr_weight;
-        this.pr_packtype = pr_packtype;
-        this.invoice_number = invoice_number;
-        this.order_date = order_date;
     }
 
-    public String getId() {
-        return id;
+    public String getInvoice_no() {
+        return invoice_no;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setInvoice_no(String invoice_no) {
+        this.invoice_no = invoice_no;
     }
 
     public String getOrder_date() {
@@ -72,12 +50,36 @@ public class TransportDetailsModel {
         this.order_date = order_date;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getPr_sku() {
+        return pr_sku;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setPr_sku(String pr_sku) {
+        this.pr_sku = pr_sku;
+    }
+
+    public String getPr_title() {
+        return pr_title;
+    }
+
+    public void setPr_title(String pr_title) {
+        this.pr_title = pr_title;
+    }
+
+    public String getPr_packtype() {
+        return pr_packtype;
+    }
+
+    public void setPr_packtype(String pr_packtype) {
+        this.pr_packtype = pr_packtype;
+    }
+
+    public String getTransport_orderid() {
+        return transport_orderid;
+    }
+
+    public void setTransport_orderid(String transport_orderid) {
+        this.transport_orderid = transport_orderid;
     }
 
     public String getOrder_id() {
@@ -88,36 +90,12 @@ public class TransportDetailsModel {
         this.order_id = order_id;
     }
 
-    public String getProduct_order_id() {
-        return product_order_id;
+    public String getOrder_ranid() {
+        return order_ranid;
     }
 
-    public void setProduct_order_id(String product_order_id) {
-        this.product_order_id = product_order_id;
-    }
-
-    public String getProduct_id() {
-        return product_id;
-    }
-
-    public void setProduct_id(String product_id) {
-        this.product_id = product_id;
-    }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getPr_price() {
-        return pr_price;
-    }
-
-    public void setPr_price(String pr_price) {
-        this.pr_price = pr_price;
+    public void setOrder_ranid(String order_ranid) {
+        this.order_ranid = order_ranid;
     }
 
     public String getDriver_name() {
@@ -136,6 +114,86 @@ public class TransportDetailsModel {
         this.driver_number = driver_number;
     }
 
+    public String getNtotal_charge() {
+        return ntotal_charge;
+    }
+
+    public void setNtotal_charge(String ntotal_charge) {
+        this.ntotal_charge = ntotal_charge;
+    }
+
+    public String getSkm_range() {
+        return skm_range;
+    }
+
+    public void setSkm_range(String skm_range) {
+        this.skm_range = skm_range;
+    }
+
+    public String getQuote_charge_per_km() {
+        return quote_charge_per_km;
+    }
+
+    public void setQuote_charge_per_km(String quote_charge_per_km) {
+        this.quote_charge_per_km = quote_charge_per_km;
+    }
+
+    public String getStotal_charge() {
+        return stotal_charge;
+    }
+
+    public void setStotal_charge(String stotal_charge) {
+        this.stotal_charge = stotal_charge;
+    }
+
+    public String getTrans_status() {
+        return trans_status;
+    }
+
+    public void setTrans_status(String trans_status) {
+        this.trans_status = trans_status;
+    }
+
+    public String getManual_automatic() {
+        return manual_automatic;
+    }
+
+    public void setManual_automatic(String manual_automatic) {
+        this.manual_automatic = manual_automatic;
+    }
+
+    public String getPaytype() {
+        return paytype;
+    }
+
+    public void setPaytype(String paytype) {
+        this.paytype = paytype;
+    }
+
+    public String getBank_thr_ran_id() {
+        return bank_thr_ran_id;
+    }
+
+    public void setBank_thr_ran_id(String bank_thr_ran_id) {
+        this.bank_thr_ran_id = bank_thr_ran_id;
+    }
+
+    public String getPayment_status() {
+        return payment_status;
+    }
+
+    public void setPayment_status(String payment_status) {
+        this.payment_status = payment_status;
+    }
+
+    public String getMin_charge() {
+        return min_charge;
+    }
+
+    public void setMin_charge(String min_charge) {
+        this.min_charge = min_charge;
+    }
+
     public String getVehicle_number() {
         return vehicle_number;
     }
@@ -144,117 +202,19 @@ public class TransportDetailsModel {
         this.vehicle_number = vehicle_number;
     }
 
-    public String getOrder_ranid() {
-        return order_ranid;
+    public String getService_name() {
+        return service_name;
     }
 
-    public void setOrder_ranid(String order_ranid) {
-        this.order_ranid = order_ranid;
+    public void setService_name(String service_name) {
+        this.service_name = service_name;
     }
 
-    public String getPr_title() {
-        return pr_title;
+    public String getService_id() {
+        return service_id;
     }
 
-    public void setPr_title(String pr_title) {
-        this.pr_title = pr_title;
+    public void setService_id(String service_id) {
+        this.service_id = service_id;
     }
-
-    public String getTotal_price() {
-        return total_price;
-    }
-
-    public void setTotal_price(String total_price) {
-        this.total_price = total_price;
-    }
-
-
-    public String getSeller_name() {
-        return seller_name;
-    }
-
-    public void setSeller_name(String seller_name) {
-        this.seller_name = seller_name;
-    }
-
-    public String getSeller_number() {
-        return seller_number;
-    }
-
-    public void setSeller_number(String seller_number) {
-        this.seller_number = seller_number;
-    }
-
-    public String getSeller_address() {
-        return seller_address;
-    }
-
-    public void setSeller_address(String seller_address) {
-        this.seller_address = seller_address;
-    }
-
-    public String getSeller_zipcode() {
-        return seller_zipcode;
-    }
-
-    public void setSeller_zipcode(String seller_zipcode) {
-        this.seller_zipcode = seller_zipcode;
-    }
-
-    public String getDisplay_name() {
-        return display_name;
-    }
-
-    public void setDisplay_name(String display_name) {
-        this.display_name = display_name;
-    }
-
-    public String getPay_phone() {
-        return pay_phone;
-    }
-
-    public void setPay_phone(String pay_phone) {
-        this.pay_phone = pay_phone;
-    }
-
-    public String getPay_address1() {
-        return pay_address1;
-    }
-
-    public void setPay_address1(String pay_address1) {
-        this.pay_address1 = pay_address1;
-    }
-
-    public String getPay_zipcode() {
-        return pay_zipcode;
-    }
-
-    public void setPay_zipcode(String pay_zipcode) {
-        this.pay_zipcode = pay_zipcode;
-    }
-
-    public String getPr_weight() {
-        return pr_weight;
-    }
-
-    public void setPr_weight(String pr_weight) {
-        this.pr_weight = pr_weight;
-    }
-
-    public String getPr_packtype() {
-        return pr_packtype;
-    }
-
-    public void setPr_packtype(String pr_packtype) {
-        this.pr_packtype = pr_packtype;
-    }
-
-    public String getInvoice_number() {
-        return invoice_number;
-    }
-
-    public void setInvoice_number(String invoice_number) {
-        this.invoice_number = invoice_number;
-    }
-
 }

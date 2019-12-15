@@ -41,11 +41,11 @@
                     android:layout_marginTop="3dp"
                     android:orientation="horizontal">
                     <TextView
-                        android:layout_width="80dp"
+                        android:layout_width="87dp"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:maxLines="1"
-                        android:text="Order No"
+                        android:text="Invoice No"
                         android:textColor="@color/black" />
                     <TextView
                         android:layout_width="wrap_content"
@@ -67,9 +67,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp">
                     <TextView
-                        android:layout_width="80dp"
+                        android:layout_width="87dp"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:maxLines="1"
@@ -107,7 +108,7 @@
                     android:layout_marginTop="2dp"
                     android:orientation="horizontal">
                     <TextView
-                        android:layout_width="80dp"
+                        android:layout_width="87dp"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:maxLines="1"
@@ -146,7 +147,7 @@
                     android:layout_marginTop="3dp"
                     android:orientation="horizontal">
                     <TextView
-                        android:layout_width="80dp"
+                        android:layout_width="87dp"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:maxLines="1"
@@ -181,7 +182,7 @@
                         android:id="@+id/ll_status"
                         android:orientation="horizontal">
                         <TextView
-                            android:layout_width="80dp"
+                            android:layout_width="87dp"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:maxLines="1"
@@ -201,9 +202,59 @@
                             android:text=" "
                             android:id="@+id/order_status"
                             android:layout_marginLeft="10dp"
-                            android:textColor="@color/appcolor" />
+                            android:textStyle="bold"
+                            android:textColor="@color/btn_background_color" />
 
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:id="@+id/ll_paymentstatus"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="87dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="Bank Status"
+                            android:textColor="@color/black" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textColor="@color/black" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:maxLines="1"
+                            android:text="pyment"
+                            android:id="@+id/payment_status"
+                            android:layout_marginLeft="10dp"
+                            android:textStyle="bold"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="15dp"
+                            android:visibility="gone"
+                            android:textColor="@color/btn_background_color" />
+
+                    </LinearLayout>
+                    <Button
+                        android:layout_width="190dp"
+                        android:layout_height="38dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="Add Payment Reference"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        android:gravity="center"
+                        android:layout_gravity="right"
+                        android:padding="5dp"
+                        android:layout_marginTop="7dp"
+                        android:textColor="@color/white"
+                        android:textAllCaps="false"
+                        android:background="@color/btn_background_color"
+                        android:layout_marginRight="15dp"
+                        android:id="@+id/add_payment_btn"/>
                     <Button
                         android:layout_width="120dp"
                         android:layout_height="38dp"
@@ -219,23 +270,6 @@
                         android:background="#337ab7"
                         android:layout_marginRight="15dp"
                         android:id="@+id/add_transport_btn"/>
-
-                    <Button
-                        android:layout_width="190dp"
-                        android:layout_height="38dp"
-                        android:layout_marginBottom="10dp"
-                        android:text="Add Payment Reference"
-                        android:textSize="14sp"
-                        android:visibility="gone"
-                        android:gravity="center"
-                        android:layout_gravity="right"
-                        android:padding="5dp"
-                        android:layout_marginTop="7dp"
-                        android:textColor="@color/white"
-                        android:textAllCaps="false"
-                        android:background="@color/yellow"
-                        android:layout_marginRight="15dp"
-                        android:id="@+id/add_payment_btn"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -273,21 +307,22 @@
 
                     </LinearLayout>
                 </LinearLayout>
+
                 <Button
+                    android:id="@+id/view_invoice_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="38dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="View Invoice"
-                    android:textSize="14sp"
-                    android:gravity="center"
                     android:layout_gravity="right"
-                    android:visibility="gone"
-                    android:padding="10dp"
-                    android:textColor="@color/white"
-                    android:textAllCaps="false"
-                    android:background="@color/yellow"
+                    android:layout_marginTop="7dp"
                     android:layout_marginRight="10dp"
-                    android:id="@+id/view_invoice_btn"/>
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/yellow"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="View Invoice"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -339,14 +374,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="70dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:maxLines="1"
-                    android:text="Order No"
+                    android:text="Product Code"
                     android:textColor="@color/black" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -358,7 +393,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:maxLines="1"
                     android:id="@+id/order_no_add"
                     android:layout_marginLeft="10dp"
                     android:textColor="@color/black" />
@@ -368,13 +402,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="3dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="70dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:maxLines="1"
-                    android:text="Status"
+                    android:text="Order Price"
                     android:textColor="@color/black" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -385,24 +420,24 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:maxLines="1"
-                    android:id="@+id/order_status_add"
+                    android:id="@+id/order_amount_add"
                     android:layout_marginLeft="10dp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="70dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:maxLines="1"
-                    android:text="Amount"
+                    android:text="Order Status"
                     android:textColor="@color/black" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -413,13 +448,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:layout_gravity="left"
-                    android:id="@+id/order_amount_add"
+                    android:textSize="16sp"
+                    android:id="@+id/order_status_add"
                     android:layout_marginLeft="10dp"
-                    android:text="amount"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/black" />
 
             </LinearLayout>
         </LinearLayout>

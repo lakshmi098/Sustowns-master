@@ -19,7 +19,7 @@ public class BusinessProfileActivity extends AppCompatActivity {
     RelativeLayout rl_capture,rl_gallery;
     public String PickedImgPath = null;
     String profileString,user_name,user_mobile,gal_images,image_url,banner_image;
-    LinearLayout ll_categories,ll_reviews,ll_gallery_image,ll_business_badges,shipping,bankdetails;
+    LinearLayout ll_categories,ll_reviews,ll_gallery_image,ll_business_badges,shipping,bankdetails,ll_your_categories;
     PreferenceUtils preferenceUtils;
     TextView title_name,title_mobile;
     ProgressDialog progressDialog;
@@ -46,6 +46,7 @@ public class BusinessProfileActivity extends AppCompatActivity {
         ll_business_badges = (LinearLayout) findViewById(R.id.ll_business_badges);
         shipping = (LinearLayout) findViewById(R.id.ll_shipping);
         bankdetails = (LinearLayout) findViewById(R.id.ll_bank_details);
+        ll_your_categories = (LinearLayout) findViewById(R.id.ll_your_categories);
         title_name = (TextView) findViewById(R.id.title_user_name);
         title_mobile = (TextView) findViewById(R.id.title_user_mobile);
         title_name.setText(user_name);
@@ -110,19 +111,26 @@ public class BusinessProfileActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        ll_your_categories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(BusinessProfileActivity.this, BusinessYourCategory.class);
+                startActivity(i);
+            }
+        });
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(BusinessProfileActivity.this,SettingsActivity.class);
+                startActivity(i);
                 finish();
             }
         });
-
     }
-
     @Override
     public void onBackPressed() {
+        Intent i = new Intent(BusinessProfileActivity.this,SettingsActivity.class);
+        startActivity(i);
         finish();
     }
-
-
 }

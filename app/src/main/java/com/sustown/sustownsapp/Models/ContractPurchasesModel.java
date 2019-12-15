@@ -10,9 +10,13 @@ public class ContractPurchasesModel {
     private String quantity;
     private String totalprice;
     private String order_status;
+    private String complete_amount_status;
     private String order_date;
     private String invoice_no;
     private String job_name;
+    private String unique_id;
+    private String bank_thr_ran_id;
+    private String payment_status;
 
     private String image;
     private String Total;
@@ -81,6 +85,14 @@ public class ContractPurchasesModel {
         this.order_status = order_status;
     }
 
+    public String getComplete_amount_status() {
+        return complete_amount_status;
+    }
+
+    public void setComplete_amount_status(String complete_amount_status) {
+        this.complete_amount_status = complete_amount_status;
+    }
+
     public String getOrder_date() {
         return order_date;
     }
@@ -119,5 +131,29 @@ public class ContractPurchasesModel {
 
     public void setTotal(String total) {
         Total = total;
+    }
+
+    public String getBank_thr_ran_id() {
+        return bank_thr_ran_id;
+    }
+
+    public void setBank_thr_ran_id(String bank_thr_ran_id) {
+        this.bank_thr_ran_id = bank_thr_ran_id;
+    }
+
+    public String getUnique_id() {
+        return unique_id;
+    }
+
+    public void setUnique_id(String unique_id) {
+        this.unique_id = unique_id;
+    }
+
+    public String getPayment_status() {
+        return payment_status;
+    }
+
+    public void setPayment_status(String payment_status) {
+        this.payment_status = payment_status;
     }
 }

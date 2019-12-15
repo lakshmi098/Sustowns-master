@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.sustown.sustownsapp.Activities.QuoteNowActivity">
-
+    android:orientation="vertical">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:overScrollMode="never">
     <LinearLayout
         android:id="@+id/ll_open_quote"
         android:layout_width="match_parent"
@@ -81,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:checked="false"
-                    android:text="Advance Pay"
+                    android:text="Instant Pay"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -113,7 +115,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Advance Amount"
+            android:text="Amount"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -289,7 +291,6 @@
                         android:padding="7dp"
                         android:id="@+id/document_upload_text"
                         android:layout_marginTop="5dp"
-                        android:text="Document Upload"
                         android:textColor="@color/appcolor"
                         android:textSize="16sp" />
 
@@ -318,10 +319,11 @@
     </LinearLayout>
 
 
+</ScrollView>
     <LinearLayout
         android:id="@+id/ll_quote_my_quote"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
@@ -503,7 +505,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="150dp"
@@ -511,23 +513,25 @@
                     android:text="Quote Document"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text=":"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/document_download_img"
+                        android:padding="5dp"/>
 
-                <TextView
-                    android:id="@+id/quote_document"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="Document"
-                    android:textColor="@color/appcolor"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/quote_document"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/appcolor"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
 
             </LinearLayout>
 
@@ -546,6 +550,5 @@
             android:textSize="17sp" />
 
     </LinearLayout>
-
 
 </LinearLayout>

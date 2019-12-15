@@ -78,6 +78,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("Pro_Id",pro_id);
                 intent.putExtra("Image",image);
+                intent.putExtra("Status","1");
+                intent.putExtra("StoreMgmt","1");
                 context.startActivity(intent);
             }
         });

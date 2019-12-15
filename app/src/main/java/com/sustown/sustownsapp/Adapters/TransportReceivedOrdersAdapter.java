@@ -47,11 +47,11 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
         try {
             switch (viewHolder.getItemViewType()) {
                 case TRANSPORT_ORDER:
-                    viewHolder.order_name.setText("Service Name: "+orderModels.get(position).getService_name());
+                    viewHolder.order_weight.setText(orderModels.get(position).getPr_title());
+                    viewHolder.product_code.setText(orderModels.get(position).getPr_sku());
+                    viewHolder.order_name.setText(orderModels.get(position).getService_name());
                     viewHolder.order_number.setText(orderModels.get(position).getInvoice_no());
                     viewHolder.order_date.setText(orderModels.get(position).getOrder_date());
-                    viewHolder.order_weight.setText("Product Weight: "+orderModels.get(position).getPr_weight());
-
                     if(orderModels.get(position).getTrans_status().equalsIgnoreCase("1")){
                         viewHolder.ll_confirm_reject.setVisibility(View.GONE);
                         viewHolder.status_text.setVisibility(View.VISIBLE);
@@ -108,7 +108,7 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
                     break;
                 case TRANSPORT_DETAILS:
                     viewHolder.order_name.setText(transportDetailsList.get(position).getPr_title());
-                    viewHolder.order_number.setText(transportDetailsList.get(position).getInvoice_number());
+                    viewHolder.order_number.setText(transportDetailsList.get(position).getInvoice_no());
                     viewHolder.order_date.setText(transportDetailsList.get(position).getOrder_date());
                     viewHolder.order_weight.setText("Quantity : " + transportDetailsList.get(position).getQuantity());
 
@@ -120,7 +120,7 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
                     viewHolder.order_confirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ((TransportDetailsActivity) context).payOrder(position);
+                           // ((TransportDetailsActivity) context).payOrder(position);
                         }
                     });
 
@@ -134,7 +134,7 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
                     viewHolder.order_view_details.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ((TransportDetailsActivity) context).viewDetails(position);
+                          //  ((TransportDetailsActivity) context).viewDetails(position);
                         }
                     });
                     break;
@@ -154,7 +154,7 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView order_weight, order_date, order_name, order_number, order_status,status_text;
+        TextView order_weight, order_date, order_name, order_number, order_status,status_text,product_code,product_name;
         Button order_confirm, order_reject, order_view_details,order_quote;
         LinearLayout ll_confirm_reject;
 
@@ -171,6 +171,8 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
             order_view_details = view.findViewById(R.id.order_view_details);
             ll_confirm_reject = (LinearLayout) view.findViewById(R.id.ll_confirm_reject);
             status_text = (TextView) view.findViewById(R.id.status_text);
+            product_code = (TextView) view.findViewById(R.id.product_code);
+            product_name = (TextView) view.findViewById(R.id.product_name);
         }
     }
 

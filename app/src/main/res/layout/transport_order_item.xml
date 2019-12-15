@@ -28,7 +28,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/order_date"
+                    android:id="@+id/product_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -45,7 +45,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:text=""
-                    android:textAllCaps="true"
+                    android:textAllCaps="false"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -69,29 +69,36 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/order_name"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:layout_weight="1"
-                        android:text="Iphone 5s"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:textStyle="normal" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/order_quantity"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="1"
-                        android:singleLine="true"
-                        android:text="20"
-                        android:textColor="@color/black"
-                        android:textSize="14dp"
-                        android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Product Name"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/order_quantity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -100,10 +107,77 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/order_id_txt"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Service Name"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Order No : "
+                            android:text=":"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/order_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Order Date"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/order_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Order No"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
                             android:textColor="@color/black"
                             android:textSize="14dp"
                             android:textStyle="normal" />
@@ -112,7 +186,7 @@
                             android:id="@+id/order_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="2dp"
+                            android:layout_marginLeft="10dp"
                             android:text="KWIKOID123"
                             android:textColor="@color/black"
                             android:textSize="14dp"

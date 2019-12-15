@@ -19,6 +19,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonElement;
+import com.sustown.sustownsapp.Activities.PreferenceUtils;
+import com.sustown.sustownsapp.Api.DZ_URL;
+import com.sustown.sustownsapp.Api.UserApi;
 import com.sustown.sustownsapp.helpers.ImageZoomUtils.PhotoView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.common.ConnectionResult;
@@ -32,7 +36,15 @@ import java.util.Locale;
 
 import com.example.sustownsapp.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 //import org.apache.http.client.methods.HttpGet;
 //import org.apache.http.impl.client.BasicResponseHandler;
@@ -46,8 +58,11 @@ public class Helper {
     String cityName = null;
     SweetAlertDialog mprogressDialog;
 
+    PreferenceUtils preferenceUtils;
+
     public Helper(Context context) {
         this.context = context;
+        preferenceUtils = new PreferenceUtils(context);
     }
 
 
@@ -216,15 +231,14 @@ public class Helper {
             hideLoader();
         }
     }
-
     // Show alert dialog
     public void showDialog(Activity context, int type, String title, String message, SweetAlertDialog.OnSweetClickListener listener, SweetAlertDialog.OnSweetClickListener cancelListener) {
         if (cancelListener != null) {
             new SweetAlertDialog(context, type)
                     .setTitleText(title)
                     .setContentText(message)
-                    .setCancelText("No")
                     .setConfirmText("Yes")
+                    .setCancelText("No")
                     .showCancelButton(true)
                     .setConfirmClickListener(listener)
                     .setCancelClickListener(cancelListener)
@@ -277,7 +291,6 @@ public class Helper {
             e.printStackTrace();
         }
     }
-
     // Hide progress Bar
     public void hideLoader() {
         try {

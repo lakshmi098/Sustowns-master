@@ -1,5 +1,6 @@
 package com.sustown.sustownsapp.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -70,19 +72,20 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     private static int currentPage1 = 0;
     private static int NUM_PAGES1 = 0;
     Integer[] add_imgs = {R.drawable.slide1, R.drawable.slider5};
-    private static final Integer[] IMAGES= {R.drawable.slide1, R.drawable.slider2, R.drawable.slide3, R.drawable.slider5};
+    private static final Integer[] IMAGES= {R.drawable.slide1, R.drawable.slider2,R.drawable.slide_image_6,R.drawable.eggs_1_image, R.drawable.slide3, R.drawable.slider5,};
     private ArrayList<Integer> ImagesArray = new ArrayList<Integer>();
     private ArrayList<Integer> ImagesArray1 = new ArrayList<Integer>();
     RecyclerView gridView;
-    TextView home_text,news_text,store_text,contracts_text,market_text;
+    TextView home_text,news_text,store_text,contracts_text,market_text,cart_count;
     PreferenceUtils preferenceUtils;
     public static String userName,userEmail,pro_id,image,fullname,user_role;
     LinearLayout home,news,store,bidcontracts,poultryprices;
-    ArrayList gridList=new ArrayList<>();
     ArrayList<GetHomeProducts> getHomeProducts;
     GridAdapter gridAdapter;
     ShimmerFrameLayout shimmer_grid_container;
     Helper helper;
+    String cartcount,user_id;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
 
     public static void hideAndShowItems() {
@@ -115,6 +118,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         preferenceUtils = new PreferenceUtils(MainActivity.this);
+        user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
         helper = new Helper(MainActivity.this);
         checkAndRequestPermissions();
         user_role = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ROLE,"");
@@ -134,6 +138,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         contracts_text = (TextView) findViewById(R.id.contracts_footer);
         market_text = (TextView) findViewById(R.id.marketing_footer);
         home_text.setTextColor(getResources().getColor(R.color.appcolor));
+        cart_count = (TextView) findViewById(R.id.cart_count);
        /* BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.getMenu().getItem(0).setChecked(false);*/
@@ -205,6 +210,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             public void onClick(View v) {
                 contracts_text.setTextColor(getResources().getColor(R.color.appcolor));
                 Intent i = new Intent(MainActivity.this, BidContractsActivity.class);
+                i.putExtra("Processed","0");
                 startActivity(i);
             }
         });
@@ -223,11 +229,22 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 startActivity(i);
             }
         });
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.appcolor);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getProducts();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
         init();
         init1();
         hideAndShowItems();
         getProducts();
+        cartCount();
     }
+
     private  boolean checkAndRequestPermissions() {
         int camera = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA);
         int storage = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -255,15 +272,12 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         }
         return true;
     }
-
-    /*
-        @Override
+    /*@Override
         public void onBackPressed() {
             Intent intent = new Intent(MainActivity.this,MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-        }
-    */
+        }*/
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -377,10 +391,12 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         }
         else if(id == R.id.contracts_nav){
             Intent i = new Intent(MainActivity.this, BidContractsActivity.class);
+            i.putExtra("Processed","0");
             startActivity(i);
         }
         else if (id == R.id.storemanagement_nav) {
             Intent i = new Intent(MainActivity.this, StoreMyProductsActivity.class);
+            i.putExtra("Customizations","0");
             startActivity(i);
         }
         else if (id == R.id.service_management_nav) {
@@ -445,7 +461,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     private void getProducts() {
         shimmer_grid_container.startShimmerAnimation();
 
@@ -574,5 +589,68 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             }
         });
     }
+    public void cartCount() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DZ_URL.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserApi service = retrofit.create(UserApi.class);
+
+        Call<JsonElement> callRetrofit = null;
+        callRetrofit = service.cartCount(user_id);
+
+        callRetrofit.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        Log.d("Success Call", ">>>>" + call);
+                        Log.d("Success Call ", ">>>>" + response.body().toString());
+
+                        System.out.println("----------------------------------------------------");
+                        Log.d("Call request", call.request().toString());
+                        Log.d("Call request header", call.request().headers().toString());
+                        Log.d("Response raw header", response.headers().toString());
+                        Log.d("Response raw", String.valueOf(response.raw().body()));
+                        Log.d("Response code", String.valueOf(response.code()));
+                        System.out.println("----------------------------------------------------");
+
+                        if (response.body().toString() != null) {
+                            if (response != null) {
+                                String searchResponse = response.body().toString();
+                                Log.d("Reg", "Response  >>" + searchResponse.toString());
+
+                                if (searchResponse != null) {
+                                    JSONObject root = null;
+                                    try {
+                                        root = new JSONObject(searchResponse);
+                                        String success = root.getString("success");
+                                        //   message = root.getString("message");
+                                        if (success.equalsIgnoreCase("1")) {
+                                            cartcount = root.getString("cartcount");
+                                            cart_count.setText(cartcount);
+                                        }else{
+
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+                Log.d("Error Call", ">>>>" + call.toString());
+                Log.d("Error", ">>>>" + t.toString());
+                //Toast.makeText(MainActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 }

@@ -233,20 +233,24 @@
 
             </LinearLayout>
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
                 android:text="Received Contract(0)"
                 android:textFontWeight="1"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
+                android:padding="10dp"
                 android:layout_weight="1"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="10dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
+                android:layout_gravity="right"
+                android:gravity="center"
                 android:id="@+id/received_contract_btn"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textAllCaps="false"
-                android:background="#4FDDDDDD"/>
+                android:shadowColor="#66BB6A"
+                android:background="@drawable/light_green_btn_background"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

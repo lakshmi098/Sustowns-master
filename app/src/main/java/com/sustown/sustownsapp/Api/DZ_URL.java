@@ -7,6 +7,7 @@ public interface DZ_URL {
 
     String LOGIN = "Sustownsservice/login/";
     String HOME_PRODUCTS = "Sustownsservice/home";
+    String CART_COUNT = "Sustownsservice/cartcount/";
     String VENDOR_SIGNUP = "transportservices/registrationforall";
     String STORE_POULTRY = "Sustownsservice/store";
     String PRODUCT_DETAILS = "Sustownsservice/viewproduct";
@@ -45,7 +46,9 @@ public interface DZ_URL {
     String CANCEL_ORDER = "Postcontractservice/receivedcancel";
     String STORE_ORDER_DETAILS = "Postcontractservice/orderdetailser";
     String MY_PRODUCT_CONTRACTS = "Postcontractservice/myproductcontract";
-    String GET_COUNTRY = "Accountservice/countryservice";
+    String GET_COUNTRY = "Transportservices/countrylist";
+    String GET_STATES = "Transportservices/subdivisionlist/?";
+    String GET_CITIES = "Transportservices/cities/";
     String GET_CURRENCY = "Accountservice/currencyservice";
     String STORE_SENT_OFFERS = "Postcontractservice/madeofferapp";
     String STORE_RECEIVED_OFFERS = "Postcontractservice/makereceive";
@@ -53,7 +56,6 @@ public interface DZ_URL {
     String SUBMIT_MAKE_OFFER = "Postcontractservice/addmackoffer";
     String DELETE_OFFER = "Postcontractservice/deletemakeoffer";
     String ADD_REVIEW = "sustownsservice/productreviewadd";
-    String BUY_SAMPLE = "Sustownsservice/AddtosampleCart";
     String SEARCH_STORE = "Mainsearch/searchser";
     String PAY_BY_BANK_PLACEORDER = "Shopping/paybybankapp/";
     String VENDOR_PROFILE = "sustownsservice/service_view";
@@ -86,7 +88,6 @@ public interface DZ_URL {
     String GET_RECEIVED_CONTRACTS = "Postcontractservice/Quoteapp";
     String CONFIRM_QUOTE_RECEIVED_CONTRACT = "Postcontractservice/completequotestatus";
     String MAKE_PAYMENT_BANK_APPROVE = "Postcontractservice/quoteapprove/";
-
     String TRANSPORT_REGISTRATION = "transportservices/addtransportvendor";
     String GET_TRANS_SERVICES = "transportservices/myservices";
     // dev services(18-11-19)
@@ -96,7 +97,7 @@ public interface DZ_URL {
     String GET_TRANSPORT_TYPE = "Transportservices/transtypelist/";
     String GET_VEHICLE_TYPE = "Transportservices/vehicletypelist/";
     String POST_TRANSPORT_VENDOR_CONFIRM = "freight/transportVendorConfirmOrder";
-    String GET_TRANSPORT_DETAILS_LIST = "freight/transportBuyerTransportList/";
+  //  String GET_TRANSPORT_DETAILS_LIST = "freight/transportBuyerTransportList/";
     String TRANSPORT_REQUEST_QUOTE = "Transportservices/add_transdetails_req";
     String CANCEL_BOOKING = "freight/transportcancel_byvendor";
     String ADD_SERVICE = "transportservices/addservice";
@@ -107,12 +108,10 @@ public interface DZ_URL {
 
     // CUSTOMIZATION
     String GET_CUSTOMIZATION_LIST = "customizationsserv/myservices";
-
     // Live
     String GET_FILTER_CONTINENTS = "Sustownsservice/getcontinents";
     String GET_FILTER_COUNTRIES = "Sustownsservice/getcountries";
     String GET_FILTER_CITIES = "Sustownsservice/getstates";
- ///   String ADD_TO_CART = "http://dev2.sustowns.com/Sustownsservice/AddtoCart";
     String GET_FILTER_CATEGORIES = "Sustownsservice/getproductcategories";
     String GET_FILTER_PRODUCTLIST = "Sustownsservice/productslist";
 
@@ -120,6 +119,7 @@ public interface DZ_URL {
    // String GET_FILTER_CONTINENTS = "http://dev2.sustowns.com/Sustownsservice/getcontinents";
    // String GET_FILTER_COUNTRIES = "http://dev2.sustowns.com/Sustownsservice/getcountries";
   //  String GET_FILTER_CITIES = "http://dev2.sustowns.com/Sustownsservice/getstates";
+    ///   String ADD_TO_CART = "http://dev2.sustowns.com/Sustownsservice/AddtoCart";
     String ADD_TO_CART = "Sustownsservice/AddtoCart";
     String GET_CATEGORIES_LIST = "Sustownsservice/get_categeory";
     String GET_TRANSPORT_RECEIVED_ORDERS = "Sustownsservice/get_received_orders";
@@ -129,6 +129,10 @@ public interface DZ_URL {
   //  String GET_FILTER_CATEGORIES = "http://dev2.sustowns.com/Sustownsservice/getproductcategories";
    // String GET_FILTER_PRODUCTLIST = "http://dev2.sustowns.com/Sustownsservice/productslist";
 
+
+    //Move To Live API'S
+
+    // 1. add_transdetails_req IN Add Transport
 
 }
 

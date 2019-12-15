@@ -124,6 +124,7 @@ public class NewsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 contracts_text.setTextColor(getResources().getColor(R.color.appcolor));
                 Intent i = new Intent(NewsActivity.this, BidContractsActivity.class);
+                i.putExtra("Processed","0");
                 startActivity(i);
             }
         });

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,15 +50,16 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
     ReceivedOrdersAdapter receivedOrdersAdapter;
     ProgressDialog progressDialog;
     PreferenceUtils preferenceUtils;
-    String user_id;
-    TextView available_text;
+    String user_id,messageStr = "";
+    TextView available_text,text_message;
     ArrayList<OrderModel> orderModels;
     Button my_orders_btn, received_orders_btn, cancel_btn, submit_btn;
     AlertDialog alertDialog;
-    String sellernameStr, sellernoStr, sellerAddress, sellerCountry, sellerZipcode;
+    String sellernameStr, sellernoStr, sellerAddress, sellerCountry, sellerZipcode,actionStr = "";
     EditText seller_name, seller_number, product_address, product_country, product_zipcode;
     Dialog customdialog;
     Helper helper;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +71,16 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
         preferenceUtils = new PreferenceUtils(StoreReceivedOrdersActivity.this);
         user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID, "");
         helper = new Helper(this);
-
+        messageStr = getIntent().getStringExtra("Message");
+        text_message = (TextView) findViewById(R.id.text_message);
+        if(messageStr.equalsIgnoreCase("") || messageStr.isEmpty() ||  messageStr.equalsIgnoreCase("null")){
+            text_message.setVisibility(View.GONE);
+            myOrdersList();
+        }else{
+            text_message.setVisibility(View.VISIBLE);
+            text_message.setText(messageStr);
+            myOrdersList();
+        }
         my_orders_btn = (Button) findViewById(R.id.my_orders_btn);
         received_orders_btn = (Button) findViewById(R.id.received_orders_btn);
         recycler_view_received_orders = (RecyclerView) findViewById(R.id.recycler_view_received_orders);
@@ -82,9 +93,12 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
         received_orders_btn.setTextColor(getResources().getColor(R.color.black));
         my_orders_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
         received_orders_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+        actionStr = "myOrders";
         my_orders_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                actionStr = "myOrders";
+                text_message.setVisibility(View.GONE);
                 my_orders_btn.setTextColor(getResources().getColor(R.color.white));
                 received_orders_btn.setTextColor(getResources().getColor(R.color.black));
                 my_orders_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
@@ -95,6 +109,8 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
         received_orders_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                actionStr = "receivedOrders";
+                text_message.setVisibility(View.GONE);
                 received_orders_btn.setTextColor(getResources().getColor(R.color.white));
                 my_orders_btn.setTextColor(getResources().getColor(R.color.black));
                 received_orders_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
@@ -117,7 +133,27 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        myOrdersList();
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.appcolor);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(actionStr.equalsIgnoreCase("myOrders")){
+                    my_orders_btn.setTextColor(getResources().getColor(R.color.white));
+                    received_orders_btn.setTextColor(getResources().getColor(R.color.black));
+                    my_orders_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
+                    received_orders_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+                    myOrdersList();
+                }else if(actionStr.equalsIgnoreCase("receivedOrders")) {
+                    received_orders_btn.setTextColor(getResources().getColor(R.color.white));
+                    my_orders_btn.setTextColor(getResources().getColor(R.color.black));
+                    received_orders_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
+                    my_orders_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+                    receivedOrderList();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -134,21 +170,17 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
         progressDialog.setCancelable(true);
         progressDialog.show();
     }
-
     public void myOrdersList() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DZ_URL.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         OrdersApi service = retrofit.create(OrdersApi.class);
-
         Call<JsonElement> callRetrofit = null;
         callRetrofit = service.myOrders(user_id);
        // callRetrofit = service.myOrders("453");
         callRetrofit.enqueue(new Callback<JsonElement>() {
-
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 try {
@@ -160,11 +192,8 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                         Log.d("Response raw header", response.headers().toString());
                         Log.d("Response raw", String.valueOf(response.raw().body()));
                         Log.d("Response code", String.valueOf(response.code()));
-
                         System.out.println("----------------------------------------------------");
-
                         if (response.body().toString() != null) {
-
                             if (response != null) {
                                 String searchResponse = response.body().toString();
                                 Log.d("Categeries", "response  >>" + searchResponse.toString());
@@ -208,10 +237,9 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                                                 String pay_method = jsonObject.getString("pay_method");
                                                 String bank_thr_ran_id = jsonObject.getString("bank_thr_ran_id");
                                                 String complete_amount_status = jsonObject.getString("complete_amount_status");
-
+                                                String payment_status = jsonObject.getString("payment_status");
                                                 preferenceUtils.saveString(PreferenceUtils.ORDER_ID, order_id);
                                                 preferenceUtils.saveString(PreferenceUtils.TRANSACTION_ID, bank_thr_ran_id);
-
                                                 OrderModel orderModel = new OrderModel();
                                                 orderModel.setId(id);
                                                 orderModel.setUser_id(user_id);
@@ -233,6 +261,7 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                                                 orderModel.setPay_method(pay_method);
                                                 orderModel.setBank_thr_ran_id(bank_thr_ran_id);
                                                 orderModel.setComplete_amount_status(complete_amount_status);
+                                                orderModel.setPayment_status(payment_status);
                                                 orderModels.add(orderModel);
 
                                             }
@@ -303,15 +332,11 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                         Log.d("Response raw header", response.headers().toString());
                         Log.d("Response raw", String.valueOf(response.raw().body()));
                         Log.d("Response code", String.valueOf(response.code()));
-
                         System.out.println("----------------------------------------------------");
-
                         if (response.body().toString() != null) {
-
                             if (response != null) {
                                 String searchResponse = response.body().toString();
                                 Log.d("Categeries", "response  >>" + searchResponse.toString());
-
                                 if (searchResponse != null) {
                                     JSONObject root = null;
                                     try {
@@ -358,7 +383,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
 
                                                 preferenceUtils.saveString(PreferenceUtils.ORDER_ID, order_id);
                                                 preferenceUtils.saveString(PreferenceUtils.TRANSACTION_ID, bank_thr_ran_id);
-
                                                 OrderModel orderModel = new OrderModel();
                                                 orderModel.setId(id);
                                                 orderModel.setUser_id(user_id);
@@ -385,7 +409,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                                                 orderModel.setFullname(fullname);
                                                 orderModel.setPhone(phone);
                                                 orderModels.add(orderModel);
-
                                             }
                                             // Toast.makeText(CartActivity.this, message, Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
@@ -411,7 +434,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                             available_text.setVisibility(View.VISIBLE);
                             available_text.setText("Received Orders Are Not Available");
                         }
-
                     } else {
                         //  Toast.makeText(CartActivity.this, "Cart is not added", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
@@ -420,7 +442,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 //                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
@@ -428,7 +449,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
             }
         });
     }
-
     //    Adapter
     public class ReceivedOrdersAdapter extends RecyclerView.Adapter<ReceivedOrdersAdapter.ViewHolder> {
         Context context;
@@ -444,21 +464,19 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
             this.context = context;
             this.orderModels = orderModels;
         }
-
         @Override
         public ReceivedOrdersAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.my_contract_orders_item, viewGroup, false);
             //  product_sale_activity.onItemClick(i);
             return new ReceivedOrdersAdapter.ViewHolder(view);
         }
-
         @Override
         public void onBindViewHolder(final ReceivedOrdersAdapter.ViewHolder viewHolder, final int position) {
             order_status = orderModels.get(position).getOrder_status();
             pay_method = orderModels.get(position).getPay_method();
             if (orderModels.get(position) != null) {
                 viewHolder.orderName.setText(orderModels.get(position).getPr_title());
-                viewHolder.order_no.setText(orderModels.get(position).getProduct_order_id());
+                viewHolder.order_no.setText(orderModels.get(position).getInvoice_no());
                 viewHolder.orderDate.setText(orderModels.get(position).getOrder_date());
                 viewHolder.order_price.setText(orderModels.get(position).getTotalprice());
                 if (order_status.equalsIgnoreCase("0")) {
@@ -531,14 +549,12 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                                     customdialog.show();
                                 }
                             });
-
                     alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             alertDialog.dismiss();
                         }
                     });
-
                     alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
                 }
@@ -557,7 +573,7 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
             }else{
                 viewHolder.add_payment_btn.setVisibility(View.GONE);
             }*/
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            viewHolder.view_invoice_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(context, OrderDetailsActivity.class);
@@ -569,19 +585,17 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(context, AddPaymentActivity.class);
-                    i.putExtra("OrderId",orderModels.get(position).getOrder_id());
+                    i.putExtra("OrderId",orderModels.get(position).getId());
                     i.putExtra("BankRandId",orderModels.get(position).getBank_thr_ran_id());
                     i.putExtra("RandId",orderModels.get(position).getProduct_order_id());
+                    i.putExtra("ContractOrders","1");
                     context.startActivity(i);
                 }
             });
         }
-
         public void removeAt(int position) {
             //  notifyDataSetChanged();
-
         }
-
         private void submitConfirmOrder() {
             // progressdialog();
             Retrofit retrofit = new Retrofit.Builder()
@@ -597,7 +611,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
 
             Call<JsonElement> callRetrofit = null;
             callRetrofit = service.confirmOrderSubmit(order_id, sellernameStr, sellernoStr, sellerAddress, sellerCountry, sellerZipcode);
-
             callRetrofit.enqueue(new Callback<JsonElement>() {
                 @Override
                 public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -614,14 +627,10 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                             Log.d("Response raw", String.valueOf(response.raw().body()));
                             Log.d("Response code", String.valueOf(response.code()));
                             System.out.println("----------------------------------------------------");
-
-
                             if (response.body().toString() != null) {
-
                                 if (response != null) {
                                     String searchResponse = response.body().toString();
                                     Log.d("Reg", "Response  >>" + searchResponse.toString());
-
                                     if (searchResponse != null) {
                                         JSONObject root = null;
                                         try {
@@ -637,12 +646,10 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                                                /* Intent i = new Intent(context,StoreReceivedOrdersActivity.class);
                                                 context.startActivity(i);*/
                                                 //  progressDialog.dismiss();
-
                                             } else {
                                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                                                 //  progressDialog.dismiss();
                                             }
-
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -657,7 +664,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     //  progressDialog.dismiss();
-
                 }
 
                 @Override
@@ -669,7 +675,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                 }
             });
         }
-
         private void cancelOrder() {
             //  progressdialog();
             Retrofit retrofit = new Retrofit.Builder()
@@ -679,7 +684,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
             OrdersApi service = retrofit.create(OrdersApi.class);
             Call<JsonElement> callRetrofit = null;
             callRetrofit = service.cancelOrder(order_id);
-
             callRetrofit.enqueue(new Callback<JsonElement>() {
                 @Override
                 public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -696,14 +700,10 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                             Log.d("Response raw", String.valueOf(response.raw().body()));
                             Log.d("Response code", String.valueOf(response.code()));
                             System.out.println("----------------------------------------------------");
-
-
                             if (response.body().toString() != null) {
-
                                 if (response != null) {
                                     String searchResponse = response.body().toString();
                                     Log.d("Reg", "Response  >>" + searchResponse.toString());
-
                                     if (searchResponse != null) {
                                         JSONObject root = null;
                                         try {
@@ -716,12 +716,10 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                                                 receivedOrderList();
                                                 // progressDialog.dismiss();
-
                                             } else {
                                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                                                 // progressDialog.dismiss();
                                             }
-
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -735,21 +733,16 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    // progressDialog.dismiss();
-
                 }
-
                 @Override
                 public void onFailure(Call<JsonElement> call, Throwable t) {
                     Log.d("Error Call", ">>>>" + call.toString());
                     Log.d("Error", ">>>>" + t.toString());
-                    //    Toast.makeText(MakeOffer.this, "Please login again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StoreReceivedOrdersActivity.this, "Some thing went wrong!Please try again later", Toast.LENGTH_SHORT).show();
                     //  progressDialog.dismiss();
                 }
             });
         }
-
-
         @Override
         public int getItemCount() {
             return orderModels.size();
@@ -759,7 +752,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
             TextView orderName, orderQuantity, orderDate, orderStatus,order_price,order_no;
             Button add_payment_btn, confirm_order_btn,view_invoice_btn;
             Button cancel_orderbtn;
-
             public ViewHolder(View view) {
                 super(view);
                 orderName = (TextView) view.findViewById(R.id.order_name);
@@ -772,7 +764,6 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                 view_invoice_btn = (Button) view.findViewById(R.id.view_invoice_btn);
                 order_price = (TextView) view.findViewById(R.id.order_price);
                 order_no = (TextView) view.findViewById(R.id.order_no);
-
             }
         }
     }

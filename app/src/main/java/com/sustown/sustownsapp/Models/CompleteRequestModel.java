@@ -38,6 +38,7 @@ public class CompleteRequestModel {
     private String invoice_no;
     private String status;
     private String job_id;
+    private String qnt_weight;
 
     public String getInstant_amount() {
         return instant_amount;
@@ -325,5 +326,13 @@ public class CompleteRequestModel {
 
     public void setJob_id(String job_id) {
         this.job_id = job_id;
+    }
+
+    public String getQnt_weight() {
+        return qnt_weight;
+    }
+
+    public void setQnt_weight(String qnt_weight) {
+        this.qnt_weight = qnt_weight;
     }
 }

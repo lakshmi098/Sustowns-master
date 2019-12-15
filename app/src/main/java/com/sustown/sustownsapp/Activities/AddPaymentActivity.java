@@ -42,6 +42,7 @@ import com.sustown.sustownsapp.Models.CartListModels;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,23 +57,24 @@ public class AddPaymentActivity extends AppCompatActivity {
 
     RecyclerView recycler_view_add_payment;
     ImageView backarrow;
-    TextView total_amount_add_payment,add_payment_msg;
-    EditText cheque_no,amount;
+    TextView total_amount_add_payment,add_payment_msg,product_code,date,order_status_add,product_name,amount;
+    EditText cheque_no;
     Button paymentDate,submit_btn;
     private Calendar cal;
     private int day;
     private int month;
     private int year;
-    LinearLayout ll_bank_details,linearlayout;
-    TextView acc_name,acc_no,acc_ifsccode,acc_address,acc_note;
+    LinearLayout ll_bank_details,linearlayout,ll_add_payment;
+    TextView acc_name,acc_no,acc_ifsccode,acc_address,acc_note,cheque_text;
     ProgressDialog progressDialog;
     AddPaymentAdapter addPaymentAdapter;
     ArrayList<CartListModels> paymentModels;
     PreferenceUtils preferenceUtils;
-    String user_id,orderId,order_id,transation_id,totalprice,order_status,Amount,ChequeNo,paymentType,bankRandId,randId,SelectedDate;
-    RadioButton online_radiobtn, cheque_radiobtn;
+    String user_id,orderId,order_id,transation_id,totalprice,order_status,contractOrders,Amount,ChequeNo,paymentType,bankRandId,randId,SelectedDate;
+    RadioButton online_radiobtn, cheque_radiobtn,radioButton;
     RadioGroup radioGroup;
-
+    Integer selectedId;
+    String ProName,ProCode,ProPrice,ProDate,ProStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,20 +84,37 @@ public class AddPaymentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_payment);
         preferenceUtils = new PreferenceUtils(AddPaymentActivity.this);
         user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
-        order_id = preferenceUtils.getStringFromPreference(PreferenceUtils.ORDER_ID,"");
-       // orderId = getIntent().getStringExtra("OrderId");
+        orderId = getIntent().getStringExtra("OrderId");
         bankRandId = getIntent().getStringExtra("BankRandId");
         randId = getIntent().getStringExtra("RandId");
+        contractOrders = getIntent().getStringExtra("ContractOrders");
+        ProName = getIntent().getStringExtra("ContractName");
+        ProCode = getIntent().getStringExtra("UniqueCode");
+        ProPrice = getIntent().getStringExtra("Amount");
+        ProDate = getIntent().getStringExtra("Date");
+        ProStatus = getIntent().getStringExtra("Status");
+        ll_add_payment = (LinearLayout) findViewById(R.id.ll_add_payment);
+        product_name = (TextView) findViewById(R.id.product_name);
+        product_code = (TextView) findViewById(R.id.product_code);
+        date = (TextView) findViewById(R.id.date);
+        order_status_add = (TextView) findViewById(R.id.order_status_add);
         add_payment_msg = (TextView) findViewById(R.id.add_payment_msg);
+       /* product_name.setText(ProName);
+        product_code.setText(ProCode);
+        date.setText(ProDate);
+        order_status_add.setText(ProStatus);*/
         total_amount_add_payment = (TextView) findViewById(R.id.total_amount_add_payment);
+        total_amount_add_payment.setText("Total Order Amount : "+ProPrice);
+        amount = (TextView) findViewById(R.id.amount_payment);
+        amount.setText(ProPrice);
         linearlayout = (LinearLayout) findViewById(R.id.linearlayout);
         recycler_view_add_payment = (RecyclerView) findViewById(R.id.recycler_view_add_payment);
         LinearLayoutManager layoutManager = new LinearLayoutManager(AddPaymentActivity.this,LinearLayoutManager.VERTICAL,false);
         recycler_view_add_payment.setLayoutManager(layoutManager);
         backarrow = (ImageView) findViewById(R.id.backarrow);
         cheque_no = (EditText) findViewById(R.id.cheque_no);
+        cheque_text = (TextView) findViewById(R.id.cheque_text);
         paymentDate = (Button) findViewById(R.id.payment_date);
-        amount = (EditText) findViewById(R.id.amount);
         submit_btn = (Button) findViewById(R.id.submit_btn);
         ll_bank_details = (LinearLayout) findViewById(R.id.ll_bank_details);
         acc_name = (TextView) findViewById(R.id.bank_account_name);
@@ -112,15 +131,6 @@ public class AddPaymentActivity extends AppCompatActivity {
                 return false;
             }
         });
-        amount.setFocusableInTouchMode(false);
-        amount.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                amount.setFocusableInTouchMode(true);
-                amount.requestFocus();
-                return false;
-            }
-        });
         paymentDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,13 +139,26 @@ public class AddPaymentActivity extends AppCompatActivity {
                 month = cal.get(Calendar.MONTH);
                 year = cal.get(Calendar.YEAR);
                 DateDialog();
-
             }
         });
         submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setJsonObject();
+                selectedId = radioGroup.getCheckedRadioButtonId();
+                radioButton = (RadioButton) findViewById(selectedId);
+                // selectedRadioBtn = radioButton.getText().toString();
+                if (selectedId < 0) {
+                    Toast.makeText(AddPaymentActivity.this, "Please Select Payment Method", Toast.LENGTH_SHORT).show();
+                }else if(SelectedDate.equalsIgnoreCase("")|| cheque_no.getText().toString().equalsIgnoreCase("")){
+                    Toast.makeText(AddPaymentActivity.this, "All fields are Mandatory", Toast.LENGTH_SHORT).show();
+                }else if(contractOrders.equalsIgnoreCase("1")){
+                    setJsonObject();
+                }else if(contractOrders.equalsIgnoreCase("2")){
+                    setContractJsonObject();
+                }else if(contractOrders.equalsIgnoreCase("0")){
+                    setLogisticsJsonObject();
+                    // TO DO FOR LOGISTICS ORDERS
+                }
             }
         });
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
@@ -146,20 +169,52 @@ public class AddPaymentActivity extends AppCompatActivity {
                 switch (checkedId) {
                     case R.id.cheque_radiobtn:
                         paymentType = "cheque";
+                        cheque_text.setText("Cheque No");
                         break;
                     case R.id.online_radiobtn:
                         paymentType = "online";
+                        cheque_text.setText("Online Transaction ID");
                         break;
                 }
             }
         });
+        if(contractOrders.equalsIgnoreCase("1")){
+            recycler_view_add_payment.setVisibility(View.VISIBLE);
+            ll_add_payment.setVisibility(View.GONE);
+            getStorePaymentList();
+        }else if(contractOrders.equalsIgnoreCase("2")){
+            ll_add_payment.setVisibility(View.VISIBLE);
+            recycler_view_add_payment.setVisibility(View.GONE);
+            product_name.setText(ProName);
+            product_code.setText(randId);
+            date.setText(ProDate);
+            if(ProStatus.equalsIgnoreCase("0")){
+                order_status_add.setText("Pending");
+            }else if(ProStatus.equalsIgnoreCase("1")){
+                order_status_add.setText("Complete");
+            }else if(ProStatus.equalsIgnoreCase("2")){
+                order_status_add.setText("Cancelled");
+            }else if(ProStatus.equalsIgnoreCase("3")){
+                order_status_add.setText("Payment Processing");
+            }
+        }else if(contractOrders.equalsIgnoreCase("0")){
+            ll_add_payment.setVisibility(View.VISIBLE);
+            recycler_view_add_payment.setVisibility(View.GONE);
+            product_name.setText(ProName);
+            product_code.setText(randId);
+            date.setText(ProDate);
+            if(ProStatus.equalsIgnoreCase("0")){
+                order_status_add.setText("Pending");
+            }else if(ProStatus.equalsIgnoreCase("1")){
+                order_status_add.setText("Complete");
+            }
+        }
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        getPaymentList();
         getBankDetailsList();
     }
     public void DateDialog(){
@@ -168,7 +223,7 @@ public class AddPaymentActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
-                SelectedDate = dayOfMonth+"-"+(monthOfYear+1)+"-"+year;
+                SelectedDate = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
                 paymentDate.setText(SelectedDate);
             }};
         DatePickerDialog dpDialog=new DatePickerDialog(this, listener, year, month, day);
@@ -182,8 +237,7 @@ public class AddPaymentActivity extends AppCompatActivity {
         progressDialog.setCancelable(true);
         progressDialog.show();
     }
-    public void getPaymentList() {
-        transation_id = preferenceUtils.getStringFromPreference(PreferenceUtils.TRANSACTION_ID,"");
+    public void getStorePaymentList() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DZ_URL.BASE_URL)
@@ -192,7 +246,7 @@ public class AddPaymentActivity extends AppCompatActivity {
 
         UserApi service = retrofit.create(UserApi.class);
         Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getCartListPaymentOrders(order_id,transation_id,user_id);
+        callRetrofit = service.getCartListPaymentOrders(orderId,bankRandId,user_id);
         callRetrofit.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -230,7 +284,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                                                 totalprice = jsonObject.getString("totalprice");
                                                 String order_status = jsonObject.getString("order_status");
                                                 String pr_title = jsonObject.getString("pr_title");
-
+                                                total_amount_add_payment.setText("Total Order Amount : "+totalprice);
 
                                                 CartListModels paymentModel = new CartListModels();
                                                 paymentModel.setId(id);
@@ -261,7 +315,6 @@ public class AddPaymentActivity extends AppCompatActivity {
                                             String due_or_extra_amount = final_info.getString("due_or_extra_amount");
                                             String amount_alert = final_info.getString("amount_alert");
 
-                                            total_amount_add_payment.setText("Total Order Amount : "+totalprice);
                                             add_payment_msg.setText(amount_alert+"("+due_or_extra_amount+")");
                                             progressDialog.dismiss();
                                         }
@@ -305,8 +358,8 @@ public class AddPaymentActivity extends AppCompatActivity {
             jsonObj.put("bankrandid", bankRandId);
             jsonObj.put("transactionNo",cheque_no.getText().toString());
             jsonObj.put("paydate",SelectedDate);
-            jsonObj.put("amount", amount.getText().toString());
-            jsonObj.put("payId", order_id);
+            jsonObj.put("amount",totalprice);
+            jsonObj.put("payId", orderId);
             jsonObj.put("ranid",randId);
             jsonObj.put("userid",user_id);
 
@@ -335,14 +388,133 @@ public class AddPaymentActivity extends AppCompatActivity {
                                 snackbar.show();
                                 progressDialog.dismiss();
                                 Intent i = new Intent(AddPaymentActivity.this, StoreReceivedOrdersActivity.class);
+                                i.putExtra("Message","Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours");
                                 startActivity(i);
+                                progressDialog.dismiss();
                             } else {
+                                progressDialog.dismiss();
                                 Toast.makeText(AddPaymentActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
                         }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setContractJsonObject() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("payId", orderId);
+            jsonObj.put("ranid",randId);
+            jsonObj.put("userid",user_id);
+            jsonObj.put("bankrandid", bankRandId);
+            jsonObj.put("amount", ProPrice);
+            jsonObj.put("paydate",SelectedDate);
+            jsonObj.put("transactionNo",cheque_no.getText().toString());
+            jsonObj.put("transactionType", paymentType);
+
+            androidNetworkingContractpayByBank(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingContractpayByBank(JSONObject jsonObject){
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Sustownsservice/contractpaybybank_api/")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            String message = response.getString("message");
+                            String success = response.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                Snackbar snackbar = Snackbar
+                                        .make(linearlayout,"Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                                progressDialog.dismiss();
+                                Intent i = new Intent(AddPaymentActivity.this, MyContractOrdersActivity.class);
+                                i.putExtra("Message","Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours");
+                                i.putExtra("PurchasedOrders","1");
+                                startActivity(i);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(AddPaymentActivity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setLogisticsJsonObject() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("payId", orderId);
+            jsonObj.put("ranid",randId);
+            jsonObj.put("userid",user_id);
+            jsonObj.put("bankrandid", bankRandId);
+            jsonObj.put("amount", ProPrice);
+            jsonObj.put("paydate",SelectedDate);
+            jsonObj.put("transactionNo",cheque_no.getText().toString());
+            jsonObj.put("transactionType", paymentType);
+
+            androidNetworkingLogisticpayByBank(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingLogisticpayByBank(JSONObject jsonObject){
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Sustownsservice/transportpaybybank_api/")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            String message = response.getString("message");
+                            String success = response.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                Snackbar snackbar = Snackbar
+                                        .make(linearlayout,"Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                                progressDialog.dismiss();
+                                Intent i = new Intent(AddPaymentActivity.this, LogisticsOrdersActivity.class);
+                                i.putExtra("Message","Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours");
+                                startActivity(i);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(AddPaymentActivity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
                     }
                     @Override
                     public void onError(ANError error) {

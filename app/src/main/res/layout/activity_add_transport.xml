@@ -102,6 +102,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@null"
                 android:padding="5dp"
+                android:textStyle="bold"
                 android:text="Product Details"
                 android:textColor="#000000"
                 android:textSize="16sp" />
@@ -138,6 +139,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Eggs"
+                        android:background="@null"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="10dp"
                         android:focusableInTouchMode="false"
                         android:textSize="16sp" />
 
@@ -174,6 +179,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Eggs"
+                    android:background="@null"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
                     android:focusableInTouchMode="false"
                     android:textSize="16sp" />
 
@@ -210,6 +219,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Crate"
+                    android:background="@null"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
                     android:focusableInTouchMode="false"
                     android:inputType="numberDecimal"
                     android:textSize="16sp" />
@@ -247,6 +260,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="12 Pack Crate"
+                    android:background="@null"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
                     android:focusableInTouchMode="false"
                     android:textSize="16sp" />
 
@@ -283,6 +300,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="India"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/black"
+                    android:background="@null"
+                    android:textColorHint="@color/black"
                     android:focusableInTouchMode="false"
                     android:textSize="16sp" />
 
@@ -319,6 +340,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="India"
+                    android:background="@null"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
                     android:focusableInTouchMode="false"
                     android:textSize="16sp" />
 
@@ -354,7 +379,10 @@
                     android:id="@+id/seller_location_transport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="India"
+                    android:background="@null"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
                     android:focusableInTouchMode="false"
                     android:textSize="16sp" />
 
@@ -390,7 +418,11 @@
                     android:id="@+id/drop_location_transport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="India"
+                    android:hint=""
+                    android:background="@null"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
                     android:focusableInTouchMode="false"
                     android:textSize="16sp" />
 

@@ -35,7 +35,7 @@ public class MakeOffer extends AppCompatActivity {
     EditText price_et,quantity_et;
     Button close_btn,submit_btn;
     ImageView close_make_offer;
-    String price,quantity,user_id,min_quantity,title,unit,pro_id;
+    String price,quantity,user_id,min_quantity,title,unit,pro_id,MinPriceStr;
     ProgressDialog progressDialog;
     PreferenceUtils preferenceUtils;
     Integer quantity_int,min_quant_int;
@@ -66,11 +66,13 @@ public class MakeOffer extends AppCompatActivity {
             make_offer_price.setText(price);
             make_offer_unit.setText(unit);
             quantity_et.setText(min_quantity);
+            price_et.setText(MinPriceStr);
         }else{
             make_offer_name.setText("");
             make_offer_price.setText("");
             make_offer_unit.setText("");
             quantity_et.setText("");
+            price_et.setText("");
         }
         close_make_offer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,13 +91,13 @@ public class MakeOffer extends AppCompatActivity {
             public void onClick(View v) {
                 price = price_et.getText().toString().trim();
                 quantity = quantity_et.getText().toString().trim();
-                quantity_int = Integer.parseInt(quantity);
-                if(quantity_int < min_quant_int){
-                    Toast.makeText(MakeOffer.this, "Value must be greater than "+min_quant_int+"or equals to"+min_quant_int, Toast.LENGTH_SHORT).show();
+                quantity_int = Integer.parseInt(price);
+                Integer MinPrice = Integer.parseInt(MinPriceStr);
+                if(quantity_int > MinPrice){
+                    Toast.makeText(MakeOffer.this, "Value must be less than "+min_quant_int+"or equals to"+min_quant_int, Toast.LENGTH_SHORT).show();
                 }else {
                     submitMakeOffer();
                 }
-
             }
         });
         price_et.setFocusableInTouchMode(false);
@@ -119,6 +121,7 @@ public class MakeOffer extends AppCompatActivity {
         unit = intent.getStringExtra("Unit");
         price = intent.getStringExtra("Price");
         pro_id = intent.getStringExtra("ProID");
+        MinPriceStr = intent.getStringExtra("MinPrice");
     }
 
     public void progressdialog() {

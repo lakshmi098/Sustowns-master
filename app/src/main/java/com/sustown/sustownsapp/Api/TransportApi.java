@@ -89,4 +89,6 @@ public interface TransportApi {
     @GET(DZ_URL.GET_CATEGORIES_LIST)
     Call<JsonElement> getCategoriesList();
 
+    @GET
+    Call<JsonElement> getLogisticsOrders(@Url String url);
 }

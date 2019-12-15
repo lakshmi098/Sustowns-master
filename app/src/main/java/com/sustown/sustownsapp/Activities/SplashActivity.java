@@ -32,6 +32,7 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Intent intent = new Intent(SplashActivity.this, SignInActivity.class);
+                    intent.putExtra("Message","");
                     startActivity(intent);
                     finish();
 

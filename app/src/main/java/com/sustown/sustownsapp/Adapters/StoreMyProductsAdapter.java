@@ -96,11 +96,12 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
             viewHolder.prod_name.setText(myProductsModels.get(position).getPr_title());
             viewHolder.prod_price.setText(myProductsModels.get(position).getPr_price());
             viewHolder.prod_quantity.setText(myProductsModels.get(position).getPr_min());
-            if(prod_status.equalsIgnoreCase("0")){
+            viewHolder.prod_status.setText(myProductsModels.get(position).getPr_sku());
+          /*  if(prod_status.equalsIgnoreCase("0")){
                 viewHolder.prod_status.setText("Pending");
             }else if(prod_status.equalsIgnoreCase("1")){
                 viewHolder.prod_status.setText("Complete");
-            }
+            }*/
         }
         viewHolder.update_prod.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,12 +156,12 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
                 Intent i = new Intent(context, ProductDetailsActivity.class);
                 i.putExtra("Pro_Id",pro_id);
                 i.putExtra("Image",image);
+                i.putExtra("Status","2");
+                i.putExtra("StoreMgmt","2");
                 context.startActivity(i);
             }
         });
-
     }
-
     public void removeAt(int position) {
           notifyDataSetChanged();
     }
@@ -298,6 +299,7 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
 
                                     if (success.equalsIgnoreCase("1")) {
                                         Intent i = new Intent(context, StoreMyProductsActivity.class);
+                                        i.putExtra("Customizations","0");
                                         context.startActivity(i);
                                         Toast.makeText(context, "Product Copied Successfully", Toast.LENGTH_SHORT).show();
                                         if(progressDialog.isShowing())
@@ -307,8 +309,6 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
                                             progressDialog.dismiss();
                                         Toast.makeText(context, "Product Not Copied", Toast.LENGTH_SHORT).show();
                                     }
-
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -321,7 +321,6 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
                     // Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 //                Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();

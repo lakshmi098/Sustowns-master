@@ -76,7 +76,19 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:textStyle="bold"
+        android:id="@+id/status_text"
+        android:textColor="@color/btn_background_color"
+        android:textSize="16sp" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeToRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -84,7 +96,9 @@
         android:id="@+id/recycler_received_offers">
 
     </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
+<!--
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -93,6 +107,7 @@
         android:id="@+id/recycler_sent_offers">
 
     </android.support.v7.widget.RecyclerView>
+-->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

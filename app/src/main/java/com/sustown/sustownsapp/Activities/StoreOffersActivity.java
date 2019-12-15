@@ -2,6 +2,7 @@ package com.sustown.sustownsapp.Activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,16 +37,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class StoreOffersActivity extends AppCompatActivity {
 
     ImageView backarrow;
-    RecyclerView recycler_received_offers,recycler_sent_offers;
+    RecyclerView recycler_received_offers;
     StoreReceivedOffersAdapter storeReceivedOffersAdapter;
     StoreSentOffersAdapter storeSentOffersAdapter;
     Button receivedBtn,sentBtn;
     String[] order = {"Offer 1","Offer2"};
-    TextView available_text;
+    TextView available_text,status_text;
     ProgressDialog progressDialog;
-    String user_id;
+    String user_id,MessageStr,SentOffersStr,actionStr = "";
     ArrayList<StoreSentOffersModel> storeSentOffersModels;
     PreferenceUtils preferenceUtils;
+    SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +56,12 @@ public class StoreOffersActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_store_offers);
         preferenceUtils = new PreferenceUtils(StoreOffersActivity.this);
-
+        MessageStr = getIntent().getStringExtra("Message");
+        SentOffersStr = getIntent().getStringExtra("SentOffers");
+        status_text = (TextView) findViewById(R.id.status_text);
+        //status_text.setText(MessageStr);
         recycler_received_offers = (RecyclerView) findViewById(R.id.recycler_received_offers);
-        recycler_sent_offers = (RecyclerView) findViewById(R.id.recycler_sent_offers);
+      //  recycler_sent_offers = (RecyclerView) findViewById(R.id.recycler_sent_offers);
         receivedBtn = (Button) findViewById(R.id.received_offers_btn);
         sentBtn = (Button) findViewById(R.id.sent_offers_btn);
         backarrow = (ImageView) findViewById(R.id.backarrow);
@@ -65,19 +70,21 @@ public class StoreOffersActivity extends AppCompatActivity {
         recycler_received_offers.setLayoutManager(layoutManager);
 
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        recycler_sent_offers.setLayoutManager(layoutManager1);
+      //  recycler_sent_offers.setLayoutManager(layoutManager1);
         recycler_received_offers.setVisibility(View.VISIBLE);
-        recycler_sent_offers.setVisibility(View.GONE);
+      //  recycler_sent_offers.setVisibility(View.GONE);
         sentBtn.setTextColor(getResources().getColor(R.color.black));
         receivedBtn.setTextColor(getResources().getColor(R.color.white));
         receivedBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
         sentBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
-
+        actionStr = "received";
         receivedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recycler_received_offers.setVisibility(View.VISIBLE);
-                recycler_sent_offers.setVisibility(View.GONE);
+                status_text.setVisibility(View.GONE);
+                actionStr = "received";
+                // recycler_received_offers.setVisibility(View.VISIBLE);
+               // recycler_sent_offers.setVisibility(View.GONE);
                 sentBtn.setTextColor(getResources().getColor(R.color.black));
                 receivedBtn.setTextColor(getResources().getColor(R.color.white));
                 receivedBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
@@ -90,8 +97,10 @@ public class StoreOffersActivity extends AppCompatActivity {
         sentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recycler_received_offers.setVisibility(View.GONE);
-                recycler_sent_offers.setVisibility(View.VISIBLE);
+                status_text.setVisibility(View.GONE);
+                actionStr = "sent";
+                // recycler_received_offers.setVisibility(View.GONE);
+              //  recycler_sent_offers.setVisibility(View.VISIBLE);
                 receivedBtn.setTextColor(getResources().getColor(R.color.black));
                 sentBtn.setTextColor(getResources().getColor(R.color.white));
                 sentBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
@@ -99,15 +108,46 @@ public class StoreOffersActivity extends AppCompatActivity {
                 sentOffersList();
             }
         });
+        if(MessageStr.equalsIgnoreCase("") || MessageStr.isEmpty()||  MessageStr.equalsIgnoreCase("null")){
+            status_text.setVisibility(View.GONE);
+            receivedOffersList();
+        }else{
+            status_text.setVisibility(View.VISIBLE);
+            status_text.setText(MessageStr);
+            receivedBtn.setTextColor(getResources().getColor(R.color.black));
+            sentBtn.setTextColor(getResources().getColor(R.color.white));
+            sentBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
+            receivedBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+            sentOffersList();
+        }
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        receivedOffersList();
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.appcolor);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(actionStr.equalsIgnoreCase("sent")){
+                    receivedBtn.setTextColor(getResources().getColor(R.color.black));
+                    sentBtn.setTextColor(getResources().getColor(R.color.white));
+                    sentBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
+                    receivedBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+                    sentOffersList();
+                }else if(actionStr.equalsIgnoreCase("received")) {
+                    sentBtn.setTextColor(getResources().getColor(R.color.black));
+                    receivedBtn.setTextColor(getResources().getColor(R.color.white));
+                    receivedBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
+                    sentBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+                    receivedOffersList();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
-
     public void progressdialog() {
         progressDialog = new ProgressDialog(StoreOffersActivity.this);
         progressDialog.setMessage("please wait...");
@@ -121,18 +161,16 @@ public class StoreOffersActivity extends AppCompatActivity {
                 .baseUrl(DZ_URL.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         BidContractsApi service = retrofit.create(BidContractsApi.class);
-
         Call<JsonElement> callRetrofit = null;
         callRetrofit = service.getSentOffersList(user_id);
         callRetrofit.enqueue(new Callback<JsonElement>() {
-
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 try {
                     if (response.isSuccessful()) {
-                        progressDialog.dismiss();
+                        if(progressDialog.isShowing())
+                            progressDialog.dismiss();
                         System.out.println("----------------------------------------------------");
                         Log.d("Call request", call.request().toString());
                         Log.d("Call request header", call.request().headers().toString());
@@ -141,13 +179,10 @@ public class StoreOffersActivity extends AppCompatActivity {
                         Log.d("Response code", String.valueOf(response.code()));
 
                         System.out.println("----------------------------------------------------");
-
                         if (response.body().toString() != null) {
-
                             if (response != null) {
                                 String searchResponse = response.body().toString();
                                 Log.d("Categeries", "response  >>" + searchResponse.toString());
-
                                 if (searchResponse != null) {
                                     JSONObject root = null;
                                     try {
@@ -163,6 +198,8 @@ public class StoreOffersActivity extends AppCompatActivity {
                                                 String prod_id = jsonObject.getString("prod_id");
                                                 String makepeice = jsonObject.getString("makepeice");
                                                 String makeqty = jsonObject.getString("makeqty");
+                                                Integer Price = Integer.parseInt(makepeice)*Integer.parseInt(makeqty);
+                                                String TotalPrice = String.valueOf(Price);
                                                 String user_id = jsonObject.getString("user_id");
                                                 String status = jsonObject.getString("status");
                                                 String pr_userid = jsonObject.getString("pr_userid");
@@ -174,7 +211,7 @@ public class StoreOffersActivity extends AppCompatActivity {
                                                 StoreSentOffersModel storeSentOffersModel = new StoreSentOffersModel();
                                                 storeSentOffersModel.setId(id);
                                                 storeSentOffersModel.setProd_id(prod_id);
-                                                storeSentOffersModel.setMakepeice(makepeice);
+                                                storeSentOffersModel.setMakepeice(TotalPrice);
                                                 storeSentOffersModel.setMakeqty(makeqty);
                                                 storeSentOffersModel.setUser_id(user_id);
                                                 storeSentOffersModel.setPr_title(pr_title);
@@ -183,24 +220,30 @@ public class StoreOffersActivity extends AppCompatActivity {
                                                 storeSentOffersModel.setPid(pid);
                                                 storeSentOffersModel.setFullname(fullname);
                                                 storeSentOffersModels.add(storeSentOffersModel);
-
+                                                if(progressDialog.isShowing())
+                                                    progressDialog.dismiss();
                                             }
                                             if(storeSentOffersModels != null){
                                                 available_text.setVisibility(View.GONE);
                                                 storeSentOffersAdapter = new StoreSentOffersAdapter(StoreOffersActivity.this,storeSentOffersModels);
-                                                recycler_sent_offers.setAdapter(storeSentOffersAdapter);
+                                                recycler_received_offers.setAdapter(storeSentOffersAdapter);
                                                 storeSentOffersAdapter.notifyDataSetChanged();
+                                                if(progressDialog.isShowing())
+                                                    progressDialog.dismiss();
                                             }else{
                                                 available_text.setVisibility(View.VISIBLE);
-                                                recycler_sent_offers.setVisibility(View.GONE);
+                                                recycler_received_offers.setVisibility(View.GONE);
+                                                if(progressDialog.isShowing())
+                                                    progressDialog.dismiss();
                                             }
                                             // Toast.makeText(CartActivity.this, message, Toast.LENGTH_SHORT).show();
-                                            progressDialog.dismiss();
+                                            if(progressDialog.isShowing())
+                                                progressDialog.dismiss();
                                         }
                                         else {
                                             available_text.setText("Sent Offers Are Not Available");
                                             available_text.setVisibility(View.VISIBLE);
-                                            recycler_sent_offers.setVisibility(View.GONE);
+                                            recycler_received_offers.setVisibility(View.GONE);
                                             //    Toast.makeText(CareerOppurtunitiesActivity.this, message, Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
                                         }
@@ -251,7 +294,8 @@ public class StoreOffersActivity extends AppCompatActivity {
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 try {
                     if (response.isSuccessful()) {
-                        progressDialog.dismiss();
+                        if(progressDialog.isShowing())
+                            progressDialog.dismiss();
                         System.out.println("----------------------------------------------------");
                         Log.d("Call request", call.request().toString());
                         Log.d("Call request header", call.request().headers().toString());
@@ -306,14 +350,19 @@ public class StoreOffersActivity extends AppCompatActivity {
                                                 storeSentOffersModel.setPid(pid);
                                                 storeSentOffersModel.setFullname(fullname);
                                                 storeSentOffersModels.add(storeSentOffersModel);
-
+                                                if(progressDialog.isShowing())
+                                                    progressDialog.dismiss();
                                             }
                                             if(storeSentOffersModels != null){
+                                                if(progressDialog.isShowing())
+                                                    progressDialog.dismiss();
                                                 available_text.setVisibility(View.GONE);
                                                 storeReceivedOffersAdapter = new StoreReceivedOffersAdapter(StoreOffersActivity.this,storeSentOffersModels);
                                                 recycler_received_offers.setAdapter(storeReceivedOffersAdapter);
                                                 storeReceivedOffersAdapter.notifyDataSetChanged();
                                             }else{
+                                                if(progressDialog.isShowing())
+                                                    progressDialog.dismiss();
                                                 available_text.setVisibility(View.VISIBLE);
                                                 recycler_received_offers.setVisibility(View.GONE);
                                             }
@@ -332,8 +381,8 @@ public class StoreOffersActivity extends AppCompatActivity {
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    progressDialog.dismiss();
-                                }
+                                    if(progressDialog.isShowing())
+                                        progressDialog.dismiss();                                }
 
                             }
                         }
@@ -346,6 +395,8 @@ public class StoreOffersActivity extends AppCompatActivity {
                 catch (Exception e){
                     e.printStackTrace();
                 }
+                if(progressDialog.isShowing())
+                    progressDialog.dismiss();
             }
 
             @Override

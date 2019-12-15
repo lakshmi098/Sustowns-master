@@ -105,6 +105,8 @@ public class ProductsAdapter extends BaseAdapter {
                 Intent i = new Intent(context, ProductDetailsActivity.class);
                 i.putExtra("Pro_Id",pro_id);
                 i.putExtra("Image",image);
+                i.putExtra("Status","0");
+                i.putExtra("StoreMgmt","0");
                 context.startActivity(i);
             }
         });

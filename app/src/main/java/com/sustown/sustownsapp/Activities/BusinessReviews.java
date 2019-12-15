@@ -249,6 +249,10 @@ public class BusinessReviews extends AppCompatActivity {
                                     for (int i3 = 0; i3 < businessbadges.length(); i3++) {
                                         JSONObject image = businessbadges.getJSONObject(i3);
                                     }
+                                    JSONArray categoryArray = root.getJSONArray("category");
+                                    for (int i4 = 0; i4 < businessbadges.length(); i4++) {
+                                        JSONObject categoryObj = businessbadges.getJSONObject(i4);
+                                    }
                                 } else if (success.equalsIgnoreCase("0")) {
                                     message = root.getString("message");
                                     if (progressDialog.isShowing())

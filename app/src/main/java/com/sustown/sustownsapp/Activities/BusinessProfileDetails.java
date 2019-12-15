@@ -113,15 +113,25 @@ public class BusinessProfileDetails extends AppCompatActivity {
         et_website.setText(user_website);*/
         profile_image = (CircleImageView) findViewById(R.id.profile_image);
         if(image != null || !image.equalsIgnoreCase("")){
-            Glide.with(BusinessProfileDetails.this)
+            Picasso.get()
+                    .load(image)
+                    .placeholder(R.drawable.profile_ic)
+                    .error(R.drawable.profile_ic)
+                    .into(profile_image);
+          /*  Glide.with(BusinessProfileDetails.this)
                     .load(image)
                     //.placeholder(R.drawable.profile_ic)
-                    .into(profile_image);
+                    .into(profile_image);*/
         }else{
-            Glide.with(BusinessProfileDetails.this)
+            Picasso.get()
+                    .load(R.drawable.profile_ic)
+                    .placeholder(R.drawable.profile_ic)
+                    .error(R.drawable.profile_ic)
+                    .into(profile_image);
+            /*Glide.with(BusinessProfileDetails.this)
                     .load(R.drawable.no_image_available)
                     //.placeholder(R.drawable.profile_ic)
-                    .into(profile_image);
+                    .into(profile_image);*/
         }
         iv_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,7 +158,6 @@ public class BusinessProfileDetails extends AppCompatActivity {
                         customdialog.dismiss();
                     }
                 });
-
                 customdialog.show();
             }
         });
@@ -162,7 +171,6 @@ public class BusinessProfileDetails extends AppCompatActivity {
                 editBusinessProfile();
             }
         });
-
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,7 +223,6 @@ public class BusinessProfileDetails extends AppCompatActivity {
     public void onBackPressed() {
         finish();
     }
-
     private void browse() {
         try {
             Intent gallery_intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
@@ -226,7 +233,6 @@ public class BusinessProfileDetails extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     private void capture() {
         try {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -236,12 +242,9 @@ public class BusinessProfileDetails extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
             if (requestCode == FileUtils.CAMERA_CAPTURE) {  // Camera intent
                 onCaptureImageResult(data);
@@ -282,7 +285,6 @@ public class BusinessProfileDetails extends AppCompatActivity {
             PickedImgPath = "NO";
         }
     }
-
     public void onCaptureImageResult(Intent data) {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -312,8 +314,6 @@ public class BusinessProfileDetails extends AppCompatActivity {
         //   profile_img.setImageBitmap(thumbnail);
        //   preferenceUtils.saveString(PreferenceUtils.Image, PickedImgPath);
     }
-
-
     public void progressdialog() {
         progressDialog = new ProgressDialog(BusinessProfileDetails.this);
         progressDialog.setMessage("please wait...");
@@ -442,7 +442,10 @@ public class BusinessProfileDetails extends AppCompatActivity {
                                     for (int i3 = 0; i3 < businessbadges.length(); i3++) {
                                         JSONObject image = businessbadges.getJSONObject(i3);
                                     }
-
+                                    JSONArray categoryArray = root.getJSONArray("category");
+                                    for (int i4 = 0; i4 < businessbadges.length(); i4++) {
+                                        JSONObject categoryObj = businessbadges.getJSONObject(i4);
+                                    }
                                     if (progressDialog.isShowing())
                                         progressDialog.dismiss();
                                    /* Intent i = new Intent(BusinessProfileDetails.this,SignInActivity.class);

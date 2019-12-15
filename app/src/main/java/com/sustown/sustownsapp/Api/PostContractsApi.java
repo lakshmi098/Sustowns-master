@@ -1,9 +1,11 @@
 package com.sustown.sustownsapp.Api;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface PostContractsApi {
@@ -40,5 +42,5 @@ public interface PostContractsApi {
 
     @GET(DZ_URL.MAKE_PAYMENT_BANK_APPROVE)
     Call<JsonElement> makePaymentByBank(@Query("user_id") String user_id, @Query("pay_type") String pay_type,@Query("amount") String amount,
-                                        @Query("quotedid") String quotedid,@Query("jobquatid") String jobquatid,@Query("action") String action);
+                                        @Query("quotedid") String quotedid,@Query("jobquatid") String jobquatid,@Query("action") String action,@Query("jobid") String jobid);
 }

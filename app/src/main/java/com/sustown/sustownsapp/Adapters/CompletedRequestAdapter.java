@@ -75,13 +75,14 @@ public class CompletedRequestAdapter extends RecyclerView.Adapter<CompletedReque
         if (completeRequestModels.get(position) != null) {
             viewHolder.title.setText(completeRequestModels.get(position).getContractname());
             viewHolder.bid_prod_name.setText(completeRequestModels.get(position).getJob_name());
-            viewHolder.bid_quantity.setText(completeRequestModels.get(position).getMinqantity());
+            viewHolder.bid_quantity.setText(completeRequestModels.get(position).getJob_date());
             viewHolder.bid_quote.setText(completeRequestModels.get(position).getEnd_date());
             viewHolder.buyer_name.setText(completeRequestModels.get(position).getFullname());
             viewHolder.bid_location.setText(completeRequestModels.get(position).getJob_location());
             viewHolder.cust_det_fullname.setText(completeRequestModels.get(position).getFullname());
             viewHolder.cust_det_emailid.setText(completeRequestModels.get(position).getEmail());
             viewHolder.cust_det_phno.setText(completeRequestModels.get(position).getPhone());
+            viewHolder.required_quantity_completed.setText(completeRequestModels.get(position).getMinqantity()+" "+completeRequestModels.get(position).getQnt_weight());
             viewHolder.cust_det_city.setText(completeRequestModels.get(position).getCity() + " " + completeRequestModels.get(position).getCountry());
             Picasso.get()
                     .load(completeRequestModels.get(position).getImage())
@@ -435,7 +436,7 @@ public class CompletedRequestAdapter extends RecyclerView.Adapter<CompletedReque
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView bid_image;
         TextView title, bid_prod_name, bid_quantity, bid_quote, buyer_name, bid_close_in, bid_location, cust_det_fullname, cust_det_phno,
-                cust_det_emailid, cust_det_city;
+                cust_det_emailid, cust_det_city,required_quantity_completed;
         Button myquote_completed, product_documents;
 
         public ViewHolder(View view) {
@@ -453,8 +454,7 @@ public class CompletedRequestAdapter extends RecyclerView.Adapter<CompletedReque
             cust_det_phno = (TextView) view.findViewById(R.id.cust_det_phno);
             cust_det_emailid = (TextView) view.findViewById(R.id.cust_det_emailid);
             cust_det_city = (TextView) view.findViewById(R.id.cust_det_city);
-
-
+            required_quantity_completed = (TextView) view.findViewById(R.id.required_quantity_completed);
         }
     }
 }

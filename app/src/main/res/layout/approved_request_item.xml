@@ -101,46 +101,6 @@
                             android:layout_width="120dp"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
-                            android:text="Quantity"
-                            android:textColor="@color/black"
-                            android:textSize="14dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textColor="@color/black" />
-
-                        <TextView
-                            android:id="@+id/bid_quantity"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
-                            android:layout_marginLeft="10dp"
-                            android:layout_weight="1"
-                            android:maxLines="3"
-                            android:hint="01"
-                            android:textColor="@color/black"
-                            android:textSize="14dp" />
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_marginRight="10dp"
-                            android:src="@drawable/close_black_icon"
-                            android:visibility="gone" />
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="120dp"
-                            android:layout_height="wrap_content"
-                            android:maxLines="1"
                             android:text="Quote Before"
                             android:textColor="@color/black"
                             android:textSize="14dp" />
@@ -159,6 +119,47 @@
                             android:layout_marginLeft="10dp"
                             android:layout_weight="1"
                             android:maxLines="10"
+                            android:hint="01"
+                            android:textColor="@color/black"
+                            android:textSize="14dp" />
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/close_black_icon"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text="Posted On"
+                            android:textColor="@color/black"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/bid_quantity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:maxLines="3"
                             android:hint="01"
                             android:textColor="@color/black"
                             android:textSize="14dp" />
@@ -206,6 +207,43 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_below="@+id/ll_bid"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="Required Quantity"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/remove_item"
+                    android:id="@+id/required_quantity_approve"
+                    android:layout_marginLeft="10dp"
+                    android:text="location"
+                    android:gravity="right"
+                    android:maxLines="10"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
+
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -373,7 +411,7 @@
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:text="City and Counrty"
+                        android:text="City and Country"
                         android:textColor="@color/black"
                         android:textSize="14dp" />
 
@@ -480,6 +518,20 @@
                     android:textSize="13sp"
                     android:textAllCaps="false"
                     android:background="@drawable/backgroundapp_transparent_blue"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Status : Awaiting Confirmation"
+                    android:layout_marginTop="5dp"
+                    android:padding="7dp"
+                    android:visibility="gone"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/btn_background_color"
+                    android:id="@+id/status_for_process_documents"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"/>
 
             </LinearLayout>
         </LinearLayout>

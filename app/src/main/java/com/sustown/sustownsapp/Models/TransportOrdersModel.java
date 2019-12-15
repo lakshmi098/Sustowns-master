@@ -5,6 +5,7 @@ public class TransportOrdersModel {
     private String id;
     private String user_id;
     private String order_id;
+    private String ran_id;
     private String service_id;
     private String service_name;
     private String pr_sku;
@@ -181,6 +182,14 @@ public class TransportOrdersModel {
 
     public void setChargeperkm(String chargeperkm) {
         this.chargeperkm = chargeperkm;
+    }
+
+    public String getRan_id() {
+        return ran_id;
+    }
+
+    public void setRan_id(String ran_id) {
+        this.ran_id = ran_id;
     }
 }
 

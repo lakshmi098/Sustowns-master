@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.sustownsapp.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.sustown.sustownsapp.Activities.AddShippingServices;
 import com.sustown.sustownsapp.Activities.ServiceManagementActivity;
 import com.sustown.sustownsapp.Models.ServiceUnitModel;
 import com.sustown.sustownsapp.helpers.Helper;
@@ -34,15 +35,18 @@ public class ServiceUnitListAdapter extends RecyclerView.Adapter<ServiceUnitList
     Context context;
     List<ServiceUnitModel> unitDisplayList;
     List<ServiceUnitModel> unitList;
-    Helper helper = new Helper(context);
+    Helper helper;
     boolean isPartial;
     AlertDialog alertDialog;
+    String Shipping;
 
-    public ServiceUnitListAdapter(Context context, List<ServiceUnitModel> unitDisplayList, List<ServiceUnitModel> unitList, boolean isPartial) {
+    public ServiceUnitListAdapter(Context context, List<ServiceUnitModel> unitDisplayList, List<ServiceUnitModel> unitList, boolean isPartial, String Shipping) {
         this.context = context;
         this.unitDisplayList = unitDisplayList;
         this.unitList = unitList;
         this.isPartial = isPartial;
+        this.Shipping = Shipping;
+        helper = new Helper(context);
     }
 
     @NonNull
@@ -223,9 +227,17 @@ public class ServiceUnitListAdapter extends RecyclerView.Adapter<ServiceUnitList
             notifyDataSetChanged();
             if (unitDisplayList.size() == 0) {
                 if (isPartial) {
-                    ((ServiceManagementActivity) context).hidePartialRecyclerview();
+                    if(Shipping.equalsIgnoreCase("1")){
+                        ((AddShippingServices) context).hidePartialRecyclerview();
+                    }else {
+                        ((ServiceManagementActivity) context).hidePartialRecyclerview();
+                    }
                 } else {
-                    ((ServiceManagementActivity) context).hideFullRecyclerview();
+                    if(Shipping.equalsIgnoreCase("1")){
+                        ((AddShippingServices) context).hideFullRecyclerview();
+                    }else {
+                        ((ServiceManagementActivity) context).hideFullRecyclerview();
+                    }
                 }
             }
             return true;

@@ -147,7 +147,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 sweetAlertDialog.dismissWithAnimation();
-                                removeCartItem();
+                                removeCartItem(position);
                             }
                         }, new SweetAlertDialog.OnSweetClickListener() {
                             @Override
@@ -184,7 +184,19 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         viewHolder.update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setJsonObject();
+                helper.showDialog((Activity) context, SweetAlertDialog.WARNING_TYPE, "", "Do you want to Update the product?",
+                        new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismissWithAnimation();
+                                setJsonObject();
+                            }
+                        }, new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        });
             }
         });
     }
@@ -236,12 +248,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("Response" , "JSON : "+response);
-                      /*  try {
-                            Log.d("inserted_id", "inserted_id : " + response.getString("inserted_id"));
-                            Log.d("success", "success : " + response.getString("success"));
-                            Log.d("message", "message : " + response.getString("message"));
-                        } catch (JSONException e) {
-                        }*/
                         try {
                             String message = response.getString("message");
                             String success = response.getString("success");
@@ -349,10 +355,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         });
     }
 
-    public void removeCartItem() {
-        progressdialog();
-        //  row_id = preferenceUtils.getStringFromPreference(PreferenceUtils.RowIdCart,"");
-        //helper.showLoader(context, "Removing..", "Please wait for a while");
+    public void removeCartItem(final int position) {
+      //  progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DZ_URL.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -368,7 +372,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 if (response.isSuccessful()) {
-                    progressDialog.dismiss();
+                   // progressDialog.dismiss();
                     System.out.println("----------------------------------------------------");
                     Log.d("Call request", call.request().toString());
                     Log.d("Call request header", call.request().headers().toString());
@@ -394,52 +398,42 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                                     String success = root.getString("success");
 
                                     if (success.equals("1")) {
-                                        Intent i = new Intent(context, CartActivity.class);
-                                        context.startActivity(i);
-                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                                        progressDialog.dismiss();
-                                        // ((CartActivity) context).getCartListItems();
-                                       /* notifyItemRemoved(position);
+                                        ((CartActivity) context).getCartListItems();
+                                        ((CartActivity) context).cartCount();
+                                        notifyItemRemoved(position);
                                         notifyItemRangeChanged(position, cartServerModelList.size());
-                                        notifyDataSetChanged();*/
-                                        // editor.putBoolean("loginstatus", true);
-                                        // editor.putString("cart_id", cart_id);
-                                        // editor.commit();
-                                        // Toast.makeText(context, message_cart, Toast.LENGTH_SHORT).show();
-                                        //  Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                                    } else {
+                                        notifyDataSetChanged();
+                                        /*Intent i = new Intent(context, CartActivity.class);
+                                        context.startActivity(i);*/
                                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                                        progressDialog.dismiss();
+                                       // progressDialog.dismiss();
+                                    }else {
+                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                                       // progressDialog.dismiss();
                                     }
 
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                progressDialog.dismiss();
+                               // progressDialog.dismiss();
                             }
 
                         }
                     }
                 } else {
-                    progressDialog.dismiss();
+                    //progressDialog.dismiss();
                     // Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
-                progressDialog.dismiss();
+               // progressDialog.dismiss();
 //                Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();
 
             }
         });
     }
-/*
-    public void getQuantity(String quantity){
-        quantity = quantity_edit.getText().toString().trim();
-        QuantityStr = quantity;
-    }
-*/
     @Override
     public int getItemCount() {
         return cartServerModelList.size();

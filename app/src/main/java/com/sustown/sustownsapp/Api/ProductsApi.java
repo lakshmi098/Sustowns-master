@@ -41,9 +41,6 @@ public interface ProductsApi {
     Call<JsonElement> addReview(@Query("userid") String userid, @Query("productid") String productid, @Query("comment") String comment,
                                 @Query("ratting") String ratting);
 
-    @GET(DZ_URL.BUY_SAMPLE)
-    Call<JsonElement> buySampleData(@Query("qtys") String qtys, @Query("id") String id);
-
     @GET(DZ_URL.SEARCH_STORE)
     Call<JsonElement> searchStoreProducts(@Query("search") String search);
 

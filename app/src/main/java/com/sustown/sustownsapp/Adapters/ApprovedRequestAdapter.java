@@ -94,13 +94,14 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
         if(completeRequestModels.get(position) != null){
             viewHolder.title.setText(completeRequestModels.get(position).getContractname());
             viewHolder.bid_prod_name.setText(completeRequestModels.get(position).getJob_name());
-            viewHolder.bid_quantity.setText(completeRequestModels.get(position).getMinqantity());
+            viewHolder.bid_quantity.setText(completeRequestModels.get(position).getJob_date());
             viewHolder.bid_quote.setText(completeRequestModels.get(position).getEnd_date());
             viewHolder.buyer_name.setText(completeRequestModels.get(position).getFullname());
             viewHolder.bid_location.setText(completeRequestModels.get(position).getJob_location());
             viewHolder.cust_det_fullname.setText(completeRequestModels.get(position).getFullname());
             viewHolder.cust_det_emailid.setText(completeRequestModels.get(position).getEmail());
             viewHolder.cust_det_phno.setText(completeRequestModels.get(position).getPhone());
+            viewHolder.required_quantity_approve.setText(completeRequestModels.get(position).getMinqantity()+" "+completeRequestModels.get(position).getQnt_weight());
             viewHolder.cust_det_city.setText(completeRequestModels.get(position).getCity()+" "+completeRequestModels.get(position).getCountry());
            if(completeRequestModels.get(position).getImage().isEmpty() || completeRequestModels.get(position).getImage() == null){
                Picasso.get()
@@ -126,6 +127,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                 viewHolder.confirm_contract.setVisibility(View.GONE);
                 viewHolder.payment_button.setVisibility(View.GONE);
                 viewHolder.process_documents.setVisibility(View.VISIBLE);
+                viewHolder.status_for_process_documents.setText("Please Upload the Process Documents to complete the contract");
                 viewHolder.my_process_documents.setVisibility(View.GONE);
                 viewHolder.waiting_confirmation.setVisibility(View.GONE);
             }else if(Status.equalsIgnoreCase("7")){
@@ -161,11 +163,13 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                 layout_complete_myquote.setVisibility(View.VISIBLE);
                 layout_complete_documents.setVisibility(View.GONE);
                 title = (TextView) customdialog1.findViewById(R.id.title);
+                complete_quote_img = (ImageView) customdialog1.findViewById(R.id.complete_quote_img);
                 payment_type_quote = (TextView) customdialog1.findViewById(R.id.payment_type_quote);
                 price_quote = (TextView) customdialog1.findViewById(R.id.price_quote);
                 description_quote = (TextView) customdialog1.findViewById(R.id.description_quote);
                 close_dialog = (Button) customdialog1.findViewById(R.id.close_dialog);
                 quote_document = (TextView) customdialog1.findViewById(R.id.quote_document);
+                getQuoteDetails();
                 quote_document.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -186,9 +190,6 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                         downloadManager.enqueue(request);
                     }
                 });
-
-                complete_quote_img = (ImageView) customdialog1.findViewById(R.id.complete_quote_img);
-                getQuoteDetails();
                 close_dialog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -205,6 +206,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                 i.putExtra("Title", completeRequestModels.get(position).getJob_name());
                 i.putExtra("JobId", completeRequestModels.get(position).getJob_id());
                 i.putExtra("BidId",completeRequestModels.get(position).getId());
+                i.putExtra("Documents",completeRequestModels.get(position).getAttachment());
                 context.startActivity(i);
             }
         });
@@ -379,17 +381,21 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                                             String quoteImage = image_docpath + image;
                                             String appattachment = comjobquoteObj.getString("appattachment");
                                             String approve_status = comjobquoteObj.getString("approve_status");
-
-                                            JSONObject comjobcomObj = root.getJSONObject("comjobcom");
-                                            String id1 = comjobcomObj.getString("id");
-                                            String job_id1 = comjobcomObj.getString("job_id");
-                                            String user_id1 = comjobcomObj.getString("user_id");
-                                            String description1 = comjobcomObj.getString("description");
-                                            String image1 = comjobcomObj.getString("image");
-                                            String quoteImage1 = image_docpath + image;
-                                            String appattachment1 = comjobcomObj.getString("appattachment");
-                                            String approve_status1 = comjobcomObj.getString("approve_status");
-
+                                            try {
+                                                JSONObject comjobcomObj = root.getJSONObject("comjobcom");
+                                                if(comjobcomObj != null) {
+                                                    String id1 = comjobcomObj.getString("id");
+                                                    String job_id1 = comjobcomObj.getString("job_id");
+                                                    String user_id1 = comjobcomObj.getString("user_id");
+                                                    String description1 = comjobcomObj.getString("description");
+                                                    String image1 = comjobcomObj.getString("image");
+                                                    String quoteImage1 = image_docpath + image;
+                                                    String appattachment1 = comjobcomObj.getString("appattachment");
+                                                    String approve_status1 = comjobcomObj.getString("approve_status");
+                                                }
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                            }
                                             title.setText(contractname);
                                             payment_type_quote.setText(payment);
                                             price_quote.setText(currency + " "+ instant_amount);
@@ -590,6 +596,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                                     String success = root.getString("success");
                                     if (success.equals("1")) {
                                         Intent i = new Intent(context, BidContractsActivity.class);
+                                        i.putExtra("Processed","0");
                                         context.startActivity(i);
                                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                                         progressDialog.dismiss();
@@ -743,7 +750,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView bid_image;
         TextView title,bid_prod_name,bid_quantity,bid_quote,buyer_name,bid_close_in,bid_location,cust_det_fullname,cust_det_phno,
-                cust_det_emailid,cust_det_city,payment_button,waiting_confirmation;
+                cust_det_emailid,cust_det_city,payment_button,waiting_confirmation,required_quantity_approve,status_for_process_documents;
         Button myquote_completed,process_documents,confirm_contract,my_process_documents;
 
         public ViewHolder(View view) {
@@ -765,6 +772,8 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
             confirm_contract = (Button) view.findViewById(R.id.confirm_contract);
             my_process_documents = (Button) view.findViewById(R.id.my_process_documents);
             waiting_confirmation = (TextView) view.findViewById(R.id.waiting_confirmation);
+            required_quantity_approve = (TextView) view.findViewById(R.id.required_quantity_approve);
+            status_for_process_documents = (TextView) view.findViewById(R.id.status_for_process_documents);
         }
     }
 

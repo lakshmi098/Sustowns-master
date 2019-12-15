@@ -31,7 +31,6 @@
                 android:visibility="gone" />
 
             <LinearLayout
-                android:id="@+id/ll_offers"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
@@ -70,7 +69,7 @@
 
                         <TextView
                             android:id="@+id/prod_name"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="1"
@@ -78,6 +77,7 @@
                             android:text="Product1"
                             android:textColor="@color/black"
                             android:textSize="16sp" />
+
                     </LinearLayout>
 
                 </LinearLayout>
@@ -190,6 +190,20 @@
                         android:text="name"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/offer_accepted"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:padding="7dp"
+                        android:text="Offer Accepted"
+                        android:visibility="gone"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/btn_background_color"
+                        android:textStyle="bold"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -197,6 +211,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:layout_marginRight="10dp"
                     android:gravity="right">
 
                     <Button
@@ -207,10 +222,20 @@
                         android:background="@drawable/backgroundapp_transparent_blue"
                         android:gravity="center"
                         android:padding="7dp"
-                        android:text="Offer Accepted and Pay"
+                        android:text="proceed to Pay"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/text_offer_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:padding="7dp"
+                        android:visibility="gone"
+                        android:textColor="@color/btn_background_color"
+                        android:textStyle="bold"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 

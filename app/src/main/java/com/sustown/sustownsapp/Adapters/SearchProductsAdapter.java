@@ -80,12 +80,20 @@ public class SearchProductsAdapter extends BaseAdapter {
             }
             pro_name.setText(searchProductsModels.get(i).getPr_title());
             pr_currency.setText(searchProductsModels.get(i).getPr_currency());
+            pr_price.setText(searchProductsModels.get(i).getPr_price()+" /");
+            pr_weight.setText(searchProductsModels.get(i).getPr_weight()+" "+searchProductsModels.get(i).getPr_weight_unit());
+            pr_moq.setText("MOQ : "+searchProductsModels.get(i).getPr_min());
+            pr_min_unit.setText("* (Unit : "+searchProductsModels.get(i).getPr_weight()+" "+searchProductsModels.get(i).getPr_weight_unit()+")");
+            country_text.setText(searchProductsModels.get(i).getCountry_name());
+            lcation_text.setText(searchProductsModels.get(i).getCity_name());
+         /*   pro_name.setText(searchProductsModels.get(i).getPr_title());
+            pr_currency.setText(searchProductsModels.get(i).getPr_currency());
             pr_price.setText(searchProductsModels.get(i).getPr_price() + " /");
             pr_weight.setText(searchProductsModels.get(i).getPr_weight());
             pr_moq.setText("MOQ : " + searchProductsModels.get(i).getPr_min());
             pr_min_unit.setText("* (Unit : " + searchProductsModels.get(i).getPr_gweight_unit() + ")");
             country_text.setText(searchProductsModels.get(i).getCountry());
-            lcation_text.setText(searchProductsModels.get(i).getJob_location());
+            lcation_text.setText(searchProductsModels.get(i).getJob_location());*/
 
         } else {
             imageView.setImageResource(R.drawable.no_image_available);
@@ -106,6 +114,8 @@ public class SearchProductsAdapter extends BaseAdapter {
                 Intent i = new Intent(context, ProductDetailsActivity.class);
                 i.putExtra("Pro_Id", pro_id);
                 i.putExtra("Image", image);
+                i.putExtra("Status","0");
+                i.putExtra("StoreMgmt","0");
                 context.startActivity(i);
             }
         });

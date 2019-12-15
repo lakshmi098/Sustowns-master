@@ -5,25 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/allToolbarTitle"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:text="Order Summary"
-        android:gravity="center"
-        android:background="@color/appcolor"
-        android:textColor="@android:color/white"
-        android:textSize="20sp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_weight="1"
+        android:id="@+id/ll_transport_details"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/allToolbarTitle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:text="Order Summary"
+            android:gravity="center"
+            android:background="@color/appcolor"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,7 +89,8 @@
 
                     <TableRow
                         android:layout_gravity="center"
-                        android:layout_marginTop="15dp">
+                        android:layout_marginTop="15dp"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="100dp"
@@ -185,7 +185,7 @@
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="15dp">
+                    android:padding="10dp">
 
                     <TableRow android:layout_gravity="center">
 
@@ -308,7 +308,8 @@
 
                     <TableRow
                         android:layout_gravity="center"
-                        android:layout_marginTop="15dp">
+                        android:layout_marginTop="15dp"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="120dp"
@@ -406,29 +407,134 @@
                     android:background="@color/lightwhite" />
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="15dp"
-                    android:fontFamily="@font/regular"
+                    style="@style/TextView_Heading"
+                    android:layout_marginTop="10dp"
                     android:text="Shipping Address"
-                    android:textColor="@color/black"
-                    android:textSize="16dp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/order_shipped_to"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/regular"
-                    android:text="Shipping Address"
-                    android:textColor="@color/black"
-                    android:textSize="16dp"
-                    android:textStyle="normal" />
+                    android:layout_marginTop="7dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Name"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/shipping_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Number"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/shipping_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Address"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/shipping_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Postal Code"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/shipping_postalcode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -438,45 +544,279 @@
                     android:background="@color/lightwhite" />
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="15dp"
-                    android:fontFamily="@font/regular"
+                    style="@style/TextView_Heading"
+                    android:layout_marginTop="20dp"
                     android:text="Seller Details"
-                    android:textColor="@color/black"
-                    android:textSize="16dp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/order_seller_address"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/regular"
-                    android:text="Shipping Address"
-                    android:textColor="@color/black"
-                    android:textSize="16dp"
-                    android:textStyle="normal" />
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Name"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/seller_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Number"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/seller_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Address"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/seller_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Postal Code"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/seller_postalcode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/order_close"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/backgroundapp_transparent"
-                    android:padding="10dp"
                     android:textAllCaps="false"
                     android:text="Close"
                     android:textColor="@color/white" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:id="@+id/ll_view_contact_details"
+        android:orientation="vertical">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Driver Name"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/driver_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Driver Number"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/driver_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text="Vehicle Number"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:text=":"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                    <TextView
+                        android:id="@+id/vehicle_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/regular"
+                        android:textColor="@color/black"
+                        android:textSize="14dp" />
+                </LinearLayout>
+                <Button
+                    android:id="@+id/order_close1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/backgroundapp_transparent"
+                    android:textAllCaps="false"
+                    android:text="Close"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
 </LinearLayout>

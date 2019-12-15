@@ -9,14 +9,18 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,6 +31,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -39,6 +44,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.sustownsapp.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.JsonElement;
 import com.sustown.sustownsapp.Adapters.ExistingAddressAdapterContract;
 import com.sustown.sustownsapp.Adapters.ProductContractAdapter;
@@ -46,8 +52,10 @@ import com.sustown.sustownsapp.Api.BidContractsApi;
 import com.sustown.sustownsapp.Api.DZ_URL;
 import com.sustown.sustownsapp.Api.PostContractsApi;
 import com.sustown.sustownsapp.Api.TransportApi;
+import com.sustown.sustownsapp.Api.UserApi;
 import com.sustown.sustownsapp.Models.GetAddressModel;
 import com.sustown.sustownsapp.Models.OpenRequestModel;
+import com.sustown.sustownsapp.helpers.Helper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +70,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -88,7 +97,7 @@ public class MyProductContractActivity extends AppCompatActivity {
     private int year;
     Spinner spinner_choose_category,spinner_subcategory,spinner_packing_type,spinner_unit,spinner_weight,spinner_quantity,spinner_packing,
             poultry_spinner_choose_name,poultry_spinner_choose_quality,poultry_spinner_choose_location,quantity_unit_spinner;
-    Spinner spinner_location,poultry_spinner_choose_category,poultry_spinner_choose_subcategory,poultry_spinner_choose_subsubcategory,spinner_country;
+    Spinner spinner_location,poultry_spinner_choose_category,poultry_spinner_choose_subcategory,poultry_spinner_choose_subsubcategory;
     String[] category = {"Choose Category","Energy","Gadgets","Food","Health","Textiles and Apparels","Crafts","Machinery","Consumables",
             "Miscellaneous","Live Stock"};
     String[] packingType = {"Other","Bulk","Can","Drum","Gift Packing","Mason Jar","Tank","Vaccum Pack","Carton","Bags","Pallet"};
@@ -113,29 +122,35 @@ public class MyProductContractActivity extends AppCompatActivity {
     EditText poultry_contract_heading,poultry_quantity_edit;
     Button poultry_choose_image_btn,poultry_choosedoc_btn,submit_add_prod_contract,choose_image,save_address,save_address_btn;
     CircleImageView prod_contract_image,poultry_prod_contract_image;
-    String user_role,profileString,imagePath,user_id,PoultryFromDate,PoultryToDate,PoultryProdName,PoultryQuality,PoultryLocation;
+    String user_role,profileString = "",imagePath,user_id,PoultryFromDate,PoultryToDate,PoultryProdName,PoultryQuality,PoultryLocation;
     final int CAMERA_CAPTURE = 1;
     final int PICK_IMAGE = 100;
     Dialog customdialog;
-    EditText name_address,company_address, email_address, first_name_address,last_name_address, address1_address, address2_address, address_state, address_town, mobile_address, pincode_address, fax_address;
-    String quantityUnitStr,nameAddress,companyAddress, emailAddress, firstnameAddress, lastnameAddress, address1Address, address2Address, addressState, addressTown, mobileAddress, pincodeAddress, faxAddress,AddressId,countryAddress,Action,Latitude,Longitude;
-    TextView address_txt_map_dialog,saved_address_text,document_text;
+    EditText name_address,company_address, email_address, first_name_address,last_name_address, address1_address, address2_address,mobile_address, pincode_address, fax_address;
+    String quantityUnitStr,countryId,stateId, cityId, firstnameAddress, lastnameAddress, address1Address, address2Address, addressState, addressTown, mobileAddress, pincodeAddress, faxAddress,AddressId,countryAddress,Action,Latitude,Longitude;
+    TextView address_txt_map_dialog,saved_address_text,document_text,address_town;
     LinearLayout ll_shipping_details,ll_existing_address,ll_dates,ll_poultry_edit_contract_product;
     RadioGroup radioGroup;
     RadioButton existing_radiobtn, new_radiobtn;
     ExistingAddressAdapterContract existingAddressAdapter;
     ArrayList<GetAddressModel> getAddressModels;
-    String PoultryQuantity,PoultryName,actionValue,id,job_id,PoultryEditToDate,filename,ret,fileString,unitId,headingValue = "";
+    String PoultryQuantity,PoultryName,actionValue,id,job_id,PoultryEditToDate,filename,ret,fileString = "",unitId,headingValue = "";
     RadioGroup radio_group;
     RadioButton open_radiobtn,range_radiobtn;
     boolean isUpdate;
     int position;
     TextView edit_poultry_cat,edit_poultry_subcat,edit_poultry_subsubcat,edit_poultry_contractheading,edit_poultry_prodname,edit_poultry_quantity,
-            edit_poultry_unitquantity,edit_poultry_quality,edit_poultry_location;
+            edit_poultry_unitquantity,edit_poultry_quality,edit_poultry_location,spinner_country,address_state,not_availabletext;
     Button poultryeditfromdate,poultryedittodate,submit_edit_prod_contract;
     private static final int PICKFILE_RESULT_CODE = 3;
     Uri returnUri;
     byte[] bytes;
+    ArrayList<String> countryList = new ArrayList<>();
+    ArrayList<String> statesList = new ArrayList<>();
+    ArrayList<String> citiesList = new ArrayList<>();
+    AlertDialog alertDialog;
+    Helper helper;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     public static String getEncodedImage(Bitmap bitmapImage) {
         ByteArrayOutputStream baos;
         baos = new ByteArrayOutputStream();
@@ -152,6 +167,16 @@ public class MyProductContractActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_my_product_contract);
         try {
+            mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
+            mSwipeRefreshLayout.setColorSchemeResources(R.color.appcolor);
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    getMyProductContractList();
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
+            helper = new Helper(MyProductContractActivity.this);
             isUpdate = false;
             preferenceUtils = new PreferenceUtils(MyProductContractActivity.this);
             user_role = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ROLE, "");
@@ -165,7 +190,7 @@ public class MyProductContractActivity extends AppCompatActivity {
             recycler_added_contracts = (RecyclerView) findViewById(R.id.recycler_added_contracts);
             LinearLayoutManager lManager1 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             recycler_view_post_contracts.setLayoutManager(lManager1);
-
+            not_availabletext = (TextView) findViewById(R.id.not_availabletext);
             ll_poultry_add_contract_product = (LinearLayout) findViewById(R.id.ll_poultry_add_contract_product);
             poultry_spinner_choose_category = (Spinner) findViewById(R.id.poultry_spinner_choose_category);
             poultry_spinner_choose_subcategory = (Spinner) findViewById(R.id.poultry_spinner_choose_subcategory);
@@ -466,9 +491,14 @@ public class MyProductContractActivity extends AppCompatActivity {
             submit_add_prod_contract.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     if (!isUpdate) {
+                        if(poultry_contract_heading.getText().toString().isEmpty() || profileString.isEmpty() || poultry_quantity_edit.getText().toString().isEmpty()||
+                                PoultryFromDate.isEmpty()||PoultryToDate.isEmpty()){
+                            Toast.makeText(MyProductContractActivity.this, "Please Fill Empty Fileds", Toast.LENGTH_SHORT).show();
+                        }
                         // addProduct();
-                        if(PoultryLocation.equalsIgnoreCase("buyers")) {
+                        else if(PoultryLocation.equalsIgnoreCase("buyers")) {
                             if(actionValue.equalsIgnoreCase("existing")) {
                                 setJsonObject();
                             }else{
@@ -519,8 +549,10 @@ public class MyProductContractActivity extends AppCompatActivity {
                         startActivity(i);
                     }else {
                         Intent i = new Intent(MyProductContractActivity.this, BidContractsActivity.class);
+                        i.putExtra("Processed","0");
                         startActivity(i);
-                        finish();                    }
+                        finish();
+                    }
                 }
             });
             getMyProductContractList();
@@ -535,6 +567,7 @@ public class MyProductContractActivity extends AppCompatActivity {
             startActivity(i);
         } else {
             Intent i = new Intent(MyProductContractActivity.this, BidContractsActivity.class);
+            i.putExtra("Processed","0");
             startActivity(i);
             finish();
         }
@@ -694,21 +727,11 @@ public class MyProductContractActivity extends AppCompatActivity {
                     company_address = (EditText) customdialog.findViewById(R.id.company_address);
                     email_address = (EditText) customdialog.findViewById(R.id.email_address);
                     first_name_address = (EditText) customdialog.findViewById(R.id.first_name_address);
-                    spinner_country = (Spinner) customdialog.findViewById(R.id.spinner_countrydialog);
-                    ArrayAdapter aa = new ArrayAdapter(MyProductContractActivity.this, android.R.layout.simple_spinner_item,country);
-                    aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    //Setting the ArrayAdapter data on the Spinner
-                    spinner_country.setAdapter(aa);
-                    spinner_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    spinner_country = (TextView) customdialog.findViewById(R.id.spinner_countrydialog);
+                    spinner_country.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            countryAddress = parent.getItemAtPosition(position).toString();
-                            // Toast.makeText(ProductDetailsActivity.this,shippingStr,Toast.LENGTH_SHORT).show();
-                            // preferenceUtils.saveString(PreferenceUtils.SAMPLE_UNIT_WEIGHT,shippingStr);
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
+                        public void onClick(View v) {
+                            getCountryList();
                         }
                     });
                     last_name_address = (EditText) customdialog.findViewById(R.id.last_name_address);
@@ -723,8 +746,20 @@ public class MyProductContractActivity extends AppCompatActivity {
                         }
                     });
                     address2_address = (EditText) customdialog.findViewById(R.id.address2_address);
-                    address_state = (EditText) customdialog.findViewById(R.id.address_state);
-                    address_town = (EditText) customdialog.findViewById(R.id.address_town);
+                    address_state = (TextView) customdialog.findViewById(R.id.address_state);
+                    address_state.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getStatesList();
+                        }
+                    });
+                    address_town = (TextView) customdialog.findViewById(R.id.address_town);
+                    address_town.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getCityList();
+                        }
+                    });
                     mobile_address = (EditText) customdialog.findViewById(R.id.mobile_address);
                     pincode_address = (EditText) customdialog.findViewById(R.id.pincode_address);
                     fax_address = (EditText) customdialog.findViewById(R.id.fax_address);
@@ -839,7 +874,7 @@ public class MyProductContractActivity extends AppCompatActivity {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
                 PoultryFromDate = dayOfMonth+"-"+(monthOfYear+1)+"-"+year;
-                poultryfromDateText.setText(dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
+                poultryfromdate.setText(dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
 
             }};
 
@@ -856,7 +891,7 @@ public class MyProductContractActivity extends AppCompatActivity {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
                 PoultryToDate = dayOfMonth+"-"+(monthOfYear+1)+"-"+year;
-                poultrytoDateText.setText(dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
+                poultrytodate.setText(dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
 
             }};
 
@@ -1086,8 +1121,8 @@ public class MyProductContractActivity extends AppCompatActivity {
         edit_poultry_quantity.setText(openRequestModels.get(position).getMinqantity());
         edit_poultry_unitquantity.setText("Crate");
         edit_poultry_quality.setText(openRequestModels.get(position).getSpequality());
-        poultryeditfromdate.setText(splitToValid[0]);
-        poultryedittodate.setText(splitToDate[0]);
+        poultryfromdate.setText(splitToDate[0]);
+        poultryedittodate.setText(splitToValid[0]);
         edit_poultry_location.setText(openRequestModels.get(position).getJob_location());
     }
 
@@ -1125,13 +1160,10 @@ public class MyProductContractActivity extends AppCompatActivity {
                         Log.d("Response raw", String.valueOf(response.raw().body()));
                         Log.d("Response code", String.valueOf(response.code()));
                         System.out.println("----------------------------------------------------");
-
                         if (response.body().toString() != null) {
-
                             if (response != null) {
                                 String searchResponse = response.body().toString();
                                 Log.d("Reg", "Response  >>" + searchResponse.toString());
-
                                 if (searchResponse != null) {
                                     JSONObject root = null;
                                     try {
@@ -1187,16 +1219,17 @@ public class MyProductContractActivity extends AppCompatActivity {
                                                 progressDialog.dismiss();
                                             }
                                         }
-
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    if(openRequestModels != null) {
+                                    if(openRequestModels != null || openRequestModels.size()>0) {
                                         progressDialog.dismiss();
                                         productContractAdapter = new ProductContractAdapter(MyProductContractActivity.this,openRequestModels);
                                         recycler_view_post_contracts.setAdapter(productContractAdapter);
                                         productContractAdapter.notifyDataSetChanged();
                                     }else{
+                                        not_availabletext.setVisibility(View.VISIBLE);
+                                        recycler_view_post_contracts.setVisibility(View.GONE);
                                         progressDialog.dismiss();
                                         // Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
                                     }
@@ -1210,9 +1243,7 @@ public class MyProductContractActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 progressDialog.dismiss();
-
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
                 Log.d("Error Call", ">>>>" + call.toString());
@@ -1365,7 +1396,7 @@ public class MyProductContractActivity extends AppCompatActivity {
                                 Snackbar snackbar = Snackbar
                                         .make(linearlayout,message, Snackbar.LENGTH_LONG);
                                 snackbar.show();
-                               // Toast.makeText(MyProductContractActivity.this, "Product Contract Added Successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MyProductContractActivity.this, "Product Contract Added Successfully", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(MyProductContractActivity.this, MyProductContractActivity.class);
                                 startActivity(i);
                             } else {
@@ -1581,7 +1612,6 @@ public class MyProductContractActivity extends AppCompatActivity {
             }
         });
     }
-
     public void saveExistingAddress() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
@@ -1592,7 +1622,6 @@ public class MyProductContractActivity extends AppCompatActivity {
 
         Call<JsonElement> callRetrofit = null;
         callRetrofit = service.sentAddress(user_id,user_id,"408","500038","5.76765656","8.765645",AddressId);
-
         callRetrofit.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -1601,7 +1630,6 @@ public class MyProductContractActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         Log.d("Success Call", ">>>>" + call);
                         Log.d("Success Call ", ">>>>" + response.body().toString());
-
                         System.out.println("----------------------------------------------------");
                         Log.d("Call request", call.request().toString());
                         Log.d("Call request header", call.request().headers().toString());
@@ -1609,14 +1637,10 @@ public class MyProductContractActivity extends AppCompatActivity {
                         Log.d("Response raw", String.valueOf(response.raw().body()));
                         Log.d("Response code", String.valueOf(response.code()));
                         System.out.println("----------------------------------------------------");
-
-
                         if (response.body().toString() != null) {
-
                             if (response != null) {
                                 String searchResponse = response.body().toString();
                                 Log.d("Reg", "Response  >>" + searchResponse.toString());
-
                                 if (searchResponse != null) {
                                     JSONObject root = null;
                                     try {
@@ -1648,7 +1672,81 @@ public class MyProductContractActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 progressDialog.dismiss();
+            }
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+                Log.d("Error Call", ">>>>" + call.toString());
+                Log.d("Error", ">>>>" + t.toString());
+                //  Toast.makeText(ProductsActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //   drop_location.setText(radioText);
+        if(address_txt_map_dialog != null){
+            address_txt_map_dialog.setText(Product_Detail_Address_Map);
+        }
+    }
+    private void getCountryList() {
+        progressdialog();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DZ_URL.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserApi service = retrofit.create(UserApi.class);
 
+        Call<JsonElement> callRetrofit = null;
+        callRetrofit = service.getCountries();
+
+        callRetrofit.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        progressDialog.dismiss();
+                        Log.d("Success Call", ">>>>" + call);
+                        Log.d("Success Call ", ">>>>" + response.body().toString());
+
+                        System.out.println("----------------------------------------------------");
+                        Log.d("Call request", call.request().toString());
+                        Log.d("Call request header", call.request().headers().toString());
+                        Log.d("Response raw header", response.headers().toString());
+                        Log.d("Response raw", String.valueOf(response.raw().body()));
+                        Log.d("Response code", String.valueOf(response.code()));
+                        System.out.println("----------------------------------------------------");
+                        if (response.body().toString() != null) {
+                            JSONObject root = null;
+                            try {
+                                root = new JSONObject(response.body().toString());
+                                String success = root.getString("success");
+                                if (success.equalsIgnoreCase("1")) {
+                                    JSONArray jsonArray = root.getJSONArray("country");
+                                    countryList = new ArrayList<>();
+                                    List<String> idList = new ArrayList<>();
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                                        countryList.add(jsonObject.getString("country_name"));
+                                        idList.add(jsonObject.getString("CountryCode"));
+                                    }
+                                    //In response data
+                                    progressDialog.dismiss();
+                                    showAlertDialog(true, countryList, idList);
+                                } else {
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -1660,28 +1758,260 @@ public class MyProductContractActivity extends AppCompatActivity {
             }
         });
     }
+    private void getStatesList() {
+        progressdialog();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DZ_URL.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserApi service = retrofit.create(UserApi.class);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //   drop_location.setText(radioText);
+        Call<JsonElement> callRetrofit = null;
+        callRetrofit = service.getStates(countryId);
 
-/*
-        if(drop_location != null){
-           drop_location.setText(radioText);
-        }*/
-        if(address_txt_map_dialog != null){
-            address_txt_map_dialog.setText(Product_Detail_Address_Map);
-        } /*if ( spinner_thirdparty_shipping.getCount() > 0 )
-        {
-            spinner_thirdparty_shipping.getOnItemSelectedListener()
-                    .onItemSelected( spinner_thirdparty_shipping, null, spinner_thirdparty_shipping.getSelectedItemPosition(), 0 );
-        }*/
-      /*  Spinner spinner = (Spinner)findViewById(R.id.spinner_thirdparty_shipping);
+        callRetrofit.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        progressDialog.dismiss();
+                        Log.d("Success Call", ">>>>" + call);
+                        Log.d("Success Call ", ">>>>" + response.body().toString());
 
-        SharedPreferences prefs = getSharedPreferences("prefs_name", Context.MODE_PRIVATE);
-        int spinnerIndx = prefs.getInt("spinner_indx", 0);
-        spinner.setSelection(spinnerIndx);*/
+                        System.out.println("----------------------------------------------------");
+                        Log.d("Call request", call.request().toString());
+                        Log.d("Call request header", call.request().headers().toString());
+                        Log.d("Response raw header", response.headers().toString());
+                        Log.d("Response raw", String.valueOf(response.raw().body()));
+                        Log.d("Response code", String.valueOf(response.code()));
+                        System.out.println("----------------------------------------------------");
+
+                        if (response.body().toString() != null) {
+                            JSONObject root = null;
+                            try {
+                                root = new JSONObject(response.body().toString());
+                                String success = root.getString("success");
+                                if (success.equalsIgnoreCase("1")) {
+                                    JSONArray jsonArray = root.getJSONArray("states");
+                                    statesList = new ArrayList<>();
+                                    List<String> idList = new ArrayList<>();
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                                        statesList.add(jsonObject.getString("subdivision_1_name"));
+                                        idList.add(jsonObject.getString("subdivision_1_iso_code"));
+                                    }
+                                    //In response data
+                                    progressDialog.dismiss();
+                                    showAlertDialog(false,statesList, idList);
+                                } else {
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                progressDialog.dismiss();
+            }
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+                Log.d("Error Call", ">>>>" + call.toString());
+                Log.d("Error", ">>>>" + t.toString());
+                progressDialog.dismiss();
+            }
+        });
+    }
+    private void getCityList() {
+        progressdialog();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DZ_URL.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserApi service = retrofit.create(UserApi.class);
+
+        Call<JsonElement> callRetrofit = null;
+        callRetrofit = service.getCities(stateId);
+        callRetrofit.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        progressDialog.dismiss();
+                        Log.d("Success Call", ">>>>" + call);
+                        Log.d("Success Call ", ">>>>" + response.body().toString());
+                        System.out.println("----------------------------------------------------");
+                        Log.d("Call request", call.request().toString());
+                        Log.d("Call request header", call.request().headers().toString());
+                        Log.d("Response raw header", response.headers().toString());
+                        Log.d("Response raw", String.valueOf(response.raw().body()));
+                        Log.d("Response code", String.valueOf(response.code()));
+                        System.out.println("----------------------------------------------------");
+                        if (response.body().toString() != null) {
+                            JSONObject root = null;
+                            try {
+                                root = new JSONObject(response.body().toString());
+                                String success = root.getString("success");
+                                if (success.equalsIgnoreCase("1")) {
+                                    JSONArray jsonArray = root.getJSONArray("cities");
+                                    citiesList = new ArrayList<>();
+                                    List<String> idList = new ArrayList<>();
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                                        idList.add(jsonObject.getString("city_id"));
+                                        citiesList.add(jsonObject.getString("city_name"));
+                                    }
+                                    //In response data
+                                    progressDialog.dismiss();
+                                    showAlertDialogCity(citiesList, idList);
+                                } else {
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                progressDialog.dismiss();
+            }
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+                Log.d("Error Call", ">>>>" + call.toString());
+                Log.d("Error", ">>>>" + t.toString());
+                //  Toast.makeText(ProductsActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+    }
+    private void showAlertDialog(final boolean isCountry, final List<String> countryList,
+                                 final List<String> idList){
+        try {
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MyProductContractActivity.this);
+            LayoutInflater inflater = this.getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.custom_list_layout, null);
+            dialogBuilder.setView(dialogView);
+
+            TextView title = (TextView) dialogView.findViewById(R.id.customDialogTitle);
+            if (isCountry)
+                title.setText("Choose Country");
+            else
+                title.setText("Choose State");
+
+            final ListView categoryListView = (ListView) dialogView.findViewById(R.id.categoryList);
+            final ShimmerFrameLayout shimmerFrameLayout = dialogView.findViewById(R.id.shimmer_list_item);
+            shimmerFrameLayout.startShimmerAnimation();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    helper.stopShimmer(shimmerFrameLayout);
+                }
+            }, 3000);
+            alertDialog = dialogBuilder.create();
+            if (countryList.size() == 0) {
+                if (alertDialog != null)
+                    alertDialog.dismiss();
+            }
+            try {
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                Window window = alertDialog.getWindow();
+                lp.copyFrom(window.getAttributes());
+                // This makes the dialog take up the full width
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                window.setAttributes(lp);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                    R.layout.simple_list_item, R.id.list_item_txt, countryList);
+            // Assign adapter to ListView
+            categoryListView.setAdapter(adapter);
+            // ListView Item Click Listener
+            categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    String itemValue = countryList.get(position);
+                    if (isCountry) {
+                        spinner_country.setText(itemValue);
+                        address_state.setText("");
+                        address_state.setHint("Choose State");
+                        countryId = idList.get(position);
+                        alertDialog.dismiss();
+                    } else {
+                        address_state.setText(itemValue);
+                        stateId = idList.get(position);
+                        alertDialog.dismiss();
+                    }
+                }
+            });
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void showAlertDialogCity(final List<String> cityList,
+                                     final List<String> idList){
+        try {
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MyProductContractActivity.this);
+            LayoutInflater inflater = this.getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.custom_list_layout, null);
+            dialogBuilder.setView(dialogView);
+
+            TextView title = (TextView) dialogView.findViewById(R.id.customDialogTitle);
+            title.setText("Choose City");
+
+            final ListView categoryListView = (ListView) dialogView.findViewById(R.id.categoryList);
+            final ShimmerFrameLayout shimmerFrameLayout = dialogView.findViewById(R.id.shimmer_list_item);
+            shimmerFrameLayout.startShimmerAnimation();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    helper.stopShimmer(shimmerFrameLayout);
+                }
+            }, 3000);
+            alertDialog = dialogBuilder.create();
+            if (cityList.size() == 0) {
+                if (alertDialog != null)
+                    alertDialog.dismiss();
+            }
+            try {
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                Window window = alertDialog.getWindow();
+                lp.copyFrom(window.getAttributes());
+                // This makes the dialog take up the full width
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                window.setAttributes(lp);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                    R.layout.simple_list_item, R.id.list_item_txt, cityList);
+            // Assign adapter to ListView
+            categoryListView.setAdapter(adapter);
+            // ListView Item Click Listener
+            categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    String itemValue = cityList.get(position);
+                    address_town.setText(itemValue);
+                    cityId = idList.get(position);
+                    alertDialog.dismiss();
+                }
+            });
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

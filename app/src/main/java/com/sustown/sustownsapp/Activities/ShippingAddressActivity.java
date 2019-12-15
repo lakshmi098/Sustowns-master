@@ -106,7 +106,7 @@ public class ShippingAddressActivity extends AppCompatActivity {
     WebServices webServices;
     Helper helper;
     LinearLayout ll_payu_options;
-    String bankCode,mihpayid,mode,status,txnid ,amount,net_amount_debit,firstname,phone,hash,payment_source,PG_TYPE,bank_ref_num;
+    String bankCode="",mihpayid="",mode="",status,txnid="" ,amount = "",net_amount_debit="",firstname,phone,hash,payment_source,PG_TYPE="",bank_ref_num="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,7 +172,7 @@ public class ShippingAddressActivity extends AppCompatActivity {
         pincode_address = (EditText) findViewById(R.id.pincode_address);
         fax_address = (EditText) findViewById(R.id.fax_address);
         ll_bank_details = (LinearLayout) findViewById(R.id.ll_bank_details);
-        ll_payu_options = (LinearLayout) findViewById(R.id.ll_payu_options);
+//        ll_payu_options = (LinearLayout) findViewById(R.id.ll_payu_options);
         acc_name = (TextView) findViewById(R.id.bank_account_name);
         acc_no = (TextView) findViewById(R.id.bank_account_no);
         acc_ifsccode = (TextView) findViewById(R.id.bank_ifsccode);
@@ -183,6 +183,7 @@ public class ShippingAddressActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ShippingAddressActivity.this,StoreReceivedOrdersActivity.class);
+                i.putExtra("Message","");
                 startActivity(i);
             }
         });
@@ -250,7 +251,7 @@ public class ShippingAddressActivity extends AppCompatActivity {
 
 
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-        payu_radigroup = (RadioGroup) findViewById(R.id.payu_radigroup);
+//        payu_radigroup = (RadioGroup) findViewById(R.id.payu_radigroup);
         payu_radiobutton = (RadioButton) findViewById(R.id.pay_u_radiobtn);
         paybank_radiobtn = (RadioButton) findViewById(R.id.paybank_radiobtn);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -502,16 +503,19 @@ public class ShippingAddressActivity extends AppCompatActivity {
                             String success = responseObj.getString("success");
                             if (success.equalsIgnoreCase("1")) {
                                 progressDialog.dismiss();
-                                Toast.makeText(ShippingAddressActivity.this, message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ShippingAddressActivity.this, "Thank you for Choosing Pay by Bank Option and further process to Check My Orders", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(ShippingAddressActivity.this, StoreReceivedOrdersActivity.class);
+                                i.putExtra("Message","Thank you for Choosing Pay by Bank Option and further process to Check My Orders");
                                 startActivity(i);
                             } else {
+                                progressDialog.dismiss();
                                 Toast.makeText(ShippingAddressActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
                         }
+                        progressDialog.dismiss();
                     }
 
                     @Override
@@ -548,16 +552,20 @@ public class ShippingAddressActivity extends AppCompatActivity {
                             String success = responseObj.getString("success");
                             if (success.equalsIgnoreCase("1")) {
                                 progressDialog.dismiss();
-                                Toast.makeText(ShippingAddressActivity.this, message, Toast.LENGTH_SHORT).show();
-                               /* Intent i = new Intent(ShippingAddressActivity.this, StoreReceivedOrdersActivity.class);
+                               /* Toast.makeText(ShippingAddressActivity.this, "Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(ShippingAddressActivity.this, StoreReceivedOrdersActivity.class);
+                                i.putExtra("Message","Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours");
                                 startActivity(i);*/
+                               // progressDialog.dismiss();
                             } else {
+                                progressDialog.dismiss();
                                 Toast.makeText(ShippingAddressActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
                         }
+                        progressDialog.dismiss();
                     }
 
                     @Override
@@ -567,15 +575,12 @@ public class ShippingAddressActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
     public void setParameter() {
         mPaymentParams.setKey(merchantKey);
         mPaymentParams.setAmount(totalAmount);
         mPaymentParams.setProductInfo("Sustowns Product");
 
         mPaymentParams.setFirstName(preferenceUtils.getStringFromPreference(PreferenceUtils.FULL_NAME, ""));
-
         mPaymentParams.setEmail(preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL, ""));
         mPaymentParams.setPhone(preferenceUtils.getStringFromPreference(PreferenceUtils.MOBILE, ""));
         mPaymentParams.setAddress1(preferenceUtils.getStringFromPreference(PreferenceUtils.Cust_Address, ""));
@@ -726,8 +731,9 @@ public class ShippingAddressActivity extends AppCompatActivity {
                             String success = responseObj.getString("success");
                             if (success.equalsIgnoreCase("1")) {
                                 progressDialog.dismiss();
-                                Toast.makeText(ShippingAddressActivity.this, message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ShippingAddressActivity.this, "", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(ShippingAddressActivity.this, StoreReceivedOrdersActivity.class);
+                                i.putExtra("Message","");
                                 startActivity(i);
                             } else {
                                 progressDialog.dismiss();
@@ -821,7 +827,6 @@ public class ShippingAddressActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
             if (data != null) {
-
                 /**
                  * Here, data.getStringExtra("payu_response") ---> Implicit response sent by PayU
                  * data.getStringExtra("result") ---> Response received from merchant's Surl/Furl

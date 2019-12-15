@@ -3,6 +3,7 @@ package com.sustown.sustownsapp.Adapters;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.sustownsapp.R;
+import com.sustown.sustownsapp.Activities.AddShippingServices;
+import com.sustown.sustownsapp.Activities.EditTransportServices;
 import com.sustown.sustownsapp.Activities.PreferenceUtils;
 import com.sustown.sustownsapp.Activities.ServiceManagementActivity;
 import com.sustown.sustownsapp.Models.TransportGetService;
@@ -30,10 +33,12 @@ public class MyServicesAdapter extends RecyclerView.Adapter<MyServicesAdapter.Vi
     TextView transport_service_name, category_name, transport_type, vehicle_type, load_type, from_date, to_date,
             crate_min_charge, box_charge_km, box_text, box_min_charge;
     Button close_dialog;
+    String StoreMgmt;
 
-    public MyServicesAdapter(Context context, ArrayList<TransportGetService> transportGetServices) {
+    public MyServicesAdapter(Context context, ArrayList<TransportGetService> transportGetServices,String StoreMgmt) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
+        this.StoreMgmt = StoreMgmt;
         this.transportGetServices = transportGetServices;
     }
 
@@ -57,13 +62,76 @@ public class MyServicesAdapter extends RecyclerView.Adapter<MyServicesAdapter.Vi
         viewHolder.update_service.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               ((ServiceManagementActivity) context).editProduct(position);
+                if(StoreMgmt.equalsIgnoreCase("0")){
+                    Intent i = new Intent(context, EditTransportServices.class);
+                    i.putExtra("ServiceId",transportGetServices.get(position).getId());
+                    i.putExtra("Update","1");
+                    i.putExtra("Name",transportGetServices.get(position).getPr_title());
+                    i.putExtra("TranportType",transportGetServices.get(position).getTransport_type());
+                    i.putExtra("VehicleType",transportGetServices.get(position).getVehicle_type());
+                    i.putExtra("FromDate",transportGetServices.get(position).getFromdate());
+                    i.putExtra("ToDate",transportGetServices.get(position).getTodate());
+                    i.putExtra("Category",transportGetServices.get(position).getCategory());
+                    i.putExtra("CatId",transportGetServices.get(position).getCategoryid());
+                    i.putExtra("VehicleIdNumber",transportGetServices.get(position).getVehicle_id());
+                    i.putExtra("SubCategory",transportGetServices.get(position).getSubcategory());
+                    i.putExtra("SubCatId",transportGetServices.get(position).getPr_subcatid());
+                    i.putExtra("VehicleId",transportGetServices.get(position).getVehicleid());
+                    i.putExtra("TransId",transportGetServices.get(position).getTransid());
+                    i.putExtra("MinLoad",transportGetServices.get(position).getMinimumload());
+                    i.putExtra("MaxLoad",transportGetServices.get(position).getMaximumload());
+                    i.putExtra("ContainerType",transportGetServices.get(position).getContainertype());
+                    i.putExtra("Length",transportGetServices.get(position).getVehicle_length());
+                    i.putExtra("Width",transportGetServices.get(position).getVehicle_width());
+                    i.putExtra("Height",transportGetServices.get(position).getVehicle_height());
+                    i.putExtra("TransportTax",transportGetServices.get(position).getTransport_tax());
+                    i.putExtra("TransportDis",transportGetServices.get(position).getTransport_dis());
+                    i.putExtra("ServiceRadius",transportGetServices.get(position).getService_area_radius());
+                    i.putExtra("ServiceExtendRadius",transportGetServices.get(position).getRadi_exp());
+                    i.putExtra("PointSourceLoc",transportGetServices.get(position).getPoint_source_locaiton());
+                    i.putExtra("PointDesLoc",transportGetServices.get(position).getPoint_des_location());
+                    i.putExtra("LoadType",transportGetServices.get(position).getLoad_type());
+                    context.startActivity(i);
+                   // ((ServiceManagementActivity) context).editProduct(position);
+                }
+                else if(StoreMgmt.equalsIgnoreCase("1")){
+                    Intent i = new Intent(context,AddShippingServices.class);
+                    i.putExtra("ServiceId",transportGetServices.get(position).getId());
+                    i.putExtra("Update","1");
+                    i.putExtra("Name",transportGetServices.get(position).getPr_title());
+                    i.putExtra("TranportType",transportGetServices.get(position).getTransport_type());
+                    i.putExtra("VehicleType",transportGetServices.get(position).getVehicle_type());
+                    i.putExtra("FromDate",transportGetServices.get(position).getFromdate());
+                    i.putExtra("ToDate",transportGetServices.get(position).getTodate());
+                    i.putExtra("Category",transportGetServices.get(position).getCategory());
+                    i.putExtra("CatId",transportGetServices.get(position).getCategoryid());
+                    i.putExtra("VehicleIdNumber",transportGetServices.get(position).getVehicle_id());
+                    i.putExtra("SubCategory",transportGetServices.get(position).getSubcategory());
+                    i.putExtra("SubCatId",transportGetServices.get(position).getPr_subcatid());
+                    i.putExtra("VehicleId",transportGetServices.get(position).getVehicleid());
+                    i.putExtra("TransId",transportGetServices.get(position).getTransid());
+                    i.putExtra("MinLoad",transportGetServices.get(position).getMinimumload());
+                    i.putExtra("MaxLoad",transportGetServices.get(position).getMaximumload());
+                    i.putExtra("ContainerType",transportGetServices.get(position).getContainertype());
+                    i.putExtra("Length",transportGetServices.get(position).getVehicle_length());
+                    i.putExtra("Width",transportGetServices.get(position).getVehicle_width());
+                    i.putExtra("Height",transportGetServices.get(position).getVehicle_height());
+                    i.putExtra("TransportTax",transportGetServices.get(position).getTransport_tax());
+                    i.putExtra("TransportDis",transportGetServices.get(position).getTransport_dis());
+                    i.putExtra("ServiceRadius",transportGetServices.get(position).getService_area_radius());
+                    i.putExtra("ServiceExtendRadius",transportGetServices.get(position).getRadi_exp());
+                    i.putExtra("PointSourceLoc",transportGetServices.get(position).getPoint_source_locaiton());
+                    i.putExtra("PointDesLoc",transportGetServices.get(position).getPoint_des_location());
+                    i.putExtra("LoadType",transportGetServices.get(position).getLoad_type());
+                    context.startActivity(i);
+                    //((AddShippingServices) context).editProductShipping(position);
+                }
             }
         });
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.view_service.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // create dialog for buy sample
+                // create dialog for View Service Details
                 final Dialog customdialog = new Dialog(context);
                 customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 customdialog.setContentView(R.layout.get_service_details);
@@ -103,7 +171,7 @@ public class MyServicesAdapter extends RecyclerView.Adapter<MyServicesAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView ser_prod_name, ser_prod_price, ser_category, ser_transport_type,update_service;
+        TextView ser_prod_name, ser_prod_price, ser_category, ser_transport_type,update_service,view_service;
 
         public ViewHolder(View view) {
             super(view);
@@ -112,6 +180,7 @@ public class MyServicesAdapter extends RecyclerView.Adapter<MyServicesAdapter.Vi
             ser_category = (TextView) view.findViewById(R.id.ser_category);
             ser_transport_type = (TextView) view.findViewById(R.id.ser_transport_type);
             update_service = (TextView) view.findViewById(R.id.update_service);
+            view_service = (TextView) view.findViewById(R.id.view_service);
         }
     }
 }

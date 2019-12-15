@@ -26,4 +26,5 @@ public interface OrdersApi {
     @GET(DZ_URL.GET_MARKET_LIST)
     Call<JsonElement> getMarketList(@Query("category") String category, @Query("subcategory") String subcategory, @Query("year") String year,
                                     @Query("month") String month, @Query("day") String day);
+
 }

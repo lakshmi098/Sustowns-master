@@ -35,6 +35,8 @@ public class SearchProductsModel {
     private String days;
     private String pr_sku;
     private String imagepath;
+    private String country_name;
+    private String city_name;
 
     public String getId() {
         return id;
@@ -298,5 +300,21 @@ public class SearchProductsModel {
 
     public void setImagepath(String imagepath) {
         this.imagepath = imagepath;
+    }
+
+    public String getCountry_name() {
+        return country_name;
+    }
+
+    public void setCountry_name(String country_name) {
+        this.country_name = country_name;
+    }
+
+    public String getCity_name() {
+        return city_name;
+    }
+
+    public void setCity_name(String city_name) {
+        this.city_name = city_name;
     }
 }

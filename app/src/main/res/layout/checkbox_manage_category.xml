@@ -5,22 +5,20 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     card_view:cardCornerRadius="5dp"
-
     card_view:cardUseCompatPadding="true" >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
+        android:layout_margin="5dp">
 
         <CheckBox
-            android:id="@+id/checkbox"
+            android:id="@+id/issuesCheck"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="name" />
 
     </RelativeLayout>
-
 </android.support.v7.widget.CardView>
 

@@ -575,6 +575,7 @@ public class QuoteNowActivity extends AppCompatActivity {
                                 String message = responseObj.getString("message");
                                 Toast.makeText(QuoteNowActivity.this, "Your Quote Submitted Successfully", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(QuoteNowActivity.this, BidContractsActivity.class);
+                                i.putExtra("Processed","2");
                                 startActivity(i);
                             } else {
                                 Toast.makeText(QuoteNowActivity.this, "Service not added", Toast.LENGTH_SHORT).show();

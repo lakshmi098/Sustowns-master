@@ -14,11 +14,11 @@ import com.example.sustownsapp.R;
 
 public class TradeManagementActivity extends AppCompatActivity {
     PreferenceUtils preferenceUtils;
-    public static String username,useremail,user_role;
+    public static String username, useremail, user_role;
     ImageView backarrow;
-    LinearLayout home,news,store,bidcontracts,poultryprices,ll_signout;
-    LinearLayout ll_cart,ll_orders,ll_offers,ll_transport_orders,ll_transport_details,ll_contract_orders;
-    TextView home_text,news_text,store_text,contracts_text,market_text;
+    LinearLayout home, news, store, bidcontracts, poultryprices, ll_signout;
+    LinearLayout ll_cart, ll_orders, ll_offers, ll_transport_orders, ll_transport_details, ll_contract_orders, ll_logistic_orders;
+    TextView home_text, news_text, store_text, contracts_text, market_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +29,15 @@ public class TradeManagementActivity extends AppCompatActivity {
         setContentView(R.layout.trade_management_layout);
 
         preferenceUtils = new PreferenceUtils(TradeManagementActivity.this);
-        username = preferenceUtils.getStringFromPreference(PreferenceUtils.UserName,"");
-        useremail = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL,"");
-        user_role = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ROLE,"");
+        username = preferenceUtils.getStringFromPreference(PreferenceUtils.UserName, "");
+        useremail = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL, "");
+        user_role = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ROLE, "");
 
         ll_cart = (LinearLayout) findViewById(R.id.ll_cart);
         ll_orders = (LinearLayout) findViewById(R.id.ll_orders);
         ll_offers = (LinearLayout) findViewById(R.id.ll_offers);
         ll_transport_orders = (LinearLayout) findViewById(R.id.ll_transport_orders);
+        ll_logistic_orders = (LinearLayout) findViewById(R.id.ll_logistic_orders);
         ll_transport_details = (LinearLayout) findViewById(R.id.ll_transport_details);
         ll_contract_orders = (LinearLayout) findViewById(R.id.ll_contract_orders);
 
@@ -45,21 +46,22 @@ public class TradeManagementActivity extends AppCompatActivity {
             ll_orders.setVisibility(View.VISIBLE);
             ll_offers.setVisibility(View.VISIBLE);
             ll_transport_orders.setVisibility(View.GONE);
-            ll_transport_details.setVisibility(View.VISIBLE);
+            ll_transport_details.setVisibility(View.GONE);
             ll_contract_orders.setVisibility(View.VISIBLE);
-        } else if(user_role.equalsIgnoreCase("transport")){
+        } else if (user_role.equalsIgnoreCase("transport")) {
             ll_cart.setVisibility(View.VISIBLE);
             ll_orders.setVisibility(View.GONE);
             ll_offers.setVisibility(View.GONE);
             ll_transport_orders.setVisibility(View.VISIBLE);
             ll_transport_details.setVisibility(View.GONE);
             ll_contract_orders.setVisibility(View.GONE);
-        }else{
+            ll_logistic_orders.setVisibility(View.GONE);
+        } else {
             ll_cart.setVisibility(View.VISIBLE);
             ll_orders.setVisibility(View.VISIBLE);
             ll_offers.setVisibility(View.VISIBLE);
             ll_transport_orders.setVisibility(View.GONE);
-            ll_transport_details.setVisibility(View.VISIBLE);
+            ll_transport_details.setVisibility(View.GONE);
             ll_contract_orders.setVisibility(View.VISIBLE);
         }
 
@@ -113,6 +115,7 @@ public class TradeManagementActivity extends AppCompatActivity {
             public void onClick(View v) {
                 contracts_text.setTextColor(getResources().getColor(R.color.appcolor));
                 Intent i = new Intent(TradeManagementActivity.this, BidContractsActivity.class);
+                i.putExtra("Processed","0");
                 startActivity(i);
             }
         });
@@ -135,6 +138,7 @@ public class TradeManagementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(TradeManagementActivity.this, StoreReceivedOrdersActivity.class);
+                i.putExtra("Message","");
                 startActivity(i);
             }
         });
@@ -142,6 +146,8 @@ public class TradeManagementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(TradeManagementActivity.this, MyContractOrdersActivity.class);
+                i.putExtra("Message","");
+                i.putExtra("PurchasedOrders","0");
                 startActivity(i);
             }
         });
@@ -152,23 +158,34 @@ public class TradeManagementActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        ll_offers.setOnClickListener(new View.OnClickListener() {
+        ll_logistic_orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(TradeManagementActivity.this, StoreOffersActivity.class);
+                Intent i = new Intent(TradeManagementActivity.this, LogisticsOrdersActivity.class);
+                i.putExtra("Message","");
                 startActivity(i);
             }
         });
-        ll_transport_details.setOnClickListener(new View.OnClickListener() {
+      /*  ll_logistic_orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(TradeManagementActivity.this, TransportDetailsActivity.class);
                 startActivity(i);
             }
+        });*/
+        ll_offers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(TradeManagementActivity.this, StoreOffersActivity.class);
+                i.putExtra("Message","");
+                i.putExtra("SentOffers","");
+                startActivity(i);
+            }
         });
     }
+
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Intent intent = new Intent(TradeManagementActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

@@ -3,6 +3,7 @@ package com.sustown.sustownsapp.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,12 +54,13 @@ public class BidContractsActivity extends AppCompatActivity {
     ApprovedRequestAdapter approvedRequestAdapter;
     CompletedRequestAdapter completedRequestAdapter;
     String[] text = {"0 Open Requests"};
-    TextView contracts_title,home_text,news_text,store_text,contracts_text,market_text;
+    TextView contracts_title,home_text,news_text,store_text,contracts_text,market_text,not_availabletext;
     ImageView backarrow;
     ProgressDialog progressDialog;
     ArrayList<OpenRequestModel> openrequestModels;
     ArrayList<CompleteRequestModel> completeRequestModels;
-
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    String clickAction = "",ProcessStr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +73,7 @@ public class BidContractsActivity extends AppCompatActivity {
         username = preferenceUtils.getStringFromPreference(PreferenceUtils.UserName,"");
         useremail = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL,"");
         user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
-        Intent incoming = getIntent();
+        ProcessStr = getIntent().getStringExtra("Processed");
         backarrow = (ImageView) findViewById(R.id.backarrow);
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +82,7 @@ public class BidContractsActivity extends AppCompatActivity {
                startActivity(i);
             }
         });
+        not_availabletext = (TextView) findViewById(R.id.not_availabletext);
         home = (LinearLayout) findViewById(R.id.ll_home);
         news = (LinearLayout) findViewById(R.id.ll_news);
         store = (LinearLayout) findViewById(R.id.ll_store);
@@ -136,14 +139,38 @@ public class BidContractsActivity extends AppCompatActivity {
         ll_mycontractpurchases.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(BidContractsActivity.this, MyContractPurchases.class);
+                Intent i = new Intent(BidContractsActivity.this, LogisticsOrdersActivity.class);
                 startActivity(i);
             }
         });
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_bid_contracts);
         LinearLayoutManager lManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(lManager);
-
+        if(ProcessStr.equalsIgnoreCase("1")){
+            clickAction = "Approve";
+            approved.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
+            quoted.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+            open.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+            completed.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+            approved.setTextColor(getResources().getColor(R.color.white));
+            quoted.setTextColor(getResources().getColor(R.color.black));
+            open.setTextColor(getResources().getColor(R.color.black));
+            completed.setTextColor(getResources().getColor(R.color.black));
+            bidApproveRequests();
+        }else if(ProcessStr.equalsIgnoreCase("2")){
+            clickAction = "Quote";
+            quoted.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
+            open.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+            approved.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+            completed.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+            quoted.setTextColor(getResources().getColor(R.color.white));
+            open.setTextColor(getResources().getColor(R.color.black));
+            approved.setTextColor(getResources().getColor(R.color.black));
+            completed.setTextColor(getResources().getColor(R.color.black));
+            bidQuoteRequests();
+        }else{
+            bidOpenRequests();
+        }
 
         bid_contracts_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,6 +227,7 @@ public class BidContractsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 contracts_text.setTextColor(getResources().getColor(R.color.appcolor));
                 Intent i = new Intent(BidContractsActivity.this, BidContractsActivity.class);
+                i.putExtra("Processed","0");
                 startActivity(i);
             }
         });
@@ -215,6 +243,7 @@ public class BidContractsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                // ll_contracts.setVisibility(View.GONE);
+                clickAction = "Open";
                 open.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
                 quoted.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
                 approved.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
@@ -230,6 +259,7 @@ public class BidContractsActivity extends AppCompatActivity {
         quoted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clickAction = "Quote";
                 quoted.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
                 open.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
                 approved.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
@@ -244,6 +274,7 @@ public class BidContractsActivity extends AppCompatActivity {
         approved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clickAction = "Approve";
                 approved.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
                 quoted.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
                 open.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
@@ -258,6 +289,7 @@ public class BidContractsActivity extends AppCompatActivity {
         completed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clickAction = "Complete";
                 completed.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
                 quoted.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
                 approved.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
@@ -270,22 +302,38 @@ public class BidContractsActivity extends AppCompatActivity {
             }
         });
         //   hideAndShowItems();
-        bidOpenRequests();
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.appcolor);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(clickAction.equalsIgnoreCase("Open")){
+                    bidOpenRequests();
+                }else if(clickAction.equalsIgnoreCase("Quote")){
+                    bidQuoteRequests();
+                }else if(clickAction.equalsIgnoreCase("Approve")){
+                    bidApproveRequests();
+                }else if(clickAction.equalsIgnoreCase("Complete")){
+                    bidCompleteRequests();
+                }else if(clickAction.equalsIgnoreCase("")){
+                    bidOpenRequests();
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
     @Override
     public void onBackPressed(){
         Intent intent = new Intent(BidContractsActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
-
     public void progressdialog() {
         progressDialog = new ProgressDialog(BidContractsActivity.this);
         progressDialog.setMessage("please wait...");
         progressDialog.setCancelable(true);
         progressDialog.show();
     }
-
     public void bidOpenRequests() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
@@ -338,11 +386,13 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 String category_id = jsonObject.getString("category_id");
                                                 String subcat_id = jsonObject.getString("subcat_id");
                                                 String subsubcat_id = jsonObject.getString("subsubcat_id");
+                                                String job_date = jsonObject.getString("job_date");
                                                 String end_date = jsonObject.getString("end_date");
                                                 String etime = jsonObject.getString("etime");
                                                 String contractname = jsonObject.getString("contractname");
                                                 String image = jsonObject.getString("image");
                                                 String minqantity = jsonObject.getString("minqantity");
+                                                String qnt_weight = jsonObject.getString("qnt_weight");
                                                 String job_location = jsonObject.getString("job_location");
                                                 String contractor_id = jsonObject.getString("contractor_id");
                                                 String on_date = jsonObject.getString("on_date");
@@ -365,22 +415,29 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 openRequestModel.setSubsubcat_id(subsubcat_id);
                                                 openRequestModel.setEnd_date(end_date);
                                                 openRequestModel.setEtime(etime);
+
                                                 openRequestModel.setContractname(contractname);
                                                 openRequestModel.setImage(Image);
                                                 openRequestModel.setMinqantity(minqantity);
+                                                openRequestModel.setQnt_weight(qnt_weight);
                                                 openRequestModel.setContractor_id(contractor_id);
                                                 openRequestModel.setJob_location(job_location);
                                                 openRequestModel.setTitle(title);
                                                 openRequestModel.setFullname(fullname);
                                                 openRequestModel.setMy_bid_id(my_bid_id);
-                                                openRequestModel.setOn_date(on_date);
+                                                openRequestModel.setJob_date(job_date);
                                                 openrequestModels.add(openRequestModel);
 
                                             }
-                                            if(openrequestModels != null){
+                                            if(openrequestModels != null || openrequestModels.size()>0){
                                                 openRequestAdapter = new OpenRequestAdapter(BidContractsActivity.this,openrequestModels);
                                                 recyclerView.setAdapter(openRequestAdapter);
                                                 openRequestAdapter.notifyDataSetChanged();
+                                                progressDialog.dismiss();
+                                            }else{
+                                                progressDialog.dismiss();
+                                                not_availabletext.setVisibility(View.VISIBLE);
+                                                recyclerView.setVisibility(View.GONE);
                                             }
                                             // Toast.makeText(CartActivity.this, message, Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
@@ -480,6 +537,7 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 String contractname = jsonObject.getString("contractname");
                                                 String image = jsonObject.getString("image");
                                                 String minqantity = jsonObject.getString("minqantity");
+                                                String qnt_weight = jsonObject.getString("qnt_weight");
                                                 String job_location = jsonObject.getString("job_location");
                                                 String contractor_id = jsonObject.getString("contractor_id");
                                                 String on_date = jsonObject.getString("on_date");
@@ -507,11 +565,12 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 openRequestModel.setContractname(contractname);
                                                 openRequestModel.setImage(Image);
                                                 openRequestModel.setMinqantity(minqantity);
+                                                openRequestModel.setQnt_weight(qnt_weight);
                                                 openRequestModel.setContractor_id(contractor_id);
                                                 openRequestModel.setJob_location(job_location);
                                                 openRequestModel.setTitle(title);
                                                 openRequestModel.setFullname(fullname);
-                                                openRequestModel.setOn_date(on_date);
+                                                openRequestModel.setJob_date(job_date);
                                                 openrequestModels.add(openRequestModel);
 
                                             }
@@ -613,12 +672,14 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 String category_id = jsonObject.getString("category_id");
                                                 String subcat_id = jsonObject.getString("subcat_id");
                                                 String subsubcat_id = jsonObject.getString("subsubcat_id");
+                                                String job_date = jsonObject.getString("job_date");
                                                 String end_date = jsonObject.getString("end_date");
                                                 String detail = jsonObject.getString("detail");
                                                 String contractname = jsonObject.getString("contractname");
                                                 String image = jsonObject.getString("image");
                                                 String Image = image_path + image;
                                                 String minqantity = jsonObject.getString("minqantity");
+                                                String qnt_weight = jsonObject.getString("qnt_weight");
                                                 String job_location = jsonObject.getString("job_location");
                                                 String city = jsonObject.getString("city");
                                                 String country = jsonObject.getString("country");
@@ -644,10 +705,12 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 completeRequestModel.setCategory_id(category_id);
                                                 completeRequestModel.setSubcat_id(subcat_id);
                                                 completeRequestModel.setSubsubcat_id(subsubcat_id);
+                                                completeRequestModel.setJob_date(job_date);
                                                 completeRequestModel.setEnd_date(end_date);
                                                 completeRequestModel.setContractname(contractname);
                                                 completeRequestModel.setImage(Image);
                                                 completeRequestModel.setMinqantity(minqantity);
+                                                completeRequestModel.setQnt_weight(qnt_weight);
                                                 completeRequestModel.setJob_location(job_location);
                                                 completeRequestModel.setCity(city);
                                                 completeRequestModel.setCountry(country);
@@ -770,6 +833,7 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 String image = jsonObject.getString("image");
                                                 String attachment = jsonObject.getString("attachment");
                                                 String minqantity = jsonObject.getString("minqantity");
+                                                String qnt_weight = jsonObject.getString("qnt_weight");
                                                 String job_location = jsonObject.getString("job_location");
                                                 String zipcode = jsonObject.getString("zipcode");
                                                 String city = jsonObject.getString("city");
@@ -806,6 +870,7 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 completeRequestModel.setSubcat_id(subcat_id);
                                                 completeRequestModel.setSubsubcat_id(subsubcat_id);
                                                 completeRequestModel.setEnd_date(end_date);
+                                                completeRequestModel.setJob_date(job_date);
                                                 completeRequestModel.setContractname(contractname);
                                                 completeRequestModel.setImage(ImageStr);
                                                 completeRequestModel.setMinqantity(minqantity);
@@ -820,8 +885,8 @@ public class BidContractsActivity extends AppCompatActivity {
                                                 completeRequestModel.setEmail(email);
                                                 completeRequestModel.setStatus(status);
                                                 completeRequestModel.setJob_id(job_id);
+                                                completeRequestModel.setQnt_weight(qnt_weight);
                                                 completeRequestModels.add(completeRequestModel);
-
                                             }
                                             if(completeRequestModels != null){
                                                 approvedRequestAdapter = new ApprovedRequestAdapter(BidContractsActivity.this,completeRequestModels);
@@ -831,19 +896,15 @@ public class BidContractsActivity extends AppCompatActivity {
                                             // Toast.makeText(CartActivity.this, message, Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
                                         }
-
                                         else {
                                             //    Toast.makeText(CareerOppurtunitiesActivity.this, message, Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
                                         }
-
-
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                     progressDialog.dismiss();
                                 }
-
                             }
                         }
                     }
@@ -856,7 +917,6 @@ public class BidContractsActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 //                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
@@ -864,6 +924,4 @@ public class BidContractsActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

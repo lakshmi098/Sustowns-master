@@ -218,6 +218,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                                 status_order.setText("Pending");
                                             }else if(order_status.equalsIgnoreCase("1")){
                                                 status_order.setText("Complete");
+                                            }else if(order_status.equalsIgnoreCase("2")){
+                                                status_order.setText("Cancelled");
+                                            }else if(order_status.equalsIgnoreCase("3")){
+                                                status_order.setText("Payment Processing");
                                             }
                                             customer_name_tv.setText("Name : "+bill_fname);
                                             customer_email.setText(bill_email);

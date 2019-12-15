@@ -49,11 +49,11 @@ public class OpenRequestAdapter extends RecyclerView.Adapter<OpenRequestAdapter.
                 viewHolder.card_view.setVisibility(View.VISIBLE);
                 viewHolder.title.setText(openRequestModels.get(position).getContractname());
                 viewHolder.bid_prod_name.setText(openRequestModels.get(position).getJob_name());
-                viewHolder.bid_quantity.setText(openRequestModels.get(position).getMinqantity());
+                viewHolder.bid_quantity.setText(openRequestModels.get(position).getMinqantity()+" "+openRequestModels.get(position).getQnt_weight());
                 viewHolder.bid_quote.setText(openRequestModels.get(position).getEnd_date());
                 viewHolder.buyer_name.setText(openRequestModels.get(position).getFullname());
                 viewHolder.bid_location.setText(openRequestModels.get(position).getJob_location());
-                viewHolder.bid_close_in.setText(openRequestModels.get(position).getEnd_date() + "," + openRequestModels.get(position).getEtime());
+                viewHolder.bid_close_in.setText(openRequestModels.get(position).getJob_date());
                 Picasso.get()
                         .load(openRequestModels.get(position).getImage())
                         .placeholder(R.drawable.no_image_available)

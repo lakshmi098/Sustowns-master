@@ -90,6 +90,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
+            android:id="@+id/text_message"
+            android:textColor="@color/btn_background_color"
+            android:layout_margin="10dp"/>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeToRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,6 +114,7 @@
             android:layout_margin="10dp">
 
         </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

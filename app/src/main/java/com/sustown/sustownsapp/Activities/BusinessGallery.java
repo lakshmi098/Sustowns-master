@@ -406,7 +406,10 @@ public class BusinessGallery extends AppCompatActivity {
                                         image_url = badgeImage.getString("image_url");
                                         preferenceUtils.saveString(PreferenceUtils.BadgeImage,image_url);
                                     }
-
+                                    JSONArray categoryArray = root.getJSONArray("category");
+                                    for (int i4 = 0; i4 < businessbadges.length(); i4++) {
+                                        JSONObject categoryObj = businessbadges.getJSONObject(i4);
+                                    }
                                     if (progressDialog.isShowing())
                                         progressDialog.dismiss();
                                    /* Intent i = new Intent(BusinessProfileDetails.this,SignInActivity.class);

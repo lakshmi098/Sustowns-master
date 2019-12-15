@@ -15,9 +15,12 @@ public interface UserApi {
     @GET(DZ_URL.HOME_PRODUCTS)
     Call<JsonElement> getHomeProducts();
 
+    @GET(DZ_URL.CART_COUNT)
+    Call<JsonElement> cartCount(@Query("userid") String userid);
+
     @POST(DZ_URL.VENDOR_SIGNUP)
     Call<JsonElement> vendorSignup(@Query("name") String name, @Query("username") String username, @Query("phone") String phone, @Query("email") String email,
-                                   @Query("businessname") String businessname, @Query("password") String password, @Query("role") String role, @Query("country") String country);
+                                   @Query("businessname") String businessname, @Query("password") String password, @Query("role") String role, @Query("country") String country,@Query("pincode") String pincode);
 
     @GET(DZ_URL.STORE_POULTRY)
     Call<JsonElement> StorePoultryProducts();
@@ -39,6 +42,12 @@ public interface UserApi {
 
     @GET(DZ_URL.GET_COUNTRY)
     Call<JsonElement> getCountries();
+
+    @GET(DZ_URL.GET_STATES)
+    Call<JsonElement> getStates(@Query("country") String country);
+
+    @GET(DZ_URL.GET_CITIES)
+    Call<JsonElement> getCities(@Query("state") String state);
 
     @GET(DZ_URL.GET_CURRENCY)
     Call<JsonElement> getCurrencyCodes();

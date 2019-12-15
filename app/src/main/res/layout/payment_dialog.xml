@@ -1,73 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="10dp">
-
-    <LinearLayout
+    android:padding="10dp"
+    android:id="@+id/linearlayout"
+    android:layout_margin="10dp">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:padding="8dp"
-        android:visibility="gone"
-        android:id="@+id/ll_order_placed_text"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Order Placed Successfully"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Thank you for your order"
-            android:textColor="@color/black"
-            android:layout_marginTop="5dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="5dp"
-            android:text="If you would like to view the status of your order"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="or make any changes to it,"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="please visit "
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/my_orders_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="My Orders"
-                android:textStyle="bold"
-                android:textColor="@color/appcolor"
-                android:textSize="17sp" />
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,6 +23,243 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:padding="8dp"
+            android:visibility="gone"
+            android:id="@+id/ll_order_placed_text"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Order Placed Successfully"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thank you for your order"
+                android:textColor="@color/black"
+                android:layout_marginTop="5dp"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:text="If you would like to view the status of your order"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="or make any changes to it,"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="please visit "
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/my_orders_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="My Orders"
+                    android:textStyle="bold"
+                    android:textColor="@color/appcolor"
+                    android:textSize="17sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ll_quote_received_details"
+            android:visibility="gone"
+            android:orientation="vertical">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar1"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/button_square_edges_drawable"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:titleTextColor="#ffffff">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Details"
+                    android:id="@+id/buysample_title"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/close_send_quote"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/delete_icon" />
+
+            </android.support.v7.widget.Toolbar>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="20dp"
+                    android:layout_marginTop="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Km Range"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=":"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/km_range"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Charge per Km"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=":"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/charge_per_km"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total Charge"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=":"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/total_charge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Amount to be paid"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=":"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/amount_tobe_paid"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="10dp">
 
@@ -88,6 +268,7 @@
             android:layout_height="wrap_content"
             android:text="please pay full payment :"
             android:textColor="@color/black"
+            android:textStyle="bold"
             android:layout_marginLeft="7dp"
             android:textSize="16sp"/>
         <TextView
@@ -113,25 +294,53 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <RadioButton
-            android:id="@+id/pay_u_radiobtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="CREDIT / DEBIT CARDS"
+            android:id="@+id/cards_checkbox"
             android:checked="false"
-            android:text="Pay U"
-            android:textSize="13sp" />
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NET BANKING"
+            android:id="@+id/netbanking_checkbox"
+            android:checked="false"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UPI"
+            android:id="@+id/upi_checkbox"
+            android:checked="false"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="14sp" />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PAY U MONEY"
+            android:id="@+id/payumoney_checkbox"
+            android:checked="false"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="14sp" />
 
         <RadioButton
             android:id="@+id/pay_by_bank_radiobtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
             android:layout_weight="1"
             android:checked="false"
             android:text="Pay by Bank"
-            android:textSize="13sp" />
+            android:textSize="14sp" />
 
     </RadioGroup>
         <LinearLayout
@@ -298,4 +507,5 @@
             android:background="@drawable/backgroundapp_transparent_square"/>
 
     </LinearLayout>
+    </ScrollView>
 </LinearLayout>

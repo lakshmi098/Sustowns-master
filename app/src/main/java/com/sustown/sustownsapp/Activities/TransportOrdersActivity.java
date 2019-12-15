@@ -3,6 +3,7 @@ package com.sustown.sustownsapp.Activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -68,7 +69,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
     String OrderId,ServiceId;
     TextView order_prod_name,order_weight,order_quantity,invoice_no, order_packing_type,order_shipped_to,order_seller_address;
     TextView shipping_name,shipping_number,shipping_address,shipping_postalcode,seller_name_text,seller_number_text,seller_address_text,seller_postalcode_text;
-
+    SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +128,20 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                 getTransportOrdersList();
             }
         });
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.appcolor);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ordersValue = "Radius";
+                radius_btn.setTextColor(getResources().getColor(R.color.white));
+                extended_radius_btn.setTextColor(getResources().getColor(R.color.black));
+                radius_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
+                extended_radius_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
+                getTransportOrdersList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         getTransportOrdersList();
     }
 
@@ -136,7 +151,6 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
         progressDialog.setCancelable(true);
         progressDialog.show();
     }
-
     //  Recent get Transport Received Orders
     public void getTransportOrdersList() {
         progressdialog();
@@ -190,6 +204,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                                 String id = jsonObject.getString("id");
                                                 String user_id = jsonObject.getString("user_id");
                                                 order_id = jsonObject.getString("order_id");
+                                                String ran_id = jsonObject.getString("ran_id");
                                                 service_id = jsonObject.getString("service_id");
                                                 String service_name = jsonObject.getString("service_name");
                                                 String pr_sku = jsonObject.getString("pr_sku");
@@ -212,6 +227,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                                 transportOrderModel.setId(id);
                                                 transportOrderModel.setUser_id(user_id);
                                                 transportOrderModel.setOrder_id(order_id);
+                                                transportOrderModel.setRan_id(ran_id);
                                                 transportOrderModel.setService_id(service_id);
                                                 transportOrderModel.setService_name(service_name);
                                                 transportOrderModel.setPr_sku(pr_sku);
@@ -305,7 +321,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
     }
 
     public void viewDetails(int position) {
-         OrderId = transportOrdersModels.get(position).getOrder_id();
+         OrderId = transportOrdersModels.get(position).getRan_id();
          ServiceId = transportOrdersModels.get(position).getService_id();
         try {
             final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TransportOrdersActivity.this);
@@ -559,7 +575,6 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 try {
                     if (response.isSuccessful()) {
-                        progressDialog.dismiss();
                         System.out.println("----------------------------------------------------");
                         Log.d("Call request", call.request().toString());
                         Log.d("Call request header", call.request().headers().toString());
@@ -593,7 +608,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                             String service_id = orderitemObj.getString("service_id");
                                             String pr_title = orderitemObj.getString("pr_title");
                                             String pr_min = orderitemObj.getString("pr_min");
-                                            String pr_weight = orderitemObj.getString("pr_weight");
+                                           // String pr_weight = orderitemObj.getString("pr_weight");
                                             String pr_packtype = orderitemObj.getString("pr_packtype");
                                             String category = orderitemObj.getString("category");
                                             String vehicle_type = orderitemObj.getString("vehicle_type");
@@ -608,7 +623,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
 
                                             invoice_no.setText(product_order_id);
                                             order_prod_name.setText(pr_title);
-                                            order_weight.setText(pr_weight+" / "+unit_code);
+                                           // order_weight.setText(pr_weight+" / "+unit_code);
                                             order_quantity.setText(pr_min);
                                             order_packing_type.setText(pr_packtype);
                                             order_vehicle_type.setText(vehicle_type1);
@@ -700,6 +715,8 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                             try {
                                 JSONObject confirmObject = new JSONObject();
                                 confirmObject.put("userId", user_id);
+                                confirmObject.put("orderRandomId",transportOrdersModels.get(position).getRan_id());
+                                confirmObject.put("serviceId",transportOrdersModels.get(position).getService_id());
                                /* confirmObject.put("orderRandomId", transportOrdersModels.get(position).getOrderRandomId());
                                 confirmObject.put("serviceId", transportOrdersModels.get(position).getServiceId());*/
                                 confirmObject.put("orderStatus", "confirm");
@@ -726,8 +743,8 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                             try {
                                 JSONObject rejectOrder = new JSONObject();
                                 rejectOrder.put("userId", user_id);
-                               /* rejectOrder.put("orderRandomId", transportOrdersModels.get(position).getOrderRandomId());
-                                rejectOrder.put("serviceId", transportOrdersModels.get(position).getServiceId());*/
+                                rejectOrder.put("orderRandomId", transportOrdersModels.get(position).getRan_id());
+                                rejectOrder.put("serviceId", transportOrdersModels.get(position).getService_id());
                                 rejectOrder.put("orderStatus", "reject");
                                 rejectOrder.put("comment", reason_rejection.getText().toString().trim());
 

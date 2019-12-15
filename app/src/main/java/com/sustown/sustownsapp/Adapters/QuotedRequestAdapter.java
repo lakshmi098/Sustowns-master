@@ -47,11 +47,11 @@ public class QuotedRequestAdapter extends RecyclerView.Adapter<QuotedRequestAdap
         if(openRequestModels.get(position) != null){
             viewHolder.title.setText(openRequestModels.get(position).getContractname());
             viewHolder.bid_prod_name.setText(openRequestModels.get(position).getJob_name());
-            viewHolder.bid_quantity.setText(openRequestModels.get(position).getMinqantity());
+            viewHolder.bid_quantity.setText(openRequestModels.get(position).getMinqantity()+" "+openRequestModels.get(position).getQnt_weight());
             viewHolder.bid_quote.setText(openRequestModels.get(position).getEnd_date());
             viewHolder.buyer_name.setText(openRequestModels.get(position).getFullname());
             viewHolder.bid_location.setText(openRequestModels.get(position).getJob_location());
-            viewHolder.bid_close_in.setText(openRequestModels.get(position).getEnd_date()+","+openRequestModels.get(position).getEtime());
+            viewHolder.bid_close_in.setText(openRequestModels.get(position).getJob_date());
           /*  Glide.with(context)
                     .load(openRequestModels.get(position).getImage())*/
             Picasso.get()
@@ -75,18 +75,15 @@ public class QuotedRequestAdapter extends RecyclerView.Adapter<QuotedRequestAdap
     }
     public void removeAt(int position) {
         //  notifyDataSetChanged();
-
     }
     @Override
     public int getItemCount() {
         return openRequestModels.size();
     }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView bid_image;
         TextView title,bid_prod_name,bid_quantity,bid_quote,buyer_name,bid_close_in,bid_location;
         Button quote_now_btn;
-
         public ViewHolder(View view) {
             super(view);
             bid_image = (ImageView) view.findViewById(R.id.bid_image);
@@ -98,7 +95,6 @@ public class QuotedRequestAdapter extends RecyclerView.Adapter<QuotedRequestAdap
             bid_location = (TextView) view.findViewById(R.id.bid_location);
             bid_close_in = (TextView) view.findViewById(R.id.bid_close_in);
             quote_now_btn = (Button) view.findViewById(R.id.quote_now_btn);
-
         }
     }
 }

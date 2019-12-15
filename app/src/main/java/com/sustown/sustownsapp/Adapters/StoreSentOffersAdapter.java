@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.sustownsapp.R;
+import com.sustown.sustownsapp.Activities.PaymentContractsActvity;
 import com.sustown.sustownsapp.Activities.PreferenceUtils;
 import com.sustown.sustownsapp.Activities.ProductDetailsActivity;
 import com.sustown.sustownsapp.Models.StoreSentOffersModel;
@@ -50,17 +51,30 @@ public class StoreSentOffersAdapter extends RecyclerView.Adapter<StoreSentOffers
             viewHolder.offer_quantity.setText(storeSentOffersModels.get(position).getMakeqty());
             viewHolder.offered_by.setText(storeSentOffersModels.get(position).getFullname());
             if(status.equalsIgnoreCase("1")){
-                viewHolder.offer_btn.setText("Offer Accepted and Pay");
-            }else{
-                viewHolder.offer_btn.setText("Sent Offer");
+                viewHolder.text_offer_status.setVisibility(View.VISIBLE);
+                viewHolder.offer_btn.setVisibility(View.GONE);
+                viewHolder.offer_accepted.setVisibility(View.GONE);
+                viewHolder.text_offer_status.setText("Pending");
+            }else if(status.equalsIgnoreCase("2")){
+                viewHolder.text_offer_status.setVisibility(View.GONE);
+                viewHolder.offer_btn.setVisibility(View.VISIBLE);
+                viewHolder.offer_btn.setText("Proceed To Pay");
+                viewHolder.offer_accepted.setVisibility(View.VISIBLE);
+                viewHolder.offer_accepted.setText("Offer Accepted");
+            }else if(status.equalsIgnoreCase("3")){
+                viewHolder.text_offer_status.setVisibility(View.VISIBLE);
+                viewHolder.offer_btn.setVisibility(View.GONE);
+                viewHolder.offer_accepted.setVisibility(View.GONE);
+                viewHolder.offer_btn.setText("Paid");
             }
         }
-        viewHolder.ll_offers.setOnClickListener(new View.OnClickListener() {
+        viewHolder.offer_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pro_id = storeSentOffersModels.get(position).getProd_id();
-                Intent i = new Intent(context, ProductDetailsActivity.class);
-                i.putExtra("Pro_Id",pro_id);
+                Intent i = new Intent(context, PaymentContractsActvity.class);
+                i.putExtra("Logistics","Offers");
+                i.putExtra("Amount",storeSentOffersModels.get(position).getMakepeice());
+                i.putExtra("makeOfferId",storeSentOffersModels.get(position).getId());
                 context.startActivity(i);
             }
         });
@@ -76,22 +90,18 @@ public class StoreSentOffersAdapter extends RecyclerView.Adapter<StoreSentOffers
 
             }
         });*/
-
     }
     public void removeAt(int position) {
         //  notifyDataSetChanged();
-
     }
     @Override
     public int getItemCount() {
         return storeSentOffersModels.size();
     }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView remove_offer,accept_offer_img;
-        TextView prod_name,offer_prod_price,offer_quantity,offer_price,offered_by;
+        TextView prod_name,offer_prod_price,offer_quantity,offer_price,offered_by,text_offer_status,offer_accepted;
         Button offer_btn;
-        LinearLayout ll_offers;
         public ViewHolder(View view) {
             super(view);
             prod_name = (TextView) view.findViewById(R.id.prod_name);
@@ -102,8 +112,8 @@ public class StoreSentOffersAdapter extends RecyclerView.Adapter<StoreSentOffers
             remove_offer = (ImageView) view.findViewById(R.id.remove_offer);
             accept_offer_img = (ImageView) view.findViewById(R.id.accept_offer_img);
             offer_btn = (Button) view.findViewById(R.id.offer_btn);
-            ll_offers = (LinearLayout) view.findViewById(R.id.ll_offers);
-
+            text_offer_status = (TextView) view.findViewById(R.id.text_offer_status);
+            offer_accepted = (TextView) view.findViewById(R.id.offer_accepted);
         }
     }
 }

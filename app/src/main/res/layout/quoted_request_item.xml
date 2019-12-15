@@ -267,7 +267,7 @@
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:layout_marginRight="20dp"
-                        android:text="Close in"
+                        android:text="Posted On"
                         android:textColor="@color/black"
                         android:textSize="14dp" />
 
