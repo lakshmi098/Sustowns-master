@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.example.sustownsapp.R;
 import com.sustown.sustownsapp.Activities.PreferenceUtils;
@@ -37,22 +38,22 @@ public class ExistingAddressAdapter extends RecyclerView.Adapter<ExistingAddress
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
         this.getAddressModels = getAddressModels;
+        preferenceUtils = new PreferenceUtils(context);
     }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.markets_item, viewGroup, false);
         //  product_sale_activity.onItemClick(i);
         return new ViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         viewHolder.ll_existing_addresses.setVisibility(View.VISIBLE);
         viewHolder.ll_markets.setVisibility(View.GONE);
 
         if(getAddressModels.get(position) != null){
-            viewHolder.name_address.setText(getAddressModels.get(position).getAddress1()+"\n"+getAddressModels.get(position).getCity_name()+","+
+            viewHolder.name_address.setText(getAddressModels.get(position).getName());
+            viewHolder.address_text.setText(getAddressModels.get(position).getAddress1()+"\n"+getAddressModels.get(position).getCity_name()+","+
                                             getAddressModels.get(position).getState()+"\n"+getAddressModels.get(position).getCountry_name()+","+
                                              getAddressModels.get(position).getZipcode());
         }
@@ -61,6 +62,8 @@ public class ExistingAddressAdapter extends RecyclerView.Adapter<ExistingAddress
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 int id=group.getCheckedRadioButtonId();
+                String addressId = String.valueOf(id);
+             //   preferenceUtils.saveString(PreferenceUtils.AddressId,addressId);
 
                 radioText = viewHolder.name_address.getText().toString();
                 drop_location.setText(radioText);
@@ -86,12 +89,14 @@ public class ExistingAddressAdapter extends RecyclerView.Adapter<ExistingAddress
         RadioButton name_address;
         RadioGroup radioGroup;
         LinearLayout ll_existing_addresses,ll_markets;
+        TextView address_text;
         public ViewHolder(View view) {
             super(view);
             name_address = (RadioButton) view.findViewById(R.id.name_address);
             radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
             ll_existing_addresses = (LinearLayout) view.findViewById(R.id.ll_existing_addresses);
             ll_markets = (LinearLayout) view.findViewById(R.id.ll_markets);
+            address_text = (TextView) view.findViewById(R.id.address_text);
             // Handle item click and set the selection
 
         }

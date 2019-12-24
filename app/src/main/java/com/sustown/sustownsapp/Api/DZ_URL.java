@@ -12,14 +12,10 @@ public interface DZ_URL {
     String STORE_POULTRY = "Sustownsservice/store";
     String PRODUCT_DETAILS = "Sustownsservice/viewproduct";
     String NEWS = "Sustownsservice/news";
-   // String ADD_TO_CART = "Sustownsservice/Addtocartnew";
     String GET_CART_LIST = "Sustownsservice/viewcart";
     String REMOVE_CART = "Sustownsservice/remove_cartforsingle";
-    // dev2
-   // String CLEAR_CART = "http://dev2.sustowns.com/Sustownsservice/remove_cartfull";
+    String GET_SHIPPING_CHARGE = "Sustownsservice/get_kilometers_info/";
     String CLEAR_CART = "Sustownsservice/remove_cartfull";
-  //  String UPDATE_CART = "http://dev2.sustowns.com/Sustownsservice/updatecart";
-
     String ADD_PRODUCT = "Sustownsservice/addproduct";
     String GET_CATEGORIES = "Sustownsservice/category";
     String CAREER_LIST = "Sustownsservice/careerlist";
@@ -90,16 +86,17 @@ public interface DZ_URL {
     String MAKE_PAYMENT_BANK_APPROVE = "Postcontractservice/quoteapprove/";
     String TRANSPORT_REGISTRATION = "transportservices/addtransportvendor";
     String GET_TRANS_SERVICES = "transportservices/myservices";
-    // dev services(18-11-19)
     String ADD_TRANSPORT = "Transportservices/get_transport_req";
     String ADD_TRANSPORT_PROD_DETAILS = "Freight/productdetails_app/";
-    //String ADD_TRANSPORT = "Transportservices/get_transport_req";
+    String GET_CONTRACT_TRANSPORT_DETAILS = "Postcontractservice/get_contractproduct";
+    String GET_CONTRACT_REQUEST_SERVICES = "Postcontractservice/get_transport_req";
     String GET_TRANSPORT_TYPE = "Transportservices/transtypelist/";
     String GET_VEHICLE_TYPE = "Transportservices/vehicletypelist/";
     String POST_TRANSPORT_VENDOR_CONFIRM = "freight/transportVendorConfirmOrder";
+    String POST_TRANSPORT_CONTRACT_VENDOR_CONFIRM = "Postcontractservice/transportVendorConfirmOrder";
   //  String GET_TRANSPORT_DETAILS_LIST = "freight/transportBuyerTransportList/";
     String TRANSPORT_REQUEST_QUOTE = "Transportservices/add_transdetails_req";
-    String CANCEL_BOOKING = "freight/transportcancel_byvendor";
+  //  String CANCEL_BOOKING = "freight/transportcancel_byvendor";
     String ADD_SERVICE = "transportservices/addservice";
     String GET_CART_LIST_SERVER = "Sustownsservice/viewcart/?";
     String GET_VENDOR_SERVICES_ADD_PRODUCT = "Sustownsservice/getvendor_ser";
@@ -114,21 +111,15 @@ public interface DZ_URL {
     String GET_FILTER_CITIES = "Sustownsservice/getstates";
     String GET_FILTER_CATEGORIES = "Sustownsservice/getproductcategories";
     String GET_FILTER_PRODUCTLIST = "Sustownsservice/productslist";
-
-    // Filters dev2 SERVICES
-   // String GET_FILTER_CONTINENTS = "http://dev2.sustowns.com/Sustownsservice/getcontinents";
-   // String GET_FILTER_COUNTRIES = "http://dev2.sustowns.com/Sustownsservice/getcountries";
-  //  String GET_FILTER_CITIES = "http://dev2.sustowns.com/Sustownsservice/getstates";
-    ///   String ADD_TO_CART = "http://dev2.sustowns.com/Sustownsservice/AddtoCart";
     String ADD_TO_CART = "Sustownsservice/AddtoCart";
     String GET_CATEGORIES_LIST = "Sustownsservice/get_categeory";
     String GET_TRANSPORT_RECEIVED_ORDERS = "Sustownsservice/get_received_orders";
     String GET_TRANSPORT_ORDERDETAILS_LIST = "Transportservices/productdetails/";
-  //  String GET_TRANSPORT_RECEIVED_ORDERS ="https://www.dev.sustowns.com/Sustownsservice/get_received_orders";
     String GET_KMS_BASED_PINCODES = "Transportservices/sendquote/";
-  //  String GET_FILTER_CATEGORIES = "http://dev2.sustowns.com/Sustownsservice/getproductcategories";
-   // String GET_FILTER_PRODUCTLIST = "http://dev2.sustowns.com/Sustownsservice/productslist";
-
+    String GET_TRANSPORT_CONTRACT_RECEIVEDORDERS = "Postcontractservice/get_received_orders";
+    String GET_TRANSPORT_Contract_ORDERDETAILS_LIST = "Postcontractservice/productdetails/";
+    String GET_CONTRACT_KMS_BASED_PINCODES = "Postcontractservice/sendquote/";
+    String GET_CONTRACT_LOGISTICS_ORDERS_LIST = "Postcontractservice/contracttransportorders/";
 
     //Move To Live API'S
 

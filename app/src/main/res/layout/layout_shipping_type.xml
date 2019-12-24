@@ -16,7 +16,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/backarrow"
+            android:id="@+id/backarrow1"
             android:layout_width="50dp"
             android:layout_height="35dp"
             android:layout_marginLeft="15dp"
@@ -73,7 +73,7 @@
                     android:layout_gravity="left"
                     android:layout_marginTop="5dp"
                     android:background="@null"
-                    android:text="Name *"
+                    android:visibility="gone"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -83,7 +83,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
                     android:inputType="textPersonName"
+                    android:hint="Name *"
+                    android:textStyle="bold"
                     android:textColor="#000000"
+                    android:textColorHint="@color/black"
                     android:textSize="16sp" />
 
                 <TextView
@@ -92,7 +95,7 @@
                     android:layout_gravity="left"
                     android:layout_marginTop="5dp"
                     android:background="@null"
-                    android:text="Vehicle ID *"
+                    android:visibility="gone"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -101,7 +104,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
-                    android:inputType="number"
+                    android:hint="Vehicle ID *"
+                    android:textStyle="bold"
+                    android:textColorHint="@color/black"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -117,6 +122,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Vehicle Documents :"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -147,6 +153,7 @@
                     android:background="@null"
                     android:padding="7dp"
                     android:text="Licence Image"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -157,7 +164,7 @@
                     android:orientation="horizontal">
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/images_recyclerView"
+                        android:id="@+id/images_recyclerView_shipping"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
                         android:layout_weight="1"
@@ -165,7 +172,7 @@
                         android:scrollbars="horizontal" />
 
                     <ImageButton
-                        android:id="@+id/confirm_add_icon"
+                        android:id="@+id/confirm_add_icon_shipping"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:background="@color/appcolor"
@@ -189,6 +196,7 @@
                     android:background="@null"
                     android:padding="7dp"
                     android:text="Permit Image"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -199,7 +207,7 @@
                     android:orientation="horizontal">
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/permit_images_recyclerView"
+                        android:id="@+id/permit_images_recyclerView_shipping"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
                         android:layout_weight="1"
@@ -207,7 +215,7 @@
                         android:scrollbars="horizontal" />
 
                     <ImageButton
-                        android:id="@+id/confirm_permit_add_icon"
+                        android:id="@+id/confirm_permit_add_icon_shipping"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:background="@color/appcolor"
@@ -253,6 +261,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Transport Type *"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -286,6 +295,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Vehical Type *"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -314,7 +324,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:background="@null"
-                    android:text="Minimum Load *"
+                    android:textStyle="bold"
+                    android:text="Minimum Load(in Tones) *"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -334,7 +345,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:background="@null"
-                    android:text="Maximum Load *"
+                    android:textStyle="bold"
+                    android:text="Maximum Load(in Tones)*"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -392,6 +404,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Body Type *"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -419,7 +432,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="8dp"
                     android:background="@null"
                     android:text="Vehicle Load Measurements :*"
                     android:textColor="#000000"
@@ -434,6 +447,8 @@
                     android:layout_marginTop="5dp"
                     android:background="@null"
                     android:text="Length"
+                    android:visibility="gone"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -442,20 +457,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
+                    android:layout_marginTop="3dp"
                     android:layout_marginRight="15dp"
-                    android:hint="Length(Inches)"
+                    android:hint="Length(Feets)"
                     android:inputType="numberDecimal"
                     android:textColor="#000000"
-                    android:textSize="16sp" />
+                    android:textColorHint="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
                     android:background="@null"
                     android:text="Width"
+                    android:visibility="gone"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -465,7 +484,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="15dp"
-                    android:hint="Width(Inches)"
+                    android:layout_marginTop="3dp"
+                    android:hint="Width(Feets)"
+                    android:textStyle="bold"
+                    android:textColorHint="@color/black"
                     android:inputType="numberDecimal"
                     android:textColor="#000000"
                     android:textSize="16sp" />
@@ -478,6 +500,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@null"
                     android:text="Height"
+                    android:visibility="gone"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -487,7 +510,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="15dp"
-                    android:hint="Height(Inches)"
+                    android:hint="Height(Feets)"
+                    android:layout_marginTop="3dp"
+                    android:textStyle="bold"
+                    android:textColorHint="@color/black"
                     android:inputType="numberDecimal"
                     android:textColor="#000000"
                     android:textSize="16sp" />
@@ -499,7 +525,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:background="@null"
-                    android:text="Tax :"
+                    android:visibility="gone"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -509,6 +535,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="15dp"
+                    android:layout_marginTop="3dp"
+                    android:hint="Tax :"
+                    android:textStyle="bold"
+                    android:textColorHint="@color/black"
                     android:inputType="numberDecimal"
                     android:textColor="#000000"
                     android:textSize="16sp" />
@@ -520,7 +550,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:background="@null"
-                    android:text="Discount :"
+                    android:text=""
+                    android:visibility="gone"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -530,7 +561,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="15dp"
-                    android:hint="Percentage"
+                    android:layout_marginTop="3dp"
+                    android:hint="Discount(Percentage)"
+                    android:textColorHint="@color/black"
                     android:inputType="numberDecimal"
                     android:textColor="#000000"
                     android:textSize="16sp" />
@@ -548,6 +581,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="From Date :"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -573,6 +607,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="To Date :"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -598,6 +633,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Choose Category *"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -636,6 +672,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Choose SubCategory *"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -666,6 +703,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@null"
                     android:text="Load Type :"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -800,6 +838,7 @@
                     android:background="@null"
                     android:padding="5dp"
                     android:text="Service Area : "
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 

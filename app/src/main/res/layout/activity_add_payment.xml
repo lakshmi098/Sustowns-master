@@ -295,6 +295,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Cheque No"
+                android:textStyle="bold"
                 android:id="@+id/cheque_text"
                 android:textSize="16sp"
                 android:textColor="@color/black"/>
@@ -309,6 +310,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Payment Date"
+                android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@color/black"/>
 
@@ -360,6 +362,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     android:text="Pay By Bank"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="15dp" />

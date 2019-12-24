@@ -38,7 +38,7 @@ public class PreferenceUtils {
     public static final String IMAGE = "image_home";
     public static final String PROD_ID = "productid";
     public static final String COUNTRY_BILLING = "billing_country";
-    public static final String ADDRESS_LOCATION = "location_maps";
+    public static final String ADDRESS_ID = "addressId";
     public static final String Freight_Type = "freight_type";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
@@ -54,7 +54,7 @@ public class PreferenceUtils {
 
     // spinner for storage management
     public static final String EGGS_TYPE = "eggs_type";
-    public static final String Quality = "quality";
+    public static final String AddressId = "addressId";
     public static final String PROD_CAT = "prod_cat";
     public static final String Sector = "sector";
     public static final String ListingType = "listingType";

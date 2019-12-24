@@ -18,8 +18,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -95,6 +98,7 @@ public class MyProductContractActivity extends AppCompatActivity {
     private int day;
     private int month;
     private int year;
+    SparseBooleanArray mSelectedItemsListIds = new SparseBooleanArray();
     Spinner spinner_choose_category,spinner_subcategory,spinner_packing_type,spinner_unit,spinner_weight,spinner_quantity,spinner_packing,
             poultry_spinner_choose_name,poultry_spinner_choose_quality,poultry_spinner_choose_location,quantity_unit_spinner;
     Spinner spinner_location,poultry_spinner_choose_category,poultry_spinner_choose_subcategory,poultry_spinner_choose_subsubcategory;
@@ -127,14 +131,14 @@ public class MyProductContractActivity extends AppCompatActivity {
     final int PICK_IMAGE = 100;
     Dialog customdialog;
     EditText name_address,company_address, email_address, first_name_address,last_name_address, address1_address, address2_address,mobile_address, pincode_address, fax_address;
-    String quantityUnitStr,countryId,stateId, cityId, firstnameAddress, lastnameAddress, address1Address, address2Address, addressState, addressTown, mobileAddress, pincodeAddress, faxAddress,AddressId,countryAddress,Action,Latitude,Longitude;
+    String quantityUnitStr,countryId,stateId, cityId, firstnameAddress, lastnameAddress, address1Address, address2Address, addressState, addressTown, mobileAddress, pincodeAddress, faxAddress,AddressId,countryAddress,Action="",Latitude,Longitude;
     TextView address_txt_map_dialog,saved_address_text,document_text,address_town;
     LinearLayout ll_shipping_details,ll_existing_address,ll_dates,ll_poultry_edit_contract_product;
     RadioGroup radioGroup;
     RadioButton existing_radiobtn, new_radiobtn;
     ExistingAddressAdapterContract existingAddressAdapter;
     ArrayList<GetAddressModel> getAddressModels;
-    String PoultryQuantity,PoultryName,actionValue,id,job_id,PoultryEditToDate,filename,ret,fileString = "",unitId,headingValue = "";
+    String PoultryQuantity,PoultryName,actionValue="",id,job_id,PoultryEditToDate,filename,ret,fileString = "",unitId,headingValue = "";
     RadioGroup radio_group;
     RadioButton open_radiobtn,range_radiobtn;
     boolean isUpdate;
@@ -149,6 +153,9 @@ public class MyProductContractActivity extends AppCompatActivity {
     ArrayList<String> statesList = new ArrayList<>();
     ArrayList<String> citiesList = new ArrayList<>();
     AlertDialog alertDialog;
+    int textlength = 0;
+    ArrayList<String> selectedCountryList = new ArrayList<String>();
+    ArrayList<String> selectedCountryIdList = new ArrayList<String>();
     Helper helper;
     SwipeRefreshLayout mSwipeRefreshLayout;
     public static String getEncodedImage(Bitmap bitmapImage) {
@@ -407,6 +414,7 @@ public class MyProductContractActivity extends AppCompatActivity {
 
                 }
             });
+/*
             radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     switch (checkedId) {
@@ -421,6 +429,7 @@ public class MyProductContractActivity extends AppCompatActivity {
                     }
                 }
             });
+*/
             poultryedittodate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -499,7 +508,7 @@ public class MyProductContractActivity extends AppCompatActivity {
                         }
                         // addProduct();
                         else if(PoultryLocation.equalsIgnoreCase("buyers")) {
-                            if(actionValue.equalsIgnoreCase("existing")) {
+                            if(Action.equalsIgnoreCase("existing")) {
                                 setJsonObject();
                             }else{
                                 setJsonObject1();
@@ -657,10 +666,8 @@ public class MyProductContractActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 PoultryProdName = parent.getItemAtPosition(position).toString();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
         // choose poultry_spinner_choose_quality
@@ -689,15 +696,13 @@ public class MyProductContractActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 quantityUnitStr = parent.getItemAtPosition(position).toString();
                 if(quantityUnitStr.equalsIgnoreCase("Crate")){
-                    unitId = "17";
+                    unitId = "16";
                 }else{
-                    unitId = "18";
+                    unitId = "17";
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
         // choose poultry_spinner_choose_location
@@ -787,13 +792,13 @@ public class MyProductContractActivity extends AppCompatActivity {
                         }
                     });
                     save_address = (Button) customdialog.findViewById(R.id.save_address);
-                    save_address.setOnClickListener(new View.OnClickListener() {
+                    save_address.setVisibility(View.GONE);
+                  /*  save_address.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            saveExistingAddress();
+                          //  saveExistingAddress();
                         }
-                    });
-
+                    });*/
                     close_drop_dialog = (Button) customdialog.findViewById(R.id.close_drop_dialog);
                     close_drop_dialog.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -818,9 +823,7 @@ public class MyProductContractActivity extends AppCompatActivity {
                 }else if(PoultryLocation.equalsIgnoreCase("seller")) {
                     PoultryLocation = "seller";
                 }
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -841,7 +844,6 @@ public class MyProductContractActivity extends AppCompatActivity {
         dpDialog.getDatePicker().setMinDate(System.currentTimeMillis());
         dpDialog.show();
     }
-
     public void DateDialog1(){
         DatePickerDialog.OnDateSetListener listener=new DatePickerDialog.OnDateSetListener() {
 
@@ -877,14 +879,12 @@ public class MyProductContractActivity extends AppCompatActivity {
                 poultryfromdate.setText(dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
 
             }};
-
         DatePickerDialog dpDialog=new DatePickerDialog(this, listener, year, month, day);
         dpDialog.getDatePicker().setMinDate(System.currentTimeMillis());
         dpDialog.show();
 
     }
     public void poultryDateDialog2(){
-
         DatePickerDialog.OnDateSetListener listener=new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -894,11 +894,9 @@ public class MyProductContractActivity extends AppCompatActivity {
                 poultrytodate.setText(dayOfMonth+"-"+(monthOfYear+1)+"-"+year);
 
             }};
-
         DatePickerDialog dpDialog=new DatePickerDialog(this, listener, year, month, day);
         dpDialog.getDatePicker().setMinDate(System.currentTimeMillis());
         dpDialog.show();
-
     }
     public void poultryDateDialogEdit(){
 
@@ -917,7 +915,6 @@ public class MyProductContractActivity extends AppCompatActivity {
         dpDialog.show();
 
     }
-
     private void browse() {
         try {
             Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -926,7 +923,6 @@ public class MyProductContractActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     private void capture() {
         try {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -940,25 +936,19 @@ public class MyProductContractActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (requestCode == CAMERA_CAPTURE) {
-
             if (resultCode == RESULT_OK) {
                 onCaptureImageResult(data);
             }
-
         } else if (requestCode == PICK_IMAGE) {
-
             if (resultCode == RESULT_OK) {
                 imagePath = null;
-
                 Uri picUri = data.getData();
                 String[] filePath = {MediaStore.Images.Media.DATA};
                 Cursor c = getContentResolver().query(picUri, filePath, null, null, null);
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 imagePath = c.getString(columnIndex);
-
 
                 Bitmap bitmapImage = null;
                 try {
@@ -985,7 +975,6 @@ public class MyProductContractActivity extends AppCompatActivity {
 
                     try {
                         returnUri = data.getData();
-
                    /*     if (filesize >= FILE_SIZE_LIMIT) {
                             Toast.makeText(this,"The selected file is too large. Selet a new file with size less than 2mb",Toast.LENGTH_LONG).show();
                         } else {*/
@@ -1035,7 +1024,6 @@ public class MyProductContractActivity extends AppCompatActivity {
                 }
             }
         }
-
     }
     private void copyFileStream(File dest, Uri uri, Context context)
             throws IOException {
@@ -1090,7 +1078,6 @@ public class MyProductContractActivity extends AppCompatActivity {
         }
         Bitmap bmp = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
         profileString = getEncodedImage(bmp);
         if(user_role.equalsIgnoreCase("")){
             prod_contract_image.setImageBitmap(bmp);
@@ -1133,7 +1120,6 @@ public class MyProductContractActivity extends AppCompatActivity {
         progressDialog.show();
     }
 
-
     private void getMyProductContractList() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
@@ -1141,11 +1127,9 @@ public class MyProductContractActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         BidContractsApi service = retrofit.create(BidContractsApi.class);
-
         Call<JsonElement> callRetrofit = null;
         // callRetrofit = service.myProductContracts("453","buy");// user_id : 453
         callRetrofit = service.myProductContracts(user_id,"buy");// user_id : 453
-
         callRetrofit.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -1333,7 +1317,6 @@ public class MyProductContractActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     public void setJsonObject2() {
         try {
             JSONObject jsonObj = new JSONObject();
@@ -1374,7 +1357,6 @@ public class MyProductContractActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     public void poultryAddProductContractRequest(JSONObject jsonObject){
         progressdialog();
         AndroidNetworking.post("https://www.sustowns.com/Postcontractservice/addproductrequest")
@@ -1577,7 +1559,7 @@ public class MyProductContractActivity extends AppCompatActivity {
                                             }
                                             if (getAddressModels != null) {
                                                 saved_address_text.setVisibility(View.GONE);
-                                                existingAddressAdapter = new ExistingAddressAdapterContract(MyProductContractActivity.this,getAddressModels);
+                                                existingAddressAdapter = new ExistingAddressAdapterContract(MyProductContractActivity.this,getAddressModels,mSelectedItemsListIds);
                                                 recyclerview_saved_addresses.setAdapter(existingAddressAdapter);
                                                 existingAddressAdapter.notifyDataSetChanged();
                                             }else{
@@ -1612,6 +1594,7 @@ public class MyProductContractActivity extends AppCompatActivity {
             }
         });
     }
+/*
     public void saveExistingAddress() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
@@ -1652,8 +1635,10 @@ public class MyProductContractActivity extends AppCompatActivity {
                                         if (success == 1) {
                                             progressDialog.dismiss();
                                             customdialog.dismiss();
-                                            /*Intent i = new Intent(ProductDetailsActivity.this,ProductDetailsActivity.class);
-                                            startActivity(i);*/
+                                            */
+/*Intent i = new Intent(ProductDetailsActivity.this,ProductDetailsActivity.class);
+                                            startActivity(i);*//*
+
                                             //drop_location.setText(radioText);
                                             Toast.makeText(MyProductContractActivity.this, message, Toast.LENGTH_SHORT).show();
                                         } else {
@@ -1682,6 +1667,7 @@ public class MyProductContractActivity extends AppCompatActivity {
             }
         });
     }
+*/
     @Override
     protected void onResume() {
         super.onResume();
@@ -1895,7 +1881,7 @@ public class MyProductContractActivity extends AppCompatActivity {
         try {
             final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MyProductContractActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.custom_list_layout, null);
+            View dialogView = inflater.inflate(R.layout.custom_list_layout_register, null);
             dialogBuilder.setView(dialogView);
 
             TextView title = (TextView) dialogView.findViewById(R.id.customDialogTitle);
@@ -1905,6 +1891,7 @@ public class MyProductContractActivity extends AppCompatActivity {
                 title.setText("Choose State");
 
             final ListView categoryListView = (ListView) dialogView.findViewById(R.id.categoryList);
+            final EditText inputSearch = (EditText) dialogView.findViewById(R.id.inputSearch);
             final ShimmerFrameLayout shimmerFrameLayout = dialogView.findViewById(R.id.shimmer_list_item);
             shimmerFrameLayout.startShimmerAnimation();
             new Handler().postDelayed(new Runnable() {
@@ -1933,21 +1920,74 @@ public class MyProductContractActivity extends AppCompatActivity {
                     R.layout.simple_list_item, R.id.list_item_txt, countryList);
             // Assign adapter to ListView
             categoryListView.setAdapter(adapter);
+            inputSearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                    // When user changed the Text
+                    // adapter.getFilter().filter(cs);
+                    if (isCountry) {
+                        textlength = inputSearch.getText().length();
+                        selectedCountryList.clear();
+                        selectedCountryIdList.clear();
+                        for (int i = 0; i < countryList.size(); i++) {
+                            if (textlength <= countryList.get(i).length()) {
+                                Log.d("ertyyy", countryList.get(i).toLowerCase().trim());
+                                if (countryList.get(i).toLowerCase().trim().contains(
+                                        inputSearch.getText().toString().toLowerCase().trim())) {
+                                    selectedCountryList.add(countryList.get(i));
+                                    selectedCountryIdList.add(idList.get(i));
+                                }
+                            }
+                        }
+                    }else{
+                        textlength = inputSearch.getText().length();
+                        selectedCountryList.clear();
+                        selectedCountryIdList.clear();
+                        for (int i = 0; i < statesList.size(); i++) {
+                            if (textlength <= statesList.get(i).length()) {
+                                Log.d("ertyyy", statesList.get(i).toLowerCase().trim());
+                                if (statesList.get(i).toLowerCase().trim().contains(
+                                        inputSearch.getText().toString().toLowerCase().trim())) {
+                                    selectedCountryList.add(statesList.get(i));
+                                    selectedCountryIdList.add(idList.get(i));
+                                }
+                            }
+                        }
+                    }
+                    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(MyProductContractActivity.this,
+                            R.layout.simple_list_item, R.id.list_item_txt, selectedCountryList);
+                    // Assign adapter to ListView
+                    categoryListView.setAdapter(adapter);
+                }
+                @Override
+                public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                              int arg3) {
+                    // TODO Auto-generated method stub
+                }
+                @Override
+                public void afterTextChanged(Editable arg0) {
+                    // TODO Auto-generated method stub
+                }
+            });
             // ListView Item Click Listener
             categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    String itemValue = countryList.get(position);
+                    String itemValue = selectedCountryList.get(position);
                     if (isCountry) {
+                        //String itemValue = selectedCountryList.get(position);
                         spinner_country.setText(itemValue);
+                        countryId = selectedCountryIdList.get(position);
                         address_state.setText("");
                         address_state.setHint("Choose State");
-                        countryId = idList.get(position);
+                        //  countryId = idList.get(position);
                         alertDialog.dismiss();
                     } else {
+                       /* sp_state.setText(itemValue);
+                        stateId = idList.get(position);*/
                         address_state.setText(itemValue);
-                        stateId = idList.get(position);
+                        stateId = selectedCountryIdList.get(position);
                         alertDialog.dismiss();
                     }
                 }
@@ -1962,13 +2002,12 @@ public class MyProductContractActivity extends AppCompatActivity {
         try {
             final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MyProductContractActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.custom_list_layout, null);
+            View dialogView = inflater.inflate(R.layout.custom_list_layout_register, null);
             dialogBuilder.setView(dialogView);
-
             TextView title = (TextView) dialogView.findViewById(R.id.customDialogTitle);
             title.setText("Choose City");
-
             final ListView categoryListView = (ListView) dialogView.findViewById(R.id.categoryList);
+            final EditText inputSearch = (EditText) dialogView.findViewById(R.id.inputSearch);
             final ShimmerFrameLayout shimmerFrameLayout = dialogView.findViewById(R.id.shimmer_list_item);
             shimmerFrameLayout.startShimmerAnimation();
             new Handler().postDelayed(new Runnable() {
@@ -1997,14 +2036,47 @@ public class MyProductContractActivity extends AppCompatActivity {
                     R.layout.simple_list_item, R.id.list_item_txt, cityList);
             // Assign adapter to ListView
             categoryListView.setAdapter(adapter);
+            inputSearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                    // When user changed the Text
+                    // adapter.getFilter().filter(cs);
+                    textlength = inputSearch.getText().length();
+                    selectedCountryList.clear();
+                    selectedCountryIdList.clear();
+                    for (int i = 0; i < cityList.size(); i++) {
+                        if (textlength <= cityList.get(i).length()) {
+                            Log.d("ertyyy", cityList.get(i).toLowerCase().trim());
+                            if (cityList.get(i).toLowerCase().trim().contains(
+                                    inputSearch.getText().toString().toLowerCase().trim())) {
+                                selectedCountryList.add(cityList.get(i));
+                                selectedCountryIdList.add(idList.get(i));
+                            }
+                        }
+                    }
+                    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(MyProductContractActivity.this,
+                            R.layout.simple_list_item, R.id.list_item_txt, selectedCountryList);
+                    // Assign adapter to ListView
+                    categoryListView.setAdapter(adapter);
+                }
+                @Override
+                public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                              int arg3) {
+                    // TODO Auto-generated method stub
+                }
+                @Override
+                public void afterTextChanged(Editable arg0) {
+                    // TODO Auto-generated method stub
+                }
+            });
             // ListView Item Click Listener
             categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    String itemValue = cityList.get(position);
+                    String itemValue = selectedCountryList.get(position);
                     address_town.setText(itemValue);
-                    cityId = idList.get(position);
+                    cityId = selectedCountryIdList.get(position);
                     alertDialog.dismiss();
                 }
             });
@@ -2013,6 +2085,4 @@ public class MyProductContractActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
 }

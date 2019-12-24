@@ -129,6 +129,7 @@
                                     android:layout_marginTop="10dp"
                                     android:text="Choose Category"
                                     android:textSize="16sp"
+                                    android:textStyle="bold"
                                     android:layout_weight="1"
                                     android:textColor="@color/black"/>
                                 <Spinner
@@ -160,6 +161,7 @@
                                     android:layout_marginTop="10dp"
                                     android:text="Choose Subcategory"
                                     android:textSize="16sp"
+                                    android:textStyle="bold"
                                     android:layout_weight="1"
                                     android:textColor="@color/black"/>
                                 <Spinner
@@ -188,6 +190,7 @@
                             android:layout_marginTop="10dp"
                             android:text="Contract Heading *"
                             android:textColor="#000000"
+                            android:textStyle="bold"
                             android:background="@null"
                             android:textSize="16sp"
                             android:layout_gravity="left" />
@@ -208,6 +211,7 @@
                             android:layout_marginTop="10dp"
                             android:text="Product Name *"
                             android:textColor="#000000"
+                            android:textStyle="bold"
                             android:background="@null"
                             android:textSize="16sp"
                             android:layout_gravity="left" />
@@ -226,6 +230,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="Product Description *"
+                            android:textStyle="bold"
                             android:textColor="#000000"
                             android:background="@null"
                             android:textSize="16sp"
@@ -244,6 +249,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="Image"
+                            android:textStyle="bold"
                             android:textColor="#000000"
                             android:background="@null"
                             android:textSize="16sp"
@@ -272,6 +278,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="Documents"
+                            android:textStyle="bold"
                             android:textColor="#000000"
                             android:background="@null"
                             android:textSize="16sp"
@@ -296,6 +303,7 @@
                             android:layout_marginTop="10dp"
                             android:text="Specify Quality*"
                             android:textColor="#000000"
+                            android:textStyle="bold"
                             android:background="@null"
                             android:textSize="16sp"
                             android:layout_gravity="left" />
@@ -313,6 +321,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:textStyle="bold"
                             android:text="Product Unit Packing and Measurement(?)"
                             android:textColor="#000000"
                             android:textSize="16sp"
@@ -332,6 +341,7 @@
                                 android:layout_marginTop="10dp"
                                 android:text="Packing Type"
                                 android:textSize="16sp"
+                                android:textStyle="bold"
                                 android:layout_weight="1"
                                 android:textColor="@color/black"/>
                             <Spinner
@@ -356,6 +366,7 @@
                             android:layout_marginTop="10dp"
                             android:text="Packing Measurements :"
                             android:textColor="#000000"
+                            android:textStyle="bold"
                             android:textSize="16sp"
                             android:layout_gravity="left" />
 
@@ -506,6 +517,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="7dp"
                             android:text="Note"
+                            android:textStyle="bold"
                             android:textColor="#000000"
                             android:background="@null"
                             android:textSize="16sp"
@@ -529,6 +541,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Quantity Needed *"
+                                android:textStyle="bold"
                                 android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:textColor="@color/black"/>
@@ -562,6 +575,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="Shipping and Delivery :"
+                            android:textStyle="bold"
                             android:textColor="#000000"
                             android:textSize="16sp"
                             android:layout_gravity="left" />
@@ -639,6 +653,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="Post Validity Period(?) : "
+                            android:textStyle="bold"
                             android:textColor="#000000"
                             android:textSize="16sp"
                             android:layout_gravity="left" />

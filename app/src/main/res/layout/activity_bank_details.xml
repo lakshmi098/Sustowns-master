@@ -41,6 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Account Name "
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp"
                     android:layout_marginTop="10dp"
@@ -59,6 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Account Address"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp"
                     android:layout_marginTop="10dp"
@@ -78,6 +80,7 @@
                     android:layout_height="wrap_content"
                     android:text="Account Number"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     android:maxLength="25"
                     android:textColor="#000000"
                     android:layout_marginTop="10dp"
@@ -100,6 +103,7 @@
                     android:text="Bank Name"
                     android:textColor="#000000"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     android:layout_marginTop="10dp"
                     android:layout_gravity="left"/>
 
@@ -119,6 +123,7 @@
                     android:text="Bank Country"
                     android:textSize="16sp"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:layout_marginTop="10dp"
                     android:layout_gravity="left"/>
 
@@ -137,6 +142,7 @@
                     android:text="Branch Name"
                     android:layout_gravity="left"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:layout_marginTop="10dp" />
 
@@ -156,6 +162,7 @@
                     android:text="Branch Address"
                     android:layout_gravity="left"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:layout_marginTop="10dp" />
 
@@ -173,6 +180,7 @@
                     android:text="Swift Number"
                     android:layout_gravity="left"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:layout_marginTop="10dp" />
 
@@ -192,6 +200,7 @@
                     android:text="Iban Number"
                     android:textColor="#000000"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     android:layout_marginTop="10dp"
                     android:layout_gravity="left"/>
 
@@ -211,6 +220,7 @@
                     android:text="National routing Number(IFSC)"
                     android:textColor="#000000"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     android:layout_marginTop="10dp"
                     android:layout_gravity="left"/>
 
@@ -229,6 +239,7 @@
                     android:layout_height="wrap_content"
                     android:text="Business Number"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:layout_marginTop="10dp"
                     android:layout_gravity="left"/>
@@ -245,6 +256,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tax id Number"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp"
                     android:layout_marginTop="10dp"
@@ -263,6 +275,7 @@
                     android:layout_height="wrap_content"
                     android:text="Attachment"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="16sp"
                     android:layout_marginTop="10dp"
                     android:layout_gravity="left"/>

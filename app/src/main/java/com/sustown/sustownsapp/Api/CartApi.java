@@ -15,11 +15,12 @@ public interface CartApi {
                                         @Query("serv_id") String serv_id,@Query("price") String price);*/
    @GET(DZ_URL.ADD_TO_CART)
    Call<JsonElement> addToCart(@Query("userid") String userid, @Query("productid") String productid, @Query("qtys") String qtys,
-                               @Query("ship_type") String ship_type, @Query("price_qty") String price_qty, @Query("serv_id") String serv_id);
+                               @Query("ship_type") String ship_type, @Query("price_qty") String price_qty, @Query("serv_id") String serv_id,@Query("shamount") String shamount);
 
-  /*  @GET(DZ_URL.GET_CART_LIST)
-    Call<JsonElement> getCartList();
-*/
+  @GET(DZ_URL.GET_SHIPPING_CHARGE)
+  Call<JsonElement> getShippingCharge(@Query("pickup") String pickup,@Query("drop") String drop);
+
+
   @GET
   Call<JsonElement> getCartList(@Url String url);
 

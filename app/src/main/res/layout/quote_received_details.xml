@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Details"
+                android:textStyle="bold"
                 android:id="@+id/buysample_title"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -67,6 +68,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Km Range"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
@@ -97,6 +99,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Charge per Km"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
@@ -127,6 +130,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Total Charge"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
@@ -157,6 +161,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Amount to be paid"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView

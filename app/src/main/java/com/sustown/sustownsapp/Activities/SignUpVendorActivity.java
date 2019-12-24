@@ -66,6 +66,7 @@ public class SignUpVendorActivity extends AppCompatActivity {
     AlertDialog alertDialog;
     ArrayList<String> countryList = new ArrayList<>();
     Helper helper;
+    String clickedSearch;
     int textlength = 0;
     ArrayList<String> selectedCountryList = new ArrayList<String>();
     ArrayList<String> selectedCountryIdList = new ArrayList<String>();
@@ -475,7 +476,7 @@ public class SignUpVendorActivity extends AppCompatActivity {
                 @Override
                 public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                     // When user changed the Text
-                   // adapter.getFilter().filter(cs);
+                    clickedSearch = "clicked";
                     textlength = inputSearch.getText().length();
                     selectedCountryList.clear();
                     selectedCountryIdList.clear();
@@ -504,16 +505,24 @@ public class SignUpVendorActivity extends AppCompatActivity {
                     // TODO Auto-generated method stub
                 }
             });
+            clickedSearch = "not clicked";
             // ListView Item Click Listener
             categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
                     // selectedCountryList.add(position);
-                    String itemValue = selectedCountryList.get(position);
-                    sp_country.setText(itemValue);
-                    countryId = selectedCountryIdList.get(position);
-                    alertDialog.dismiss();
+                    if (clickedSearch.equalsIgnoreCase("clicked")) {
+                        String itemValue = selectedCountryList.get(position);
+                        sp_country.setText(itemValue);
+                        countryId = selectedCountryIdList.get(position);
+                        alertDialog.dismiss();
+                    }else{
+                        String itemValue = countryList.get(position);
+                        sp_country.setText(itemValue);
+                        countryId = idList.get(position);
+                        alertDialog.dismiss();
+                    }
                 }
             });
             alertDialog.show();

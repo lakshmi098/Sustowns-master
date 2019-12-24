@@ -42,6 +42,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Category"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -75,6 +76,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:text="Subcategory"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -108,6 +110,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:text="Subcategory"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -136,6 +139,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@null"
                     android:text="Contract Heading *"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -161,6 +165,7 @@
                         android:layout_marginTop="3dp"
                         android:background="@null"
                         android:text="Product Name *"
+                        android:textStyle="bold"
                         android:textColor="#000000"
                         android:textSize="16sp" />
 
@@ -226,6 +231,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Upload Document"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -261,6 +267,7 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:text="Quantity*"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -279,6 +286,7 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:text="Units*"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -319,6 +327,7 @@
                         android:layout_weight="1"
                         android:padding="5dp"
                         android:text="Quality"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -353,6 +362,7 @@
                         android:layout_marginLeft="1dp"
                         android:layout_weight="1"
                         android:text="Shipping Location Type *"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -379,6 +389,7 @@
                     android:layout_gravity="left"
                     android:layout_marginTop="10dp"
                     android:text="Post Validity Period(?) : "
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
@@ -423,6 +434,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:text="From Date"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -439,6 +451,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:text="To Date"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 

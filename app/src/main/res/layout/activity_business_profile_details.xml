@@ -120,6 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Unique Id"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -152,6 +153,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="Name"
+                    android:textStyle="bold"
+                    android:visibility="gone"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -161,8 +164,10 @@
                     android:id="@+id/et_profile_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:hint="Username"
+                    android:textStyle="bold"
+                    android:textColorHint="@color/black"
                     android:inputType="textPersonName"
                     android:singleLine="true"
                     android:textColor="@color/black"
@@ -172,10 +177,7 @@
                            android:layout_width="match_parent"
                            android:layout_height="0.5dp"
                            android:background="@color/black" />-->
-
-
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -183,15 +185,13 @@
                 android:layout_marginTop="10dp"
                 android:padding="3dp"
                 android:orientation="vertical">
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email id"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-
-
                 <TextView
                     android:id="@+id/et_profile_email"
                     android:layout_width="match_parent"
@@ -202,30 +202,24 @@
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-
                 <!-- <View
                      android:layout_width="match_parent"
                      android:layout_height="0.5dp"
                      android:background="@color/black" />-->
-
-
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:padding="3dp"
                 android:orientation="vertical">
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mobile"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-
-
                 <TextView
                     android:id="@+id/et_mobile"
                     android:layout_width="match_parent"
@@ -256,6 +250,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Address"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -289,6 +284,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Website"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -297,7 +293,7 @@
                     android:id="@+id/et_website"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:hint="website"
                     android:textColor="@color/black"
                     android:textSize="16sp" />

@@ -58,6 +58,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.sustown.sustownsapp.Adapters.MyContractOrdersAdapter;
 import com.sustown.sustownsapp.helpers.Helper;
 
 import java.util.Arrays;
@@ -365,7 +366,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (activityName.equalsIgnoreCase("store")) {
                     StoreMyProductsActivity.Product_Address_Map = map_address_txt.getText().toString();
                 } else if (activityName.equalsIgnoreCase("product")) {
-                    ProductDetailsActivity.Product_Detail_Address_Map = map_address_txt.getText().toString();
+                  //  ProductDetailsActivity.Address = map_address_txt.getText().toString();
+                    LocationDialogActivity.Address = map_address_txt.getText().toString();
                 } else if(activityName.equalsIgnoreCase("productContract")){
                     MyProductContractActivity.Product_Detail_Address_Map = map_address_txt.getText().toString();
                 } else if(activityName.equalsIgnoreCase("service")){

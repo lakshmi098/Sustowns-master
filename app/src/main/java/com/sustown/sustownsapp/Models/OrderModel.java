@@ -59,6 +59,8 @@ public class OrderModel {
     private String fullname;
     private String phone;
     private String payment_status;
+    private String address;
+    private String shipamount;
 
     public String getId() {
         return id;
@@ -514,5 +516,21 @@ public class OrderModel {
 
     public void setPayment_status(String payment_status) {
         this.payment_status = payment_status;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getShipamount() {
+        return shipamount;
+    }
+
+    public void setShipamount(String shipamount) {
+        this.shipamount = shipamount;
     }
 }

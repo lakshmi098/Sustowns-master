@@ -792,8 +792,7 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                 Log.d("Call request", call.request().toString());
                 Log.d("Call request header", call.request().headers().toString());
                 Log.d("Response raw header", response.headers().toString());
-                Log.d("Response raw", String.valueOf(response
-                        .raw().body()));
+                Log.d("Response raw", String.valueOf(response.raw().body()));
                 Log.d("Response code", String.valueOf(response.code()));
 
                 System.out.println("----------------------------------------------------");
@@ -1672,7 +1671,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         public void onBindViewHolder(final FilterContinentAdapter.ViewHolder viewHolder, final int position) {
 
             viewHolder.continent_text.setText(continentModels.get(position).getContinent_name());
-
             if (mSelectedContinents.get(position)) {
                 viewHolder.continent_text.setChecked(true);
                 selectedContinents.add(continentModels.get(position).getContinent_code());

@@ -15,8 +15,10 @@ import android.widget.TextView;
 import com.example.sustownsapp.R;
 import com.sustown.sustownsapp.Activities.AddPaymentActivity;
 import com.sustown.sustownsapp.Activities.AddTransportActivity;
+import com.sustown.sustownsapp.Activities.LocationDialogActivity;
 import com.sustown.sustownsapp.Activities.OrderDetailsActivity;
 import com.sustown.sustownsapp.Activities.PreferenceUtils;
+import com.sustown.sustownsapp.Activities.ProductDetailsActivity;
 import com.sustown.sustownsapp.Activities.StoreReceivedOrdersActivity;
 import com.sustown.sustownsapp.Models.OrderModel;
 
@@ -55,24 +57,28 @@ public class StoreReceivedOrdersAdapter extends RecyclerView.Adapter<StoreReceiv
             viewHolder.order_price.setText(orderModels.get(position).getTotalprice());
             if(order_status.equalsIgnoreCase("0")){
                 viewHolder.orderStatus.setText("Pending");
-                viewHolder.add_payment_btn.setVisibility(View.GONE);
-                viewHolder.add_transport_btn.setVisibility(View.GONE);
-                viewHolder.ll_paymentstatus.setVisibility(View.GONE);
+               // viewHolder.add_payment_btn.setVisibility(View.GONE);
+               // viewHolder.add_transport_btn.setVisibility(View.GONE);
+               // viewHolder.ll_paymentstatus.setVisibility(View.GONE);
             }else if(order_status.equalsIgnoreCase("1")){
-                viewHolder.add_payment_btn.setVisibility(View.GONE);
-                viewHolder.add_transport_btn.setVisibility(View.VISIBLE);
-                viewHolder.ll_paymentstatus.setVisibility(View.GONE);
+               // viewHolder.add_payment_btn.setVisibility(View.GONE);
+                if(orderModels.get(position).getShipamount().equalsIgnoreCase("")||orderModels.get(position).getShipamount().equalsIgnoreCase("0")) {
+                    viewHolder.add_transport_btn.setVisibility(View.VISIBLE);
+                }
+               // viewHolder.ll_paymentstatus.setVisibility(View.GONE);
                 viewHolder.orderStatus.setText("Complete");
             }else if(order_status.equalsIgnoreCase("2")){
-                viewHolder.add_payment_btn.setVisibility(View.GONE);
-                viewHolder.add_transport_btn.setVisibility(View.GONE);
-                viewHolder.ll_paymentstatus.setVisibility(View.GONE);
+              //  viewHolder.add_payment_btn.setVisibility(View.GONE);
+               // viewHolder.add_transport_btn.setVisibility(View.GONE);
+              //  viewHolder.ll_paymentstatus.setVisibility(View.GONE);
                 viewHolder.orderStatus.setText("Rejected");
+            }else if(order_status.equalsIgnoreCase("3")){
+                viewHolder.orderStatus.setText("Pending");
             }
             if(complete_amount_status.equalsIgnoreCase("0") && !orderModels.get(position).getBank_thr_ran_id().equalsIgnoreCase("null")) {
                 viewHolder.add_payment_btn.setVisibility(View.VISIBLE);
-                viewHolder.ll_paymentstatus.setVisibility(View.GONE);
-                viewHolder.add_transport_btn.setVisibility(View.GONE);
+               // viewHolder.ll_paymentstatus.setVisibility(View.GONE);
+               // viewHolder.add_transport_btn.setVisibility(View.GONE);
             }else if(paymentStatus.equalsIgnoreCase("2")){
                 viewHolder.ll_paymentstatus.setVisibility(View.VISIBLE);
                 viewHolder.payment_status.setVisibility(View.VISIBLE);
@@ -121,44 +127,30 @@ public class StoreReceivedOrdersAdapter extends RecyclerView.Adapter<StoreReceiv
                 viewHolder.add_payment_btn.setVisibility(View.GONE);
                 viewHolder.add_transport_btn.setVisibility(View.GONE);
             }*/
-
-          /*(Old One)  if(order_status.equalsIgnoreCase("0")){
-                if(pay_method.equalsIgnoreCase("PayByBank")){
-                    viewHolder.add_payment_btn.setVisibility(View.VISIBLE);
-                    viewHolder.add_transport_btn.setVisibility(View.GONE);
-
-                }else if(pay_method.equalsIgnoreCase("online")){
-                    viewHolder.add_payment_btn.setVisibility(View.GONE);
-                    viewHolder.add_transport_btn.setVisibility(View.GONE);
-
-                }else{
-                    viewHolder.add_payment_btn.setVisibility(View.GONE);
-                    viewHolder.add_transport_btn.setVisibility(View.GONE);
-                }
-                //viewHolder.add_payment_btn.setVisibility(View.GONE);
-                //viewHolder.add_transport_btn.setVisibility(View.GONE);
-                viewHolder.orderStatus.setText("Pending");
-            }else if(order_status.equalsIgnoreCase("1")){
-                viewHolder.add_payment_btn.setVisibility(View.GONE);
-                viewHolder.add_transport_btn.setVisibility(View.VISIBLE);
-                viewHolder.orderStatus.setText("Complete");
-            }else if(order_status.equalsIgnoreCase("2")){
-                viewHolder.add_payment_btn.setVisibility(View.GONE);
-                viewHolder.add_transport_btn.setVisibility(View.GONE);
-                viewHolder.orderStatus.setText("Cancelled");
-            }else if(order_status.equalsIgnoreCase("3")){
-                viewHolder.orderStatus.setText("Payment Processing");
-                viewHolder.add_payment_btn.setVisibility(View.GONE);
-                viewHolder.add_transport_btn.setVisibility(View.GONE);
-            }*/
         }
         viewHolder.add_transport_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(context, AddTransportActivity.class);
-                i.putExtra("OrderId",orderModels.get(position).getProduct_order_id());
+                if (orderModels.get(position).getZipcode().equalsIgnoreCase("") || orderModels.get(position).getZipcode().equalsIgnoreCase("null"))
+                {
+                    Intent i = new Intent(context, LocationDialogActivity.class);
+                    i.putExtra("ContractLocation", "2");
+                    i.putExtra("OrderId", orderModels.get(position).getId());
+                    i.putExtra("InvoiceNo", orderModels.get(position).getInvoice_no());
+                    i.putExtra("RandId", orderModels.get(position).getProduct_order_id());
+               /* i.putExtra("OrderId",orderModels.get(position).getProduct_order_id());
                 i.putExtra("InvoiceNo",orderModels.get(position).getInvoice_no());
-                context.startActivity(i);
+                i.putExtra("ContractTransport","0");
+                */
+                    context.startActivity(i);
+                }else{
+                    Intent i = new Intent(context, AddTransportActivity.class);
+                    i.putExtra("OrderId",orderModels.get(position).getProduct_order_id());
+                    i.putExtra("InvoiceNo",orderModels.get(position).getInvoice_no());
+                   // i.putExtra("RandId", orderModels.get(position).getProduct_order_id());
+                    i.putExtra("ContractTransport","0");
+                    context.startActivity(i);
+                }
             }
         });
         viewHolder.view_invoice_btn.setOnClickListener(new View.OnClickListener() {

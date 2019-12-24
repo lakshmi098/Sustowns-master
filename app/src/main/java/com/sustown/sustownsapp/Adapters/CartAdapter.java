@@ -112,9 +112,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             viewHolder.name.setText(cartServerModelList.get(position).getName());
             viewHolder.quantity_edit.setText(cartServerModelList.get(position).getQty());
             viewHolder.quantity_text.setText(cartServerModelList.get(position).getQty());
-            viewHolder.dollar.setText("Price : "+cartServerModelList.get(position).getPrice_qty());
+           if(cartServerModelList.get(position).getDiscount().equalsIgnoreCase("")||cartServerModelList.get(position).getDiscount().equalsIgnoreCase("null")){
+                viewHolder.prod_price1.setVisibility(View.GONE);
+                viewHolder.dollar.setText("Price : "+cartServerModelList.get(position).getPrice_qty());
+            }else{
+                viewHolder.prod_price1.setVisibility(View.VISIBLE);
+                int OriginalPrice = Integer.parseInt(cartServerModelList.get(position).getMrp())*Integer.parseInt(cartServerModelList.get(position).getQty());
+                viewHolder.prod_price1.setText(String.valueOf(OriginalPrice));
+                viewHolder.dollar.setText("Price : "+cartServerModelList.get(position).getPrice_qty());
+            }
             viewHolder.cart_prod_code.setText("Product Code :"+cartServerModelList.get(position).getPro_code());
-
             //    if(cartServerModelList.get(position).getShipping_type().equalsIgnoreCase("1")){
             if(cartServerModelList.get(position).getShiping_amount().equalsIgnoreCase("null")){
                 viewHolder.shipping_cart_layout.setVisibility(View.GONE);
@@ -134,7 +141,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                         .into(viewHolder.shipping_image);
                 viewHolder.shipping_name.setText(cartServerModelList.get(position).getName());
                 viewHolder.shipping_price.setText("Amount : "+cartServerModelList.get(position).getShiping_amount());
-                viewHolder.ship_prod_code.setText("Product Code :"+cartServerModelList.get(position).getShipping_ven_service_id());
+                viewHolder.ship_prod_code.setText("Product Code :"+cartServerModelList.get(position).getShiping_id());
             }
         }
         viewHolder.remove.setOnClickListener(new View.OnClickListener() {
@@ -411,8 +418,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                                        // progressDialog.dismiss();
                                     }
-
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -430,7 +435,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             public void onFailure(Call<JsonElement> call, Throwable t) {
                // progressDialog.dismiss();
 //                Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();
-
             }
         });
     }
@@ -438,14 +442,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public int getItemCount() {
         return cartServerModelList.size();
     }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView,shipping_image;
-        TextView name,dollar,ship_prod_code,remove,update,shipping_name, shipping_price,remove_shipping_item,quantity_text,cart_prod_code;
+        TextView name,dollar,ship_prod_code,prod_price1,remove,update,shipping_name, shipping_price,remove_shipping_item,quantity_text,cart_prod_code;
         LinearLayout shipping_cart_layout;
         View view_cart;
         public EditText quantity_edit;
-
         public ViewHolder(View view) {
             super(view);
             imageView = (ImageView) view.findViewById(R.id.cart_image);
@@ -465,6 +467,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             remove_shipping_item = (TextView) view.findViewById(R.id.remove_shipping_item);
             quantity_text = (TextView) view.findViewById(R.id.quantity_text);
             cart_prod_code = (TextView) view.findViewById(R.id.cart_prod_code);
+            prod_price1 = (TextView) view.findViewById(R.id.prod_price_discount);
            /* name = (TextView) view.findViewById(R.id.name_cart);
             name = (TextView) view.findViewById(R.id.name_cart);*/
         }

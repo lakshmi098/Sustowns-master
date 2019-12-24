@@ -1,5 +1,6 @@
 package com.sustown.sustownsapp.Activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -221,8 +224,11 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                                                 String quantity = jsonObject.getString("quantity");
                                                 String price = jsonObject.getString("price");
                                                 String totalprice = jsonObject.getString("totalprice");
+                                                String shipamount = jsonObject.getString("shipamount");
                                                 String discount = jsonObject.getString("discount");
                                                 String invoice_no = jsonObject.getString("invoice_no");
+                                                String address = jsonObject.getString("address");
+                                                String zipcode = jsonObject.getString("zipcode");
                                                 String display_name = jsonObject.getString("display_name");
                                                 String bill_fname = jsonObject.getString("bill_fname");
                                                 String bill_lname = jsonObject.getString("bill_lname");
@@ -258,10 +264,13 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                                                 orderModel.setOrder_date(order_date);
                                                 orderModel.setOrder_status(order_status);
                                                 orderModel.setOn_date(on_date);
+                                                orderModel.setShipamount(shipamount);
                                                 orderModel.setPay_method(pay_method);
                                                 orderModel.setBank_thr_ran_id(bank_thr_ran_id);
                                                 orderModel.setComplete_amount_status(complete_amount_status);
                                                 orderModel.setPayment_status(payment_status);
+                                                orderModel.setZipcode(zipcode);
+                                                orderModel.setAddress(address);
                                                 orderModels.add(orderModel);
 
                                             }
@@ -472,6 +481,7 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
         }
         @Override
         public void onBindViewHolder(final ReceivedOrdersAdapter.ViewHolder viewHolder, final int position) {
+            viewHolder.ll_paymentstatus.setVisibility(View.GONE);
             order_status = orderModels.get(position).getOrder_status();
             pay_method = orderModels.get(position).getPay_method();
             if (orderModels.get(position) != null) {
@@ -479,28 +489,119 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                 viewHolder.order_no.setText(orderModels.get(position).getInvoice_no());
                 viewHolder.orderDate.setText(orderModels.get(position).getOrder_date());
                 viewHolder.order_price.setText(orderModels.get(position).getTotalprice());
-                if (order_status.equalsIgnoreCase("0")) {
-                    viewHolder.confirm_order_btn.setVisibility(View.VISIBLE);
-                    viewHolder.cancel_orderbtn.setVisibility(View.VISIBLE);
-                    viewHolder.orderStatus.setText("Pending");
-                } else if (order_status.equalsIgnoreCase("1")) {
-                    viewHolder.confirm_order_btn.setVisibility(View.GONE);
-                    viewHolder.cancel_orderbtn.setVisibility(View.GONE);
-                    viewHolder.orderStatus.setText("Completed");
-                } else if (order_status.equalsIgnoreCase("2")) {
-                    viewHolder.orderStatus.setText("Cancelled");
+                if(orderModels.get(position).getBank_thr_ran_id().equalsIgnoreCase("")||orderModels.get(position).getBank_thr_ran_id().equalsIgnoreCase("null")) {
+                    if (order_status.equalsIgnoreCase("0")) {
+                        viewHolder.confirm_order_btn.setVisibility(View.VISIBLE);
+                        viewHolder.cancel_orderbtn.setVisibility(View.VISIBLE);
+                        viewHolder.ll_status.setVisibility(View.GONE);
+                        // viewHolder.orderStatus.setText("Pending");
+                    } else if (order_status.equalsIgnoreCase("1")) {
+                        viewHolder.confirm_order_btn.setVisibility(View.GONE);
+                        viewHolder.cancel_orderbtn.setVisibility(View.GONE);
+                        viewHolder.ll_status.setVisibility(View.VISIBLE);
+                        viewHolder.orderStatus.setText("Completed");
+                    } else if (order_status.equalsIgnoreCase("2")) {
+                        viewHolder.confirm_order_btn.setVisibility(View.GONE);
+                        viewHolder.cancel_orderbtn.setVisibility(View.GONE);
+                        viewHolder.ll_status.setVisibility(View.VISIBLE);
+                        viewHolder.orderStatus.setText("Cancelled");
+                    }
+                }else{
+                    if (order_status.equalsIgnoreCase("0")) {
+                        viewHolder.confirm_order_btn.setVisibility(View.GONE);
+                        viewHolder.cancel_orderbtn.setVisibility(View.GONE);
+                        viewHolder.ll_status.setVisibility(View.VISIBLE);
+                         viewHolder.orderStatus.setText("Payment Pending");
+                    } else if (order_status.equalsIgnoreCase("1")) {
+                        viewHolder.confirm_order_btn.setVisibility(View.GONE);
+                        viewHolder.cancel_orderbtn.setVisibility(View.GONE);
+                        viewHolder.ll_status.setVisibility(View.VISIBLE);
+                        viewHolder.orderStatus.setText("Completed");
+                    } else if (order_status.equalsIgnoreCase("2")) {
+                        viewHolder.confirm_order_btn.setVisibility(View.GONE);
+                        viewHolder.cancel_orderbtn.setVisibility(View.GONE);
+                        viewHolder.ll_status.setVisibility(View.VISIBLE);
+                        viewHolder.orderStatus.setText("Cancelled");
+                    } else if (order_status.equalsIgnoreCase("3")) {
+                        viewHolder.confirm_order_btn.setVisibility(View.VISIBLE);
+                        viewHolder.cancel_orderbtn.setVisibility(View.VISIBLE);
+                        viewHolder.ll_status.setVisibility(View.GONE);
+                        // viewHolder.orderStatus.setText("Pending");
+                    }
                 }
             }
+/*
+            viewHolder.confirm_order_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    order_id = orderModels.get(position).getId();
+                    helper.showDialog((Activity) context, SweetAlertDialog.WARNING_TYPE, "", "Are you sure you want to Confirm...?",
+                            new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                   // sweetAlertDialog.dismissWithAnimation();
+                                    customdialog = new Dialog(StoreReceivedOrdersActivity.this);
+                                    customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    customdialog.setContentView(R.layout.confirm_order_dialog);
+                                    customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
+
+                                    cancel_btn = (Button) customdialog.findViewById(R.id.cancel_btn);
+                                    submit_btn = (Button) customdialog.findViewById(R.id.submit_btn);
+                                    seller_name = (EditText) customdialog.findViewById(R.id.seller_name);
+                                    seller_number = (EditText) customdialog.findViewById(R.id.seller_number);
+                                    product_address = (EditText) customdialog.findViewById(R.id.product_address);
+                                    product_country = (EditText) customdialog.findViewById(R.id.product_country);
+                                    product_zipcode = (EditText) customdialog.findViewById(R.id.product_zipcode);
+
+                                    seller_name.setText(orderModels.get(position).getFullname());
+                                    seller_number.setText(orderModels.get(position).getPhone());
+                                    product_address.setText(orderModels.get(position).getJob_location());
+                                    product_country.setText(orderModels.get(position).getCountry());
+                                    product_zipcode.setText(orderModels.get(position).getZipcode());
+
+                                    submit_btn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            order_id = orderModels.get(position).getId();
+                                            sellernameStr = seller_name.getText().toString().trim();
+                                            sellernoStr = seller_number.getText().toString().trim();
+                                            sellerAddress = product_address.getText().toString().trim();
+                                            sellerCountry = product_country.getText().toString().trim();
+                                            sellerZipcode = product_zipcode.getText().toString().trim();
+                                            if (sellernameStr.equalsIgnoreCase("") || sellernoStr.equalsIgnoreCase("") || sellerAddress.equalsIgnoreCase("") ||
+                                                    sellerCountry.equalsIgnoreCase("") || sellerZipcode.equalsIgnoreCase("")) {
+                                                Toast.makeText(StoreReceivedOrdersActivity.this, "Please Fill Empty Fields", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                submitConfirmOrder();
+                                            }//customdialog.dismiss();
+                                        }
+                                    });
+                                    cancel_btn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            // addToCartDatabase();
+                                            customdialog.dismiss();
+                                        }
+                                    });
+                                }
+                            }, new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismissWithAnimation();
+                                }
+                            });
+                }
+            });
+*/
             viewHolder.confirm_order_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                    alertDialogBuilder.setMessage("Are you sure you want Confirm...?");
+                    alertDialogBuilder.setMessage("Are you sure you want to Confirm...?");
                     alertDialogBuilder.setPositiveButton("yes",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
-
                                     customdialog = new Dialog(StoreReceivedOrdersActivity.this);
                                     customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     customdialog.setContentView(R.layout.confirm_order_dialog);
@@ -563,7 +664,19 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     order_id = orderModels.get(position).getId();
-                    cancelOrder();
+                    helper.showDialog((Activity) context, SweetAlertDialog.WARNING_TYPE, "", "Do you want to cancel?",
+                            new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismissWithAnimation();
+                                    cancelOrder();
+                                }
+                            }, new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismissWithAnimation();
+                                }
+                            });
                 }
             });
         /*    if(pay_method.equalsIgnoreCase("PayByBank")){
@@ -752,6 +865,7 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
             TextView orderName, orderQuantity, orderDate, orderStatus,order_price,order_no;
             Button add_payment_btn, confirm_order_btn,view_invoice_btn;
             Button cancel_orderbtn;
+            LinearLayout ll_paymentstatus,ll_status;
             public ViewHolder(View view) {
                 super(view);
                 orderName = (TextView) view.findViewById(R.id.order_name);
@@ -764,6 +878,8 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
                 view_invoice_btn = (Button) view.findViewById(R.id.view_invoice_btn);
                 order_price = (TextView) view.findViewById(R.id.order_price);
                 order_no = (TextView) view.findViewById(R.id.order_no);
+                ll_paymentstatus = (LinearLayout) view.findViewById(R.id.ll_paymentstatus);
+                ll_status = (LinearLayout) view.findViewById(R.id.ll_status);
             }
         }
     }

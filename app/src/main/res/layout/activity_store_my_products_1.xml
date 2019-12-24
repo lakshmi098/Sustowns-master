@@ -819,7 +819,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Discount Start Date *"
+                                android:text="Discount Start Date"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 
@@ -850,7 +850,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Discount End Date *"
+                                android:text="Discount End Date"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 

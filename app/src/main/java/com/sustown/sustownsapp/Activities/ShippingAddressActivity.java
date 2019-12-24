@@ -338,7 +338,7 @@ public class ShippingAddressActivity extends AppCompatActivity {
                     if (paymentType.equalsIgnoreCase("online")) {
                         /*setParameter();
                         generateHashFromSDK(mPaymentParams, salt);*/
-                        helper.showDialog(ShippingAddressActivity.this, SweetAlertDialog.WARNING_TYPE, "", "Do you want to continue with online payment?",
+                        helper.showPayDialog(ShippingAddressActivity.this, SweetAlertDialog.WARNING_TYPE, "", "Do you want to continue with online payment?",
                                 new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {

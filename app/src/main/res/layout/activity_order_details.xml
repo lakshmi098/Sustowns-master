@@ -6,7 +6,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginBottom="10dp">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -190,6 +191,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Order Status  : "
+                            android:textStyle="bold"
                             android:textAllCaps="false"
                             android:textSize="14dp"
                             android:textColor="@color/black" />
@@ -219,6 +221,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Order Date     : "
+                        android:textStyle="bold"
                         android:textAllCaps="false"
                         android:textSize="14dp"
                         android:textColor="@color/black" />
@@ -252,6 +255,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:text="Shipped To"
+                        android:textStyle="bold"
                         android:textAllCaps="false"
                         android:id="@+id/shipping_details"
                         android:textColor="@color/black"
@@ -282,7 +286,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="1dp"
                     android:layout_marginLeft="10dp"
                     android:padding="10dp">
                     <TextView
@@ -291,6 +295,7 @@
                         android:layout_marginBottom="10dp"
                         android:text="Customer Details"
                         android:textAllCaps="false"
+                        android:textStyle="bold"
                         android:id="@+id/customer_details"
                         android:textColor="@color/black"
                         android:alpha="0.5"
@@ -335,9 +340,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="1dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="7dp"
                     android:padding="10dp">
                     <TextView
                         android:layout_width="match_parent"
@@ -345,6 +349,7 @@
                         android:layout_marginBottom="15dp"
                         android:text="Price Details"
                         android:textAllCaps="true"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:alpha="0.5"
                         android:textSize="14dp"/>
@@ -357,7 +362,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Shipping Charge : "
+                            android:text="Order Amount : "
+                            android:textStyle="bold"
                             android:textAllCaps="false"
                             android:textColor="@color/black"
                             android:textSize="16sp"/>
@@ -368,7 +374,39 @@
                             android:layout_weight="1"
                             android:textAlignment="viewEnd"
                             android:layout_gravity="end"
-                            android:text="399.00"
+                            android:text=""
+                            android:textStyle="bold"
+                            android:layout_marginRight="5dp"
+                            android:id="@+id/total_amount"
+                            android:textAllCaps="false"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/ll_shipping_charge"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Shipping Charge : "
+                            android:textStyle="bold"
+                            android:textAllCaps="false"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAlignment="viewEnd"
+                            android:layout_gravity="end"
+                            android:text=""
+                            android:textStyle="bold"
                             android:layout_marginRight="5dp"
                             android:id="@+id/shipping_charge"
                             android:textAllCaps="false"
@@ -385,6 +423,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Total Amount :"
+                            android:textStyle="bold"
+                            android:paddingBottom="5dp"
                             android:textAllCaps="false"
                             android:textColor="@color/black"
                             android:textSize="15sp"/>
@@ -395,8 +435,9 @@
                             android:layout_weight="1"
                             android:textAlignment="viewEnd"
                             android:layout_gravity="end"
-                            android:text="399.00"
-                            android:id="@+id/total_amount"
+                            android:text=""
+                            android:textStyle="bold"
+                            android:id="@+id/total_amount_shipping"
                             android:textAllCaps="false"
                             android:layout_marginRight="5dp"
                             android:textColor="@color/black"

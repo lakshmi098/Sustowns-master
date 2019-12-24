@@ -120,6 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Order Summary"
+                    android:textStyle="bold"
                     android:layout_marginLeft="10dp"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
@@ -147,6 +148,7 @@
                         android:layout_weight="1"
                         android:text="Shipping Charge"
                         android:textAllCaps="false"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="14sp"/>
                     <TextView
@@ -184,6 +186,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Total Amount"
+                        android:textStyle="bold"
                         android:textAllCaps="false"
                         android:textColor="@color/black"
                         android:textSize="14sp"/>

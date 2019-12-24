@@ -323,6 +323,7 @@ public class MyContractOrdersActivity extends AppCompatActivity {
                                                 String order_date = jsonObject.getString("order_date");
                                                 String unique_id = jsonObject.getString("unique_id");
                                                 String contractname = jsonObject.getString("contractname");
+                                                String job_location = jsonObject.getString("job_location");
                                                 String payment_status = jsonObject.getString("payment_status");
 
                                                 ContractPurchasesModel contractPurchasesModel = new ContractPurchasesModel();
@@ -340,6 +341,7 @@ public class MyContractOrdersActivity extends AppCompatActivity {
                                                 contractPurchasesModel.setOrder_date(order_date);
                                                 contractPurchasesModel.setUnique_id(unique_id);
                                                 contractPurchasesModel.setJob_name(contractname);
+                                                contractPurchasesModel.setJob_location(job_location);
                                                 contractPurchasesModel.setPayment_status(payment_status);
                                                 contractPurchasesModels.add(contractPurchasesModel);
                                                 if(progressDialog.isShowing())

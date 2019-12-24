@@ -5,11 +5,20 @@ public class GetAddressModel {
     private String id;
     private String user_id;
     private String name;
+    private String companyname;
     private String address1;
     private String zipcode;
     private String country_name;
     private String state;
     private String city_name;
+    private String fname;
+    private String lname;
+    private String email;
+    private String address2;
+    private String country;
+    private String city;
+    private String mobile;
+    private String fax;
 
     public String getId() {
         return id;
@@ -73,5 +82,77 @@ public class GetAddressModel {
 
     public void setCity_name(String city_name) {
         this.city_name = city_name;
+    }
+
+    public String getCompanyname() {
+        return companyname;
+    }
+
+    public void setCompanyname(String companyname) {
+        this.companyname = companyname;
+    }
+
+    public String getFname() {
+        return fname;
+    }
+
+    public void setFname(String fname) {
+        this.fname = fname;
+    }
+
+    public String getLname() {
+        return lname;
+    }
+
+    public void setLname(String lname) {
+        this.lname = lname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
     }
 }

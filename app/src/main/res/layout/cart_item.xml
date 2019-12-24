@@ -17,7 +17,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-    <LinearLayout
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="5"
+                android:id="@+id/cart_prod_code"
+                android:text="Product Id:"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp">
@@ -57,26 +68,32 @@
                 android:src="@drawable/delete_icon"
                 android:layout_marginRight="10dp"/>
             </LinearLayout>
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="5"
-                android:id="@+id/cart_prod_code"
-                android:text="Product Code : "
+                android:layout_height="match_parent"
                 android:layout_marginTop="4dp"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
+                android:orientation="horizontal">
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:id="@+id/dollars_cart"
                 android:text="$399"
-                android:layout_marginTop="4dp"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
-
+            <TextView
+                android:id="@+id/prod_price_discount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="18"
+                android:padding="5dp"
+                android:visibility="gone"
+                android:layout_marginLeft="5dp"
+                android:foreground="@drawable/strike_through"
+                android:textStyle="bold"
+                android:textColor="#7f7f7f"
+                android:textSize="16sp" />
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -205,7 +222,7 @@
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:id="@+id/ship_prod_code"
-                        android:text="Product Code : "
+                        android:text="Product Id:"
                         android:layout_marginTop="4dp"
                         android:textColor="@color/black"
                         android:textSize="16sp" />

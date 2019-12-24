@@ -75,6 +75,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Freight Type"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -122,30 +123,34 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:text="Choose Category?"
+                        android:text="Category"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=" *"
-                        android:textColor="#F80C0C"
+                        android:text=" : "
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:textColor="#000000"
                         android:textSize="16sp" />
-                </LinearLayout>
                     <EditText
                         android:id="@+id/category_transport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Eggs"
+                        android:layout_marginLeft="10dp"
                         android:background="@null"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"
-                        android:layout_marginTop="10dp"
                         android:focusableInTouchMode="false"
                         android:textSize="16sp" />
 
+                </LinearLayout>
+
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -162,30 +167,34 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/title_transport_name"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="Product Name"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Product Name?"
-                        android:textColor="@color/black"
+                        android:text=" : "
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:textColor="#000000"
                         android:textSize="16sp" />
-                    <TextView
+                    <EditText
+                        android:id="@+id/product_name_transport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" *"
-                        android:textColor="#F80C0C"
+                        android:hint="Eggs"
+                        android:layout_marginLeft="10dp"
+                        android:background="@null"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"
+                        android:focusableInTouchMode="false"
                         android:textSize="16sp" />
-                </LinearLayout>
-                <EditText
-                    android:id="@+id/product_name_transport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Eggs"
-                    android:background="@null"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="10dp"
-                    android:focusableInTouchMode="false"
-                    android:textSize="16sp" />
 
+                </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -202,30 +211,34 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:text="Weight"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" : "
+                        android:layout_marginTop="2dp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                    <EditText
+                        android:id="@+id/weight_transport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" *"
-                        android:textColor="#F80C0C"
+                        android:hint="Crate"
+                        android:background="@null"
+                        android:layout_marginLeft="10dp"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"
+                        android:focusableInTouchMode="false"
+                        android:inputType="numberDecimal"
                         android:textSize="16sp" />
+
                 </LinearLayout>
-                <EditText
-                    android:id="@+id/weight_transport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Crate"
-                    android:background="@null"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="10dp"
-                    android:focusableInTouchMode="false"
-                    android:inputType="numberDecimal"
-                    android:textSize="16sp" />
 
             </LinearLayout>
             <LinearLayout
@@ -233,6 +246,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:id="@+id/ll_packing_type"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -243,30 +257,32 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:text="Packing Type"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" : "
+                        android:layout_marginTop="2dp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                    <EditText
+                        android:id="@+id/packingtype_transport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" *"
-                        android:textColor="#F80C0C"
+                        android:hint="12 Pack Crate"
+                        android:layout_marginLeft="10dp"
+                        android:background="@null"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"
+                        android:focusableInTouchMode="false"
                         android:textSize="16sp" />
                 </LinearLayout>
-                <EditText
-                    android:id="@+id/packingtype_transport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="12 Pack Crate"
-                    android:background="@null"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="10dp"
-                    android:focusableInTouchMode="false"
-                    android:textSize="16sp" />
-
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -283,29 +299,33 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:text="Seller Country"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" : "
+                        android:layout_marginTop="2dp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                    <EditText
+                        android:id="@+id/seller_country_transport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" *"
-                        android:textColor="#F80C0C"
+                        android:hint="India"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black"
+                        android:background="@null"
+                        android:textColorHint="@color/black"
+                        android:focusableInTouchMode="false"
                         android:textSize="16sp" />
+
                 </LinearLayout>
-                <EditText
-                    android:id="@+id/seller_country_transport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="India"
-                    android:layout_marginTop="10dp"
-                    android:textColor="@color/black"
-                    android:background="@null"
-                    android:textColorHint="@color/black"
-                    android:focusableInTouchMode="false"
-                    android:textSize="16sp" />
 
             </LinearLayout>
             <LinearLayout
@@ -323,29 +343,33 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:text="Drop Country"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" : "
+                        android:layout_marginTop="2dp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                    <EditText
+                        android:id="@+id/drop_country_transport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" *"
-                        android:textColor="#F80C0C"
+                        android:hint="India"
+                        android:layout_marginLeft="10dp"
+                        android:background="@null"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"
+                        android:focusableInTouchMode="false"
                         android:textSize="16sp" />
+
                 </LinearLayout>
-                <EditText
-                    android:id="@+id/drop_country_transport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="India"
-                    android:background="@null"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="10dp"
-                    android:focusableInTouchMode="false"
-                    android:textSize="16sp" />
 
             </LinearLayout>
             <LinearLayout
@@ -363,28 +387,31 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:text="Seller Location"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" : "
+                        android:layout_marginTop="2dp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                    <EditText
+                        android:id="@+id/seller_location_transport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" *"
-                        android:textColor="#F80C0C"
+                        android:background="@null"
+                        android:layout_marginLeft="10dp"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"
+                        android:focusableInTouchMode="false"
                         android:textSize="16sp" />
                 </LinearLayout>
-                <EditText
-                    android:id="@+id/seller_location_transport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="10dp"
-                    android:focusableInTouchMode="false"
-                    android:textSize="16sp" />
 
             </LinearLayout>
             <LinearLayout
@@ -402,29 +429,33 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:text="Drop Location"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" : "
+                        android:layout_marginTop="2dp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                    <EditText
+                        android:id="@+id/drop_location_transport"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" *"
-                        android:textColor="#F80C0C"
+                        android:hint=""
+                        android:layout_marginLeft="10dp"
+                        android:background="@null"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"
+                        android:focusableInTouchMode="false"
                         android:textSize="16sp" />
+
                 </LinearLayout>
-                <EditText
-                    android:id="@+id/drop_location_transport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint=""
-                    android:background="@null"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="10dp"
-                    android:focusableInTouchMode="false"
-                    android:textSize="16sp" />
 
             </LinearLayout>
             <LinearLayout
@@ -445,13 +476,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="PickUp Date From"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" *"
-                    android:textColor="#F80C0C"
+                    android:layout_marginTop="2dp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
                     android:textSize="16sp" />
                 </LinearLayout>
 
@@ -485,13 +519,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="PickUp Date To"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=" *"
-                        android:textColor="#F80C0C"
+                        android:layout_marginTop="2dp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
                         android:textSize="16sp" />
                 </LinearLayout>
 

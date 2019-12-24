@@ -374,6 +374,7 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Quote Payment Type"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -408,6 +409,7 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Quote Amount"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -443,6 +445,7 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Quote Description"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -478,6 +481,7 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Quote Image"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -511,6 +515,7 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Quote Document"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <LinearLayout

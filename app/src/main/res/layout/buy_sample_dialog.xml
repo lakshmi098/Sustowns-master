@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Title"
+                android:textStyle="bold"
                 android:id="@+id/buysample_title"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -69,6 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Name"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <TextView
@@ -101,6 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Units"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <TextView
@@ -133,6 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Product Size"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <TextView
@@ -164,6 +168,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Packing Type"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <TextView
@@ -195,6 +200,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Price"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <TextView
@@ -230,6 +236,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:text="Quantity    "
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 

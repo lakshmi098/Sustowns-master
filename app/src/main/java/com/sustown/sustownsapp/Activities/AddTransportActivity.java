@@ -56,21 +56,21 @@ public class AddTransportActivity extends AppCompatActivity {
     Button pickupfrom_date, pickupto_date, request_transport_btn;
     String[] type = {"Road"};
     String[] name = {"Organic Eggs", "Agro Eggs", "White Eggs"};
-    String freight_type_st, orderId, invoiceNo;
+    String freight_type_st, orderId, invoiceNo,TransportStr="",invoice_no_contract,order_id_contract;
     PreferenceUtils preferenceUtils;
     private Calendar cal;
     private int day;
     private int month;
     private int year;
-    TextView transport_services_text;
+    TextView transport_services_text,title_transport_name;
     RecyclerView transport_recyclerview;
-    LinearLayout ll_transport_services;
+    LinearLayout ll_transport_services,ll_packing_type;
     AddTransportAdapter addTransportAdapter;
     List<TransportServicesModel> transportServicesList;
     ImageView backarrow;
     Intent intent;
     ProgressDialog progressDialog;
-    String pickupDateFrom = "", pickupDateto = "",user_id;
+    String pickupDateFrom = "", pickupDateto = "",user_id,pickupDateFromContract ="",pickupDatetoContract="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +94,22 @@ public class AddTransportActivity extends AppCompatActivity {
         intent = getIntent();
         orderId = intent.getStringExtra("OrderId");
         invoiceNo = intent.getStringExtra("InvoiceNo");
-
+        TransportStr = intent.getStringExtra("ContractTransport");
        // invoiceNo = "1515192782050819";
        // orderId = "2200113";
     }
 
     private void initializeUI() {
         try {
+            title_transport_name = (TextView) findViewById(R.id.title_transport_name);
+            ll_packing_type = (LinearLayout) findViewById(R.id.ll_packing_type);
+            if(TransportStr.equalsIgnoreCase("1")){
+                title_transport_name.setText("Contract Name");
+                ll_packing_type.setVisibility(View.GONE);
+            }else{
+                title_transport_name.setText("Product Name");
+                ll_packing_type.setVisibility(View.VISIBLE);
+            }
             transport_services_text = (TextView) findViewById(R.id.transport_services_text);
             backarrow = (ImageView) findViewById(R.id.backarrow);
             ll_transport_services = (LinearLayout) findViewById(R.id.ll_transport_services);
@@ -161,7 +170,11 @@ public class AddTransportActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     ll_transport_services.setVisibility(View.VISIBLE);
                     request_transport_btn.setVisibility(View.GONE);
-                    getAddTransportServices();
+                    if(TransportStr.equalsIgnoreCase("0")) {
+                        getAddTransportServices();
+                    }else{
+                        getContractTransportServices();
+                    }
                 }
             });
             backarrow.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +183,11 @@ public class AddTransportActivity extends AppCompatActivity {
                     finish();
                 }
             });
-            getAddTransportProductDetails();
+            if(TransportStr.equalsIgnoreCase("0")) {
+                getAddTransportProductDetails();
+            }else{
+                getContractTransportDetails();
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -370,6 +387,121 @@ public class AddTransportActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+//                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+    }
+    public void getContractTransportDetails() {
+        progressdialog();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DZ_URL.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final TransportApi service = retrofit.create(TransportApi.class);
+
+        Call<JsonElement> callRetrofit = null;
+        callRetrofit = service.getContractTransportProdDetails(invoiceNo, orderId);
+        callRetrofit.enqueue(new Callback<JsonElement>() {
+
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        progressDialog.dismiss();
+                        System.out.println("----------------------------------------------------");
+                        Log.d("Call request", call.request().toString());
+                        Log.d("Call request header", call.request().headers().toString());
+                        Log.d("Response raw header", response.headers().toString());
+                        Log.d("Response raw", String.valueOf(response.raw().body()));
+                        Log.d("Response code", String.valueOf(response.code()));
+
+                        System.out.println("----------------------------------------------------");
+
+                        if (response.body().toString() != null) {
+
+                            if (response != null) {
+                                String searchResponse = response.body().toString();
+                                Log.d("Categeries", "response  >>" + searchResponse.toString());
+
+                                if (searchResponse != null) {
+                                    JSONObject root = null;
+                                    try {
+                                        root = new JSONObject(searchResponse);
+                                        String message = root.getString("message");
+                                        String success = root.getString("success");
+                                        if (success.equalsIgnoreCase("1")) {
+                                            JSONObject jsonObject = root.getJSONObject("contractdet");
+                                            String bill_zipcode = jsonObject.getString("bill_zipcode");
+                                            String seller_zipcode = jsonObject.getString("seller_zipcode");
+                                            invoice_no_contract = jsonObject.getString("invoice_no");
+                                            order_id_contract = jsonObject.getString("order_id");
+                                            String userid = jsonObject.getString("userid");
+                                            String job_id = jsonObject.getString("job_id");
+                                            String subsubcat_id = jsonObject.getString("subsubcat_id");
+                                            String contractname = jsonObject.getString("contractname");
+                                            String minqantity = jsonObject.getString("minqantity");
+                                            String qnt_weight = jsonObject.getString("qnt_weight");
+                                            String title = jsonObject.getString("title");
+                                            String unit_code = jsonObject.getString("unit_code");
+
+                                            category_transport.setText(title);
+                                            product_name_transport.setText(contractname);
+                                            weight_transport.setText(qnt_weight);
+                                            seller_country_transport.setText("India");
+                                            drop_country_transport.setText("India");
+                                            if(seller_zipcode.isEmpty() || seller_zipcode.equalsIgnoreCase("")){
+                                                seller_location_transport.setText(seller_zipcode);
+                                            }else {
+                                                seller_location_transport.setText(seller_zipcode);
+                                            }
+                                            drop_location_transport.setText(bill_zipcode);
+                                            try {
+                                                JSONObject requestObj = root.getJSONObject("exist_transport_req");
+                                                if (requestObj != null) {
+                                                    String id = requestObj.getString("id");
+                                                    pickupDateFromContract = requestObj.getString("pick_date");
+                                                    pickupDatetoContract = requestObj.getString("pick_dateto");
+                                                    request_transport_btn.setVisibility(View.GONE);
+                                                    ll_transport_services.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    request_transport_btn.setVisibility(View.VISIBLE);
+                                                    ll_transport_services.setVisibility(View.GONE);
+                                                }
+                                            }catch (Exception e){
+
+                                            }
+                                            if(pickupDateFromContract.isEmpty() || pickupDatetoContract.isEmpty()){
+                                                pickupfrom_date.setText("From Date");
+                                                pickupto_date.setText("To Date");
+                                            }else {
+                                                pickupfrom_date.setText(pickupDateFromContract);
+                                                pickupto_date.setText(pickupDatetoContract);
+                                                getContractTransportServices();
+                                            }
+                                            progressDialog.dismiss();
+                                        } else {
+                                            progressDialog.dismiss();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    progressDialog.dismiss();
+                                }
+
+                            }
+                        }
+                    } else {
+                        //  Toast.makeText(CartActivity.this, "Cart is not added", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
@@ -378,8 +510,6 @@ public class AddTransportActivity extends AppCompatActivity {
             }
         });
     }
-
-
     public void getAddTransportServices() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
@@ -497,20 +627,17 @@ public class AddTransportActivity extends AppCompatActivity {
             }
         });
     }
-    public void cancelBooking(int position) {
+    public void getContractTransportServices() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DZ_URL.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-        TransportApi service = retrofit.create(TransportApi.class);
+        final TransportApi service = retrofit.create(TransportApi.class);
 
         Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.cancelBooking(transportServicesList.get(position).getBuyer_uid(),orderId,transportServicesList.get(position).getService_id());
-      //  callRetrofit = service.cancelBooking("524","220011414","4");
+        callRetrofit = service.getContractRequestServicesList(invoiceNo, orderId, pickupDateFromContract, pickupDatetoContract);
         callRetrofit.enqueue(new Callback<JsonElement>() {
-
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 try {
@@ -522,21 +649,69 @@ public class AddTransportActivity extends AppCompatActivity {
                         Log.d("Response raw header", response.headers().toString());
                         Log.d("Response raw", String.valueOf(response.raw().body()));
                         Log.d("Response code", String.valueOf(response.code()));
-
                         System.out.println("----------------------------------------------------");
-
-                        if (response.body().toString() != null) {
-                            if (response != null) {
+                        if(response.body().toString() != null) {
+                            if(response != null) {
                                 String searchResponse = response.body().toString();
                                 Log.d("Categeries", "response  >>" + searchResponse.toString());
-                                if (searchResponse != null) {
+                                if(searchResponse != null) {
                                     JSONObject root = null;
                                     try {
                                         root = new JSONObject(searchResponse);
                                         //   String message = root.getString("message");
                                         String status = root.getString("status");
                                         if (status.equalsIgnoreCase("success")) {
-                                            Toast.makeText(AddTransportActivity.this, "success", Toast.LENGTH_SHORT).show();
+                                            JSONObject jsonObject = root.getJSONObject("order_transport_info");
+                                            String product_category = jsonObject.getString("product_category");
+                                            String product_name = jsonObject.getString("product_name");
+                                            String weight = jsonObject.getString("weight");
+                                            String seller_pin = jsonObject.getString("seller_pin");
+                                            String buyer_pin = jsonObject.getString("buyer_pin");
+                                            String pickupfrom = jsonObject.getString("pickupfromdate");
+                                            String pickuptodate = jsonObject.getString("pickuptodate");
+                                            String getkms = root.getString("getkms");
+                                            transportServicesList = new ArrayList<>();
+                                            JSONArray servicesArray = root.getJSONArray("transport_services");
+                                            if (servicesArray.length() > 0) {
+                                                for (int i = 0; i < servicesArray.length(); i++) {
+                                                    JSONObject serviceObject = servicesArray.getJSONObject(i);
+
+                                                    TransportServicesModel transportServicesModel = new TransportServicesModel(
+                                                            serviceObject.getString("transport_vendor_name"),
+                                                            serviceObject.getString("service_name"),
+                                                            serviceObject.getString("service_pincode"),
+                                                            serviceObject.getString("distance"),
+                                                            serviceObject.getString("service_area_radius"),
+                                                            serviceObject.getString("radius_extended"),
+                                                            serviceObject.getString("type_of_radius"),
+                                                            serviceObject.getString("category"),
+                                                            serviceObject.getString("rating"),
+                                                            serviceObject.getString("transport_type"),
+                                                            serviceObject.getString("vehicle_type"),
+                                                            serviceObject.getString("load_type"),
+                                                            serviceObject.getString("distance_inkms"),
+                                                            serviceObject.getString("partial_charge_perkm"),
+                                                            serviceObject.getString("partial_minimum_charge"),
+                                                            serviceObject.getString("partial_total_price"),
+                                                            serviceObject.getString("full_charge_perkm"),
+                                                            serviceObject.getString("full_minimum_charge"),
+                                                            serviceObject.getString("full_total_price"),
+                                                            serviceObject.getString("docs"),
+                                                            serviceObject.getString("service_id"),
+                                                            serviceObject.getString("transport_user"),
+                                                            serviceObject.getString("transport_booking_status"),
+                                                            serviceObject.getString("buyer_uid"),
+                                                            serviceObject.getString("manual_automatic")
+                                                    );
+                                                    transportServicesList.add(transportServicesModel);
+                                                }
+                                                setUpRecyclerView();
+                                            } else {
+                                                transport_services_text.setText("Transport Services are not available");
+                                                Toast.makeText(AddTransportActivity.this, "No transport services available for the selected date.", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            progressDialog.dismiss();
                                         } else {
                                             progressDialog.dismiss();
                                         }
@@ -574,11 +749,16 @@ public class AddTransportActivity extends AppCompatActivity {
         try {
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("user_id", user_id);
-            jsonObj.put("invoice",invoiceNo);
-            jsonObj.put("order_ranid",orderId);
+            if(TransportStr.equalsIgnoreCase("0")) {
+                jsonObj.put("invoice", invoiceNo);
+                jsonObj.put("order_ranid", orderId);
+            }else{
+                jsonObj.put("invoice", invoice_no_contract);
+                jsonObj.put("order_ranid", order_id_contract);
+            }
             jsonObj.put("service_id", transportServicesList.get(position).getService_id());
             jsonObj.put("trans_userid", transportServicesList.get(position).getTransport_user());
-            jsonObj.put("pick_date",pickupDateFrom);
+            jsonObj.put("pick_date",pickupDateFromContract);
             jsonObj.put("qchrg_km",transportServicesList.get(position).getPartial_charge_perkm());
             jsonObj.put("qminchrg_km", transportServicesList.get(position).getPartial_minimum_charge());
             jsonObj.put("totalpricetransport",transportServicesList.get(position).getPartial_total_price());
@@ -586,8 +766,11 @@ public class AddTransportActivity extends AppCompatActivity {
             jsonObj.put("qminchrg_km_full_load",transportServicesList.get(position).getFull_minimum_charge());
             jsonObj.put("total_charge_full_load",transportServicesList.get(position).getFull_total_price());
             jsonObj.put("manual_automatic","automatic");
-
-            androidNetworking(jsonObj);
+            if(TransportStr.equalsIgnoreCase("0")) {
+                androidNetworking(jsonObj);
+            }else{
+                androidContractNetworking(jsonObj);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -608,7 +791,12 @@ public class AddTransportActivity extends AppCompatActivity {
                             String message = response.getString("data");
                             if (status.equalsIgnoreCase("success")) {
                                 progressDialog.dismiss();
-                                getAddTransportProductDetails();
+                                Intent i = new Intent(AddTransportActivity.this,AddTransportActivity.class);
+                                i.putExtra("OrderId",orderId);
+                                i.putExtra("InvoiceNo",invoiceNo);
+                                i.putExtra("ContractTransport","0");
+                                startActivity(i);
+                                //getAddTransportProductDetails();
                                 Toast.makeText(AddTransportActivity.this, message, Toast.LENGTH_SHORT).show();
                             } else {
                                 progressDialog.dismiss();
@@ -627,80 +815,44 @@ public class AddTransportActivity extends AppCompatActivity {
                     }
                 });
     }
-/*
-    public void sendRequestQuote(final int position, final AddTransportAdapter.ViewHolder viewHolder) {
+    public void androidContractNetworking(JSONObject jsonObject){
         progressdialog();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DZ_URL.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TransportApi service = retrofit.create(TransportApi.class);
-
-        Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.transportRequestQuote(user_id,invoiceNo, orderId,transportServicesList.get(position).getService_id(),transportServicesList.get(position).getTransport_user(),pickupDateFrom,transportServicesList.get(position).getPartial_charge_perkm(),transportServicesList.get(position).getPartial_minimum_charge(),
-                transportServicesList.get(position).getPartial_total_price(),transportServicesList.get(position).getFull_charge_perkm(),transportServicesList.get(position).getFull_minimum_charge(),transportServicesList.get(position).getFull_total_price(),"automatic");
-     */
-/*   callRetrofit = service.transportRequestQuote(user_id,invoiceNo, orderId, transportServicesList.get(position).getService_id(),
-               transportServicesList.get(position).getTransport_user(),pickupDateFrom,transportServicesList.get(position).getPartial_charge_perkm(),transportServicesList.get(position).getPartial_minimum_charge(),
-                transportServicesList.get(position).getPartial_total_price(), transportServicesList.get(position).getFull_charge_perkm(),transportServicesList.get(position).getFull_minimum_charge(),
-                transportServicesList.get(position).getFull_total_price(),"manual");*//*
-
-        callRetrofit.enqueue(new Callback<JsonElement>() {
-
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        progressDialog.dismiss();
-                        if (response.body().toString() != null) {
-                            if (response != null) {
-                                String searchResponse = response.body().toString();
-                                Log.d("Categeries", "response  >>" + searchResponse.toString());
-
-                                if (searchResponse != null) {
-                                    JSONObject root = null;
-                                    try {
-                                        root = new JSONObject(searchResponse);
-                                        //   String message = root.getString("message");
-                                        String status = root.getString("status");
-                                        String data = root.getString("data");
-                                        if (status.equalsIgnoreCase("success")) {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(AddTransportActivity.this, data, Toast.LENGTH_SHORT).show();
-                                          */
-/*  try {
-                                                addTransportAdapter.updateBookSuccess(position, viewHolder);
-                                            }catch (Exception e){
-                                                e.printStackTrace();
-                                            }*//*
-
-                                        } else {
-                                            Toast.makeText(AddTransportActivity.this, data, Toast.LENGTH_SHORT).show();
-                                            progressDialog.dismiss();
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    progressDialog.dismiss();
-                                }
+        AndroidNetworking.post("https://www.Sustowns.com/Postcontractservice/add_transdetails_req")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            String status = response.getString("status");
+                            String message = response.getString("data");
+                            if (status.equalsIgnoreCase("success")) {
+                                progressDialog.dismiss();
+                                //getAddTransportProductDetails();
+                                Intent i = new Intent(AddTransportActivity.this,AddTransportActivity.class);
+                                i.putExtra("OrderId",orderId);
+                                i.putExtra("InvoiceNo",invoiceNo);
+                                i.putExtra("ContractTransport","1");
+                                startActivity(i);
+                                Toast.makeText(AddTransportActivity.this, message, Toast.LENGTH_SHORT).show();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(AddTransportActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        //  Toast.makeText(CartActivity.this, "Cart is not added", Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
                         progressDialog.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-//                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
+                });
     }
-*/
 }

@@ -170,7 +170,7 @@
                             android:layout_gravity="left"
                             android:layout_marginLeft="5dp"
                             android:background="@null"
-                            android:text="Min Load: *"
+                            android:text="Min Load(in Units): *"
                             android:textColor="#000000"
                             android:textSize="16sp" />
 
@@ -198,7 +198,7 @@
                             android:layout_gravity="left"
                             android:layout_marginLeft="5dp"
                             android:background="@null"
-                            android:text="Max Load : *"
+                            android:text="Max Load(in Units): *"
                             android:textColor="#000000"
                             android:textSize="16sp" />
 

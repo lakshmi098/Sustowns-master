@@ -1,5 +1,6 @@
 package com.sustown.sustownsapp.Adapters;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,12 +27,14 @@ import com.sustown.sustownsapp.Activities.StoreMyProductsActivity;
 import com.sustown.sustownsapp.Api.DZ_URL;
 import com.sustown.sustownsapp.Api.ProductsApi;
 import com.sustown.sustownsapp.Models.MyProductsModel;
+import com.sustown.sustownsapp.helpers.Helper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,13 +51,14 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
     List<MyProductsModel> myProductsModels;
     ProgressDialog progressDialog;
     AlertDialog alertDialog;
-
+    Helper helper;
 
     public StoreMyProductsAdapter(StoreMyProductsActivity context, List<MyProductsModel> myProductsModels) {
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
         this.myProductsModels = myProductsModels;
         preferenceUtils = new PreferenceUtils(context);
+        helper = new Helper(context);
         user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
         prod_id = preferenceUtils.getStringFromPreference(PreferenceUtils.STORE_PRO_ID,"");
       //  prod_status = preferenceUtils.getStringFromPreference(PreferenceUtils.STATUS,"");
@@ -78,20 +82,13 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
                         .placeholder(R.drawable.no_image_available)
                         .error(R.drawable.no_image_available)
                         .into(viewHolder.imageView);
-              /*  Glide.with(context)
-                        .load(R.drawable.no_image_available)
-                        //.placeholder(R.drawable.no_image_available)
-                        .into(viewHolder.imageView);*/
+
             }else{
                 Picasso.get()
                         .load(myProductsModels.get(position).getPr_image())
                         .placeholder(R.drawable.no_image_available)
                         .error(R.drawable.no_image_available)
                         .into(viewHolder.imageView);
-              /*  Glide.with(context)
-                        .load(myProductsModels.get(position).getPr_image())
-                        //.placeholder(R.drawable.no_image_available)
-                        .into(viewHolder.imageView);*/
             }
             viewHolder.prod_name.setText(myProductsModels.get(position).getPr_title());
             viewHolder.prod_price.setText(myProductsModels.get(position).getPr_price());
@@ -117,7 +114,22 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
             public void onClick(View v) {
                 prod_status = myProductsModels.get(position).getStatus();
                 prod_id = myProductsModels.get(position).getId();
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                helper.showDialog((Activity) context, SweetAlertDialog.WARNING_TYPE, "", "Are you sure You want to Delete the Product..?",
+                        new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismissWithAnimation();
+//                                        getHashFromSustownServer();
+                                removeMyProduct(position);
+                            }
+                        }, new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        });
+
+              /*  final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                 alertDialogBuilder.setMessage("Are you sure You want to Delete the Product");
                         alertDialogBuilder.setPositiveButton("yes",
                                 new DialogInterface.OnClickListener() {
@@ -136,7 +148,7 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
                 });
 
                 alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                alertDialog.show();*/
 
             }
         });

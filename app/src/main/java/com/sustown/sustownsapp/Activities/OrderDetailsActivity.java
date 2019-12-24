@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -47,7 +48,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
     RecyclerView recyclerview_orderdetails;
     ArrayList<OrderDetailsModel> orderDetailsModels;
     OrderDetailsAdapter orderDetailsAdapter;
-    TextView order_id_tv,name_tv,shipping_name,address_shipping,quantity_tv,customer_name_tv,address_customer_tv,total_amount_tv,address_customer;
+    LinearLayout ll_shipping_charge;
+    TextView order_id_tv,total_amount_shipping,name_tv,shipping_name,address_shipping,quantity_tv,customer_name_tv,address_customer_tv,total_amount_tv,address_customer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,9 +73,11 @@ public class OrderDetailsActivity extends AppCompatActivity {
         address_customer_tv = (TextView) findViewById(R.id.address_customer);
         total_amount_tv = (TextView) findViewById(R.id.total_amount);
         shipping_charge_tv = (TextView) findViewById(R.id.shipping_charge);
+        ll_shipping_charge = (LinearLayout) findViewById(R.id.ll_shipping_charge);
         shipping_name = (TextView) findViewById(R.id.shipping_name);
         address_shipping = (TextView) findViewById(R.id.address_shipping);
         customer_email = (TextView) findViewById(R.id.customer_email);
+        total_amount_shipping = (TextView) findViewById(R.id.total_amount_shipping);
         backarrow = (ImageView) findViewById(R.id.backarrow);
         recyclerview_orderdetails = (RecyclerView) findViewById(R.id.recyclerview_orderdetails);
         LinearLayoutManager layoutManager = new LinearLayoutManager(OrderDetailsActivity.this,LinearLayoutManager.VERTICAL,false);
@@ -107,7 +111,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
         //callRetrofit = service.getOrderDetails("http://www.ixiono.com/deaquaticnw//welcome/orderdetail/25");
         callRetrofit = service.orderDetails(orderId);
         callRetrofit.enqueue(new Callback<JsonElement>() {
-
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 System.out.println("----------------------------------------------------");
@@ -116,19 +119,15 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 Log.d("Response raw header", response.headers().toString());
                 Log.d("Response raw", String.valueOf(response.raw().body()));
                 Log.d("Response code", String.valueOf(response.code()));
-
                 System.out.println("----------------------------------------------------");
-
                 if (response.isSuccessful()) {
                     if(progressDialog.isShowing())
                         progressDialog.dismiss();
                     progressDialog.dismiss();
                     if (response.body().toString() != null) {
-
                         if (response != null) {
                             String searchResponse = response.body().toString();
                             Log.d("Reg", "Response  >>" + searchResponse.toString());
-
                             if (searchResponse != null) {
                                 JSONObject root = null;
                                 try {
@@ -172,12 +171,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                         String order_date = jsonObject.getString("order_date");
                                         String on_date = jsonObject.getString("on_date");
 
-
                                         JSONArray jsonArray = root.getJSONArray("itemdetail");
                                         orderDetailsModels = new ArrayList<>();
                                         for (int i = 0; i < jsonArray.length(); i++) {
                                             JSONObject Obj1 = jsonArray.getJSONObject(i);
-
                                             String id1 = Obj1.getString("id");
                                             String product_order_id = Obj1.getString("product_order_id");
                                             String product_id = Obj1.getString("product_id");
@@ -185,6 +182,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                             String quantity = Obj1.getString("quantity");
                                             String price = Obj1.getString("price");
                                             String totalprice = Obj1.getString("totalprice");
+                                            String shipamount = Obj1.getString("shipamount");
                                             String pr_title = Obj1.getString("pr_title");
                                             String pr_image = Obj1.getString("pr_image");
                                             String pr_sku = Obj1.getString("pr_sku");
@@ -198,7 +196,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                             orderDetailsModel.setPr_title(pr_title);
                                             orderDetailsModel.setPr_image(image);
                                             orderDetailsModels.add(orderDetailsModel);
-
                                             if(image != null || !image.isEmpty()){
                                                 Glide.with(OrderDetailsActivity.this)
                                                         .load(image)
@@ -214,6 +211,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                             quantity_tv.setText(quantity);
                                             date_order.setText(order_date);
                                             price_order.setText(currency_code+" "+totalprice);
+
                                             if(order_status.equalsIgnoreCase("0")){
                                                 status_order.setText("Pending");
                                             }else if(order_status.equalsIgnoreCase("1")){
@@ -229,7 +227,16 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                             address_shipping.setText(pay_address1+","+pay_city+","+pay_state+","+pay_country);
                                             address_customer_tv.setText(bill_address1+","+bill_city+","+bill_state+","+bill_country);
                                             total_amount_tv.setText(currency_code +" "+totalprice);
-                                            shipping_charge_tv.setText(totalprice);
+                                            if(shipamount.equalsIgnoreCase("null")){
+                                                ll_shipping_charge.setVisibility(View.GONE);
+                                            }else  {
+                                                shipping_charge_tv.setText(shipamount);
+                                                int shipInt = Integer.parseInt(shipamount);
+                                                int totalPriceInt = Integer.parseInt(totalprice);
+                                                int TotalShippingAmount = shipInt + totalPriceInt;
+                                                total_amount_shipping.setText(String.valueOf(TotalShippingAmount));
+                                            }
+                                            total_amount_shipping.setText(currency_code +" "+totalprice);
                                             if(progressDialog.isShowing())
                                                 progressDialog.dismiss();
                                         }
@@ -238,7 +245,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                             recyclerview_orderdetails.setAdapter(orderDetailsAdapter);
                                             orderDetailsAdapter.notifyDataSetChanged();
                                         }
-
                                     }else{
                                         if(progressDialog.isShowing())
                                             progressDialog.dismiss();
@@ -255,10 +261,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
-
                 Log.d("Error Call", ">>>>" + call.toString());
                 Log.d("Error", ">>>>" + t.toString());
                 progressDialog.dismiss();
@@ -266,12 +270,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-
-
-
     public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapter.ViewHolder> {
         Context context;
         LayoutInflater inflater;
@@ -280,13 +278,11 @@ public class OrderDetailsActivity extends AppCompatActivity {
         String[] order;
         ArrayList<OrderDetailsModel> orderModels;
         ProgressDialog progressDialog;
-
         public OrderDetailsAdapter(Context context, ArrayList<OrderDetailsModel> orderModels) {
             inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.context = context;
             this.orderModels = orderModels;
         }
-
         @Override
         public OrderDetailsAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.order_details_adapter_item, viewGroup, false);
@@ -305,7 +301,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 viewHolder.orderDate.setText(orderModels.get(position).getPrice());
                 viewHolder.orderStatus.setText(orderModels.get(position).getProduct_order_id());
             }
-
         }
         public void removeAt(int position) {
             //  notifyDataSetChanged();
@@ -315,7 +310,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
         public int getItemCount() {
             return orderModels.size();
         }
-
         public class ViewHolder extends RecyclerView.ViewHolder {
             ImageView imageView,remove_product,increase;
             TextView orderName,orderQuantity,orderDate,orderStatus,date_text,status;
@@ -334,6 +328,4 @@ public class OrderDetailsActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }

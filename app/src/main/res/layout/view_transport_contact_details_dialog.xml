@@ -31,8 +31,9 @@
             android:layout_gravity="left"
             android:layout_marginLeft="10dp"
             android:text="Driver Name"
-            android:textColor="#706B6B"
-            android:textSize="16sp" />
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="15sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,8 +68,9 @@
             android:layout_gravity="left"
             android:layout_marginLeft="10dp"
             android:text="Driver Number"
-            android:textColor="#706B6B"
-            android:textSize="16sp" />
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="15sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,8 +104,9 @@
             android:layout_gravity="left"
             android:layout_marginLeft="10dp"
             android:text="Vehicle Number"
-            android:textColor="#706B6B"
-            android:textSize="16sp" />
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="15sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

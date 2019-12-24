@@ -158,6 +158,8 @@ public class AddPaymentActivity extends AppCompatActivity {
                 }else if(contractOrders.equalsIgnoreCase("0")){
                     setLogisticsJsonObject();
                     // TO DO FOR LOGISTICS ORDERS
+                }else if(contractOrders.equalsIgnoreCase("3")){
+                    setContractsLogisticsJsonObject();
                 }
             }
         });
@@ -504,6 +506,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                                 Intent i = new Intent(AddPaymentActivity.this, LogisticsOrdersActivity.class);
                                 i.putExtra("Message","Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours");
+                                i.putExtra("Logistics","1");
                                 startActivity(i);
                                 progressDialog.dismiss();
                             } else {
@@ -523,7 +526,64 @@ public class AddPaymentActivity extends AppCompatActivity {
                     }
                 });
     }
+    public void setContractsLogisticsJsonObject() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("payId", orderId);
+            jsonObj.put("ranid",randId);
+            jsonObj.put("userid",user_id);
+            jsonObj.put("bankrandid", bankRandId);
+            jsonObj.put("amount", ProPrice);
+            jsonObj.put("paydate",SelectedDate);
+            jsonObj.put("transactionNo",cheque_no.getText().toString());
+            jsonObj.put("transactionType", paymentType);
 
+            androidNetworkingContractsLogisticpayByBank(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingContractsLogisticpayByBank(JSONObject jsonObject){
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Postcontractservice/transportpaybybank_api/")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            String message = response.getString("message");
+                            String success = response.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                Snackbar snackbar = Snackbar
+                                        .make(linearlayout,"Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                                progressDialog.dismiss();
+                                Intent i = new Intent(AddPaymentActivity.this, LogisticsOrdersActivity.class);
+                                i.putExtra("Message","Thank you for Transaction and Sustowns Team Will Verify Transaction within 48 Hours");
+                                i.putExtra("Logistics","0");
+                                startActivity(i);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(AddPaymentActivity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
     private void getBankDetailsList() {
        // progressdialog();
         Gson gson = new GsonBuilder()

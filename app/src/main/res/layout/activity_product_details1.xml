@@ -155,6 +155,7 @@
                                 android:layout_height="wrap_content"
                                 android:padding="5dp"
                                 android:text="Price"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 
@@ -173,7 +174,52 @@
                                 android:maxLength="18"
                                 android:padding="5dp"
                                 android:textStyle="bold"
-                                android:text="INR 500"
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:id="@+id/prod_price1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLength="18"
+                                android:padding="5dp"
+                                android:visibility="gone"
+                                android:layout_marginLeft="5dp"
+                                android:foreground="@drawable/strike_through"
+                                android:textStyle="bold"
+                                android:textColor="#7f7f7f"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:id="@+id/ll_discount"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="Discount"
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text=":"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                android:id="@+id/vendor_discount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="3dp"
+                                android:ellipsize="end"
+                                android:maxLength="18"
+                                android:text="discount"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 
@@ -205,8 +251,7 @@
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/button_square_edges_drawable"
                                 android:ellipsize="end"
-                                android:hint="100"
-                                android:maxLength="18"
+                               android:maxLength="18"
                                 android:padding="5dp"
                                 android:inputType="number"
                                 android:textColor="@color/black"
@@ -242,44 +287,9 @@
                                 android:maxLength="18"
                                 android:padding="5dp"
                                 android:textSize="16sp"
-                                android:text="unit"
                                 android:textColor="@color/black" />
 
                         </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="150dp"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="Discount"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <TextView
-                                android:layout_width="50dp"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text=":"
-                                android:textColor="@color/black" />
-
-                            <TextView
-                                android:id="@+id/vendor_discount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="3dp"
-                                android:ellipsize="end"
-                                android:maxLength="18"
-                                android:text="discount"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -341,7 +351,6 @@
                                 android:maxLength="18"
                                 android:textSize="16sp"
                                 android:padding="5dp"
-                                android:text="packing type"
                                 android:textColor="@color/black" />
 
                         </LinearLayout>
@@ -374,7 +383,6 @@
                                 android:maxLength="18"
                                 android:padding="5dp"
                                 android:textSize="16sp"
-                                android:text="minimum quantity"
                                 android:textColor="@color/black" />
 
                         </LinearLayout>
@@ -406,7 +414,6 @@
                                 android:ellipsize="end"
                                 android:maxLength="28"
                                 android:padding="5dp"
-                                android:text="stock"
                                 android:textSize="16sp"
                                 android:textColor="@color/black" />
 
@@ -447,7 +454,7 @@
                                     android:layout_marginTop="5dp"
                                     android:ellipsize="end"
                                     android:maxLength="18"
-                                    android:text="User"
+                                    android:text=""
                                     android:textColor="@color/black"
                                     android:textSize="16sp" />
 
@@ -489,28 +496,28 @@
                                 android:maxLength="18"
                                 android:padding="5dp"
                                 android:textSize="16sp"
-                                android:text="days"
+                                android:text=""
                                 android:textColor="@color/black" />
-
                         </LinearLayout>
-
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Transport Options"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
                         <LinearLayout
                             android:id="@+id/ll_vendor_shipping1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
+                            android:orientation="horizontal"
                             android:padding="2dp">
-
                             <TextView
-                                android:layout_width="match_parent"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:layout_weight="1"
-                                android:text="Transport Options"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
-
                             <Spinner
                                 android:id="@+id/spinner_thirdparty_shipping"
                                 android:layout_width="match_parent"
@@ -519,16 +526,13 @@
                                 android:layout_weight="1"
                                 android:padding="10dp"
                                 android:spinnerMode="dropdown"></Spinner>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.1dp"
-                                android:layout_marginLeft="2dp"
-                                android:layout_marginRight="15dp"
-                                android:background="@color/black" />
-
-
                         </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.1dp"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="15dp"
+                            android:background="@color/black" />
                         <LinearLayout
                             android:id="@+id/ll_shipping_services"
                             android:layout_width="match_parent"
@@ -595,6 +599,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_weight="1"
                                 android:text="Product Pickup Location"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 
@@ -614,6 +619,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_weight="1"
                                 android:text="Product Drop Location"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
 
@@ -634,7 +640,9 @@
                                 android:layout_marginTop="7dp"
                                 android:background="@drawable/backgroundapp_transparent_blue"
                                 android:padding="5dp"
+                                android:layout_gravity="right"
                                 android:text="Change Address"
+                                android:layout_marginRight="10dp"
                                 android:textAllCaps="false"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
@@ -648,6 +656,7 @@
                                     android:layout_width="150dp"
                                     android:layout_height="wrap_content"
                                     android:text="Shipping Charge"
+                                    android:textStyle="bold"
                                     android:textColor="@color/black"
                                     android:textSize="16sp" />
 
@@ -659,21 +668,15 @@
                                     android:textColor="@color/black" />
 
                                 <TextView
-                                    android:id="@+id/shipping_charge"
+                                    android:id="@+id/shipping_charge_view"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="150"
                                     android:layout_marginLeft="10dp"
                                     android:textColor="@color/black"
                                     android:textSize="16sp" />
 
                             </LinearLayout>
-
-
                         </LinearLayout>
-
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -681,12 +684,13 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="130dp"
+                                android:layout_width="150dp"
                                 android:layout_height="wrap_content"
                                 android:padding="5dp"
-                                android:text="Product Price"
+                                android:textStyle="bold"
+                                android:text="Product Total Price"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/product_price"
@@ -695,6 +699,7 @@
                                 android:background="@drawable/button_square_edges_drawable"
                                 android:ellipsize="end"
                                 android:maxLength="18"
+                                android:textStyle="bold"
                                 android:padding="5dp"
                                 android:text="product price"
                                 android:textColor="@color/black"

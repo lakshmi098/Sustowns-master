@@ -222,6 +222,22 @@ public class AddShippingServices extends AppCompatActivity {
         checkPermissions();
     }
     private void initializeUI() {
+        backarrow = (ImageView) findViewById(R.id.backarrow1);
+        backarrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TitleStr.equalsIgnoreCase("Add Service") || TitleStr.equalsIgnoreCase("Edit Service")) {
+                    Intent i = new Intent(AddShippingServices.this, StoreMyProductsActivity.class);
+                    i.putExtra("Customizations","1");
+                    startActivity(i);
+                    finish();
+                } else {
+                    Intent i = new Intent(AddShippingServices.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+            }
+        });
         ll_shipping_partial = (LinearLayout)findViewById(R.id.ll_shipping_partial);
         ll_shipping_full = (LinearLayout)findViewById(R.id.ll_shipping_full);
         shipping_partial_checkbox = findViewById(R.id.shipping_partial_checkbox);
@@ -273,6 +289,71 @@ public class AddShippingServices extends AppCompatActivity {
                 }
             }
         });
+        confirm_add_icon = findViewById(R.id.confirm_add_icon_shipping);
+        confirm_add_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SelectedButton = "Licence";
+                count = count + 1;
+                final Dialog customdialog = new Dialog(AddShippingServices.this);
+                customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                customdialog.setContentView(R.layout.camera_options);
+                customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
+
+                rl_capture = (RelativeLayout) customdialog.findViewById(R.id.rl_capture);
+                rl_gallery = (RelativeLayout) customdialog.findViewById(R.id.rl_gallery);
+
+                rl_capture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imagePath = FileUtils.launchServiceCamera(AddShippingServices.this, count, true);
+                        customdialog.dismiss();
+                    }
+                });
+                rl_gallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imagePath = FileUtils.launchLicenceGallery(AddShippingServices.this, count, true);
+                        customdialog.dismiss();
+                    }
+                });
+
+                customdialog.show();
+//                imagePath = FileUtils.launchServiceCamera(ServiceManagementActivity.this, count, true);
+            }
+        });
+        confirm_permit_add_icon = findViewById(R.id.confirm_permit_add_icon_shipping);
+        confirm_permit_add_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SelectedButton = "Permit";
+                count = count + 1;
+                final Dialog customdialog = new Dialog(AddShippingServices.this);
+                customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                customdialog.setContentView(R.layout.camera_options);
+                customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
+
+                rl_capture = (RelativeLayout) customdialog.findViewById(R.id.rl_capture);
+                rl_gallery = (RelativeLayout) customdialog.findViewById(R.id.rl_gallery);
+
+                rl_capture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imagePath = FileUtils.launchPermitCamera(AddShippingServices.this, count, true);
+                        customdialog.dismiss();
+                    }
+                });
+                rl_gallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imagePath = FileUtils.launchPermitGallery(AddShippingServices.this, count, true);
+                        customdialog.dismiss();
+                    }
+                });
+
+                customdialog.show();
+            }
+        });
         shippingpartial_recyclerview = findViewById(R.id.shippingpartial_recyclerview);
         LinearLayoutManager linearLayoutManagerq1 = new LinearLayoutManager(AddShippingServices.this, LinearLayoutManager.VERTICAL, false);
         shippingpartial_recyclerview.setLayoutManager(linearLayoutManagerq1);
@@ -293,6 +374,17 @@ public class AddShippingServices extends AppCompatActivity {
         tax_service = (EditText) findViewById(R.id.tax_service);
         discount_service = (EditText) findViewById(R.id.discount_service);
         title_shipping = (TextView) findViewById(R.id.title_shipping);
+        document_name = (TextView) findViewById(R.id.document_name);
+        images_recyclerView = findViewById(R.id.images_recyclerView_shipping);
+        images_recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayout.HORIZONTAL, false);
+        images_recyclerView.setLayoutManager(linearLayoutManager);
+        images_recyclerView.setItemAnimator(new DefaultItemAnimator());
+        permit_images_recyclerView = findViewById(R.id.permit_images_recyclerView_shipping);
+        permit_images_recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutPermit = new LinearLayoutManager(getApplicationContext(), LinearLayout.HORIZONTAL, false);
+        permit_images_recyclerView.setLayoutManager(linearLayoutPermit);
+        permit_images_recyclerView.setItemAnimator(new DefaultItemAnimator());
         from_date_text = (TextView) findViewById(R.id.from_date_text);
         to_date_text = (TextView) findViewById(R.id.to_date_text);
         from_date_ser = (Button) findViewById(R.id.from_date_ser);
@@ -435,72 +527,6 @@ public class AddShippingServices extends AppCompatActivity {
                 }
             }
         });
-        confirm_add_icon = findViewById(R.id.confirm_add_icon);
-        confirm_add_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SelectedButton = "Licence";
-                count = count + 1;
-                final Dialog customdialog = new Dialog(AddShippingServices.this);
-                customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customdialog.setContentView(R.layout.camera_options);
-                customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
-
-                rl_capture = (RelativeLayout) customdialog.findViewById(R.id.rl_capture);
-                rl_gallery = (RelativeLayout) customdialog.findViewById(R.id.rl_gallery);
-
-                rl_capture.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        imagePath = FileUtils.launchServiceCamera(AddShippingServices.this, count, true);
-                        customdialog.dismiss();
-                    }
-                });
-                rl_gallery.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        imagePath = FileUtils.launchLicenceGallery(AddShippingServices.this, count, true);
-                        customdialog.dismiss();
-                    }
-                });
-
-                customdialog.show();
-//                imagePath = FileUtils.launchServiceCamera(ServiceManagementActivity.this, count, true);
-            }
-        });
-        confirm_permit_add_icon = findViewById(R.id.confirm_permit_add_icon);
-        confirm_permit_add_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SelectedButton = "Permit";
-                count = count + 1;
-                final Dialog customdialog = new Dialog(AddShippingServices.this);
-                customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customdialog.setContentView(R.layout.camera_options);
-                customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
-
-                rl_capture = (RelativeLayout) customdialog.findViewById(R.id.rl_capture);
-                rl_gallery = (RelativeLayout) customdialog.findViewById(R.id.rl_gallery);
-
-                rl_capture.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        imagePath = FileUtils.launchPermitCamera(AddShippingServices.this, count, true);
-                        customdialog.dismiss();
-                    }
-                });
-                rl_gallery.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        imagePath = FileUtils.launchPermitGallery(AddShippingServices.this, count, true);
-                        customdialog.dismiss();
-                    }
-                });
-
-                customdialog.show();
-            }
-        });
-
         save_service = (Button) findViewById(R.id.save_service);
         save_service.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -534,6 +560,50 @@ public class AddShippingServices extends AppCompatActivity {
                 }
             }
         });
+        shipping_add_partial = findViewById(R.id.shipping_add_partial);
+        shipping_add_partial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int size = unitDisplayList.size();
+                if (size < unitList.size()) {
+                    for (int i = 0; i < unitList.size(); i++) {
+                        if (unitDisplayList.contains(unitList.get(i))) {
+                            // Do nothing
+                        } else {
+                            unitDisplayList.add(unitList.get(i));
+                            serviceUnitListAdapter.notifyItemInserted(unitFullDisplayList.size() - 1);
+                            shippingpartial_recyclerview.scrollToPosition(unitFullDisplayList.size() - 1);
+                            shippingpartial_recyclerview.setVisibility(View.VISIBLE);
+                            if (serviceUnitListAdapter != null) {
+                                serviceUnitListAdapter.notifyDataSetChanged();
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        add_full_unit = findViewById(R.id.add_full_unit);
+        add_full_unit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int size = unitFullDisplayList.size();
+                if (size < unitList.size()) {
+                    for (int i = 0; i < unitList.size(); i++) {
+                        if (unitFullDisplayList.contains(unitList.get(i))) {
+                            // Do nothing
+                        } else {
+                            unitFullDisplayList.add(unitList.get(i));
+                            shippingfull_recyclerview.setVisibility(View.VISIBLE);
+                            if (serviceUnitListAdapter != null) {
+                                serviceUnitListAdapter.notifyDataSetChanged();
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        });
         spinner_body_type = (Spinner) findViewById(R.id.spinner_body_type);
         final ArrayAdapter bodyType = new ArrayAdapter(AddShippingServices.this, android.R.layout.simple_spinner_item, BodyType);
         bodyType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -564,34 +634,6 @@ public class AddShippingServices extends AppCompatActivity {
                 spinner_body_type.setAdapter(bodyType2);
             }
         }
-        backarrow = (ImageView) findViewById(R.id.backarrow);
-        backarrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //finish();
-                if (TitleStr.equalsIgnoreCase("Add Service") || TitleStr.equalsIgnoreCase("Edit Service")) {
-                    Intent i = new Intent(AddShippingServices.this, StoreMyProductsActivity.class);
-                    i.putExtra("Customizations","1");
-                    startActivity(i);
-                    finish();
-                } else {
-                    Intent i = new Intent(AddShippingServices.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-            }
-        });
-        document_name = (TextView) findViewById(R.id.document_name);
-        images_recyclerView = findViewById(R.id.images_recyclerView);
-        images_recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayout.HORIZONTAL, false);
-        images_recyclerView.setLayoutManager(linearLayoutManager);
-        images_recyclerView.setItemAnimator(new DefaultItemAnimator());
-        permit_images_recyclerView = findViewById(R.id.permit_images_recyclerView);
-        permit_images_recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutPermit = new LinearLayoutManager(getApplicationContext(), LinearLayout.HORIZONTAL, false);
-        permit_images_recyclerView.setLayoutManager(linearLayoutPermit);
-        permit_images_recyclerView.setItemAnimator(new DefaultItemAnimator());
         if(UpdateStr.equalsIgnoreCase("1")){
             ll_choose_subcategory.setVisibility(View.VISIBLE);
             setJsonObject(true);
@@ -663,50 +705,6 @@ public class AddShippingServices extends AppCompatActivity {
         recycler_view_myservices = (RecyclerView) findViewById(R.id.recycler_view_myservices);
         LinearLayoutManager layoutManager = new LinearLayoutManager(AddShippingServices.this, LinearLayoutManager.VERTICAL, false);
         recycler_view_myservices.setLayoutManager(layoutManager);
-        shipping_add_partial = findViewById(R.id.shipping_add_partial);
-        add_full_unit = findViewById(R.id.add_full_unit);
-        shipping_add_partial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int size = unitDisplayList.size();
-                if (size < unitList.size()) {
-                    for (int i = 0; i < unitList.size(); i++) {
-                        if (unitDisplayList.contains(unitList.get(i))) {
-                            // Do nothing
-                        } else {
-                            unitDisplayList.add(unitList.get(i));
-                            serviceUnitListAdapter.notifyItemInserted(unitFullDisplayList.size() - 1);
-                            shippingpartial_recyclerview.scrollToPosition(unitFullDisplayList.size() - 1);
-                            shippingpartial_recyclerview.setVisibility(View.VISIBLE);
-                            if (serviceUnitListAdapter != null) {
-                                serviceUnitListAdapter.notifyDataSetChanged();
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-        add_full_unit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int size = unitFullDisplayList.size();
-                if (size < unitList.size()) {
-                    for (int i = 0; i < unitList.size(); i++) {
-                        if (unitFullDisplayList.contains(unitList.get(i))) {
-                            // Do nothing
-                        } else {
-                            unitFullDisplayList.add(unitList.get(i));
-                            shippingfull_recyclerview.setVisibility(View.VISIBLE);
-                            if (serviceUnitListAdapter != null) {
-                                serviceUnitListAdapter.notifyDataSetChanged();
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        });
         three_dots_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -811,38 +809,6 @@ public class AddShippingServices extends AppCompatActivity {
                         }
                     }
                 }
-              /*  imagePath = null;
-
-                Uri picUri = data.getData();
-                String[] filePath = {MediaStore.Images.Media.DATA};
-                Cursor c = getContentResolver().query(picUri, filePath, null, null, null);
-                c.moveToFirst();
-                int columnIndex = c.getColumnIndex(filePath[0]);
-                imagePath = c.getString(columnIndex);
-
-                Bitmap bitmapImage = null;
-                try {
-                    bitmapImage = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), picUri);
-                    profileString = getEncodedImage(bitmapImage);
-//                    profile_img.setImageURI(picUri);
-                    if(SelectedButton.equalsIgnoreCase("Licence")) {
-                        imagesList.add(profileString);
-                        fileList.add(imagePath);
-                        setUpRecyclerView(imagePath);
-                    }else{
-                        permitimagesList.add(profileString);
-                        permitfileList.add(imagePath);
-                        setUpRecyclerView(imagePath);
-                    }
-                    // licence_image.setImageBitmap(bitmapImage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-//                profile_img.setImageURI(Uri.parse(imagePath));
-                Log.d("Selected Image path: ", imagePath);
-
-                c.close();
-*/
             }
         }
         else {
@@ -1392,18 +1358,18 @@ public class AddShippingServices extends AppCompatActivity {
         try {
             final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddShippingServices.this);
             LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.custom_list_category, null);
-            dialogBuilder.setView(dialogView);
+            View dialogView1 = inflater.inflate(R.layout.custom_list_category, null);
+            dialogBuilder.setView(dialogView1);
 
-            TextView title = (TextView) dialogView.findViewById(R.id.customDialogTitle);
-            Button submitCat_btn = (Button) dialogView.findViewById(R.id.submitCat_btn);
+            TextView title = (TextView) dialogView1.findViewById(R.id.customDialogTitle);
+            Button submitCat_btn = (Button) dialogView1.findViewById(R.id.submitCat_btn);
             if (isCategory)
                 title.setText("Choose Category");
             else
                 title.setText("Choose SubCategory");
 
-            final ListView categoryListView = (ListView) dialogView.findViewById(R.id.categoryList);
-            final ShimmerFrameLayout shimmerFrameLayout = dialogView.findViewById(R.id.shimmer_list_item);
+            final ListView categoryListView = (ListView) dialogView1.findViewById(R.id.categoryList);
+            final ShimmerFrameLayout shimmerFrameLayout = dialogView1.findViewById(R.id.shimmer_list_item);
             shimmerFrameLayout.startShimmerAnimation();
             new Handler().postDelayed(new Runnable() {
                 @Override

@@ -17,6 +17,7 @@ public class ContractPurchasesModel {
     private String unique_id;
     private String bank_thr_ran_id;
     private String payment_status;
+    private String job_location;
 
     private String image;
     private String Total;
@@ -155,5 +156,13 @@ public class ContractPurchasesModel {
 
     public void setPayment_status(String payment_status) {
         this.payment_status = payment_status;
+    }
+
+    public String getJob_location() {
+        return job_location;
+    }
+
+    public void setJob_location(String job_location) {
+        this.job_location = job_location;
     }
 }

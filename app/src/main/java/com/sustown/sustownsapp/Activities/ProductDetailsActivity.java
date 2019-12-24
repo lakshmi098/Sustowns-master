@@ -3,7 +3,10 @@ package com.sustown.sustownsapp.Activities;
 import android.animation.Animator;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -11,10 +14,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -68,62 +75,49 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 public class ProductDetailsActivity extends AppCompatActivity {
-    public static String Product_Detail_Address_Map = "";
+    public static String Address = "";
     Button reviews, descriptions, addtocart, make_offer, buy_sample, submit_review_btn;
-    LinearLayout ll_description, ll_reviews, ll_product_details,ll_shipping_services;
+    LinearLayout ll_description, ll_reviews, ll_product_details,ll_shipping_services,ll_discount;
     ImageView backarrow, image_product_details, image_full;
     EditText name_review, edit_quantity;
-    String pro_id,status,user_id, image, quantity, pr_title, pr_price, pr_currency, makeoffer, pr_weight, weight_unit, review, sample_pro_id;
+    String pro_id,status,user_id, image, quantity, pr_title,userid, pr_price, pr_currency, makeoffer, pr_weight, weight_unit, review, sample_pro_id;
     Intent intent;
     Spinner spinner_shipping_services,spinner_thirdparty_shipping;
     PreferenceUtils preferenceUtils;
     ProgressDialog progressDialog;
-    TextView product_name, prod_price, prod_details_unit, packing_type, min_quantity, availability_stock, vendor_product_details;
+    TextView product_name, prod_price, prod_price1,prod_details_unit, packing_type, min_quantity, availability_stock, vendor_product_details;
     TextView delivery_time, reviews_text, reviews_count, product_size, vendor_discount,added_tocart,cart_count;
     public static TextView drop_location;
-    ArrayList<AddToCartModel> addToCartModels = new ArrayList<>();
     Realm realm;
     ImageView close_buy_sample, cart_img;
-    Button close_btn, addtocart_sample, addtocart_btn;
+    Button close_btn, addtocart_sample;
     TextView buysample_title, sample_name, sample_unit, sample_size, sample_pack_type, sample_price, product_price, pick_up_location;
     EditText quantity_et;
-    String sid,ratingStr, shippingStr, discount, transportStr,shipping,addressDrop,cartcount;
+    String sid,ratingStr, shippingStr, discount, transportStr,shipping="",addressDrop,cartcount,getpricekms="";
     String weight_sample, weight_unit_sample, pack_type_sample, pr_title_sample, pr_price_sample, pr_currency_sample, pr_min_sample;
     RecyclerView review_recyclerview;
     ArrayList<GetReviewsModel> getReviewsModels;
-    ArrayList<GetAddressModel> getAddressModels;
     GetReviewsAdapter getReviewsAdapter;
-    private Animator currentAnimator;
-    private int shortAnimationDuration;
     Button change_address_btn;
-    LinearLayout ll_vendor_link, ll_shipping_details;
-    String[] transport = {"Vendor Shipping", "Third Party Shipping"};
-    String[] transport1 = {"Third Party Shipping"};
-    String[] shippingServices = {"Select Vendor Shipping Services"};
+    LinearLayout ll_vendor_link;
+    String[] transport = {"Select Shipping Type","Third Party Shipping","Vendor Shipping"};
+    String[] transport1 = {"Select Shipping Type","Third Party Shipping"};
+    String[] transport2 = {"Vendor Shipping","Third Party Shipping"};
     RatingBar ratingBarProduct, ratingBarSubmit;
     LinearLayout ll_select_shipping_services, ll_existing_address,ll_buysample;
-    RadioButton existing_radiobtn, new_radiobtn;
-    Button close_drop_dialog, save_address_btn,save_address;
-    RadioGroup radioGroup;
-    RecyclerView recyclerview_saved_addresses;
-    ExistingAddressAdapter existingAddressAdapter;
     String[] address = {"Sustowns,jntu,india,Andhra Pradesh,Guntur,500072", "way web,saurashtra,university road,rajkot,india,Telangana,500018"};
     String[] name = {"Address1", "Address2"};
-    EditText name_address,company_address, email_address, first_name_address,last_name_address, address1_address, address2_address,mobile_address, pincode_address, fax_address;
-    String nameAddress,companyAddress, emailAddress, firstnameAddress, lastnameAddress, address1Address, address2Address, addressState, addressTown, mobileAddress, pincodeAddress, faxAddress;
-    TextView address_txt_map_dialog,saved_address_text,shipping_charge,spinner_countrydialog,address_state, address_town;
+    TextView shipping_charge,spinner_countrydialog,address_state, address_town;
     Helper helper;
-    String product_image_path,ServiceStr = "",vendorServiceIdStr = "",countryAddress,selected_address,Activity,countryId,stateId,cityId;
+    String product_image_path,ServiceStr = "",vendorServiceIdStr = "",PincodeAddress,Activity,zipcode_drop,zipcode,product_zipcode;
     LinearLayout ll_vendor_shipping1;
     ArrayList<String> vendor_service_ids;
     ArrayList<String> vendor_service_names;
     Dialog customdialog;
     String ProdPriceStr, ShippingValue = "2";
     RelativeLayout relativelayout;
-    ArrayList<String> countryList = new ArrayList<>();
-    ArrayList<String> statesList = new ArrayList<>();
-    ArrayList<String> citiesList = new ArrayList<>();
     AlertDialog alertDialog;
+    float TotalPriceStr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,11 +171,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
         ratingBarSubmit = (RatingBar) findViewById(R.id.ratingBarSubmit);
         product_size = (TextView) findViewById(R.id.product_size);
         vendor_discount = (TextView) findViewById(R.id.vendor_discount);
+        ll_discount = (LinearLayout) findViewById(R.id.ll_discount);
         pick_up_location = (TextView) findViewById(R.id.pick_up_location);
         drop_location = (TextView) findViewById(R.id.drop_location);
         product_price = (TextView) findViewById(R.id.product_price);
         change_address_btn = (Button) findViewById(R.id.change_address_btn);
-        shipping_charge = (TextView) findViewById(R.id.shipping_charge);
+        shipping_charge = (TextView) findViewById(R.id.shipping_charge_view);
         added_tocart = (TextView) findViewById(R.id.added_tocart);
         ll_select_shipping_services = (LinearLayout) findViewById(R.id.ll_select_shipping_services);
         spinner_thirdparty_shipping = (Spinner) findViewById(R.id.spinner_thirdparty_shipping);
@@ -198,33 +193,59 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 ll_shipping_services.setVisibility(View.GONE);
             }
         } else  {
-
         }
         spinner_thirdparty_shipping.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                transportStr = parent.getItemAtPosition(position).toString();
-                if (transportStr.equalsIgnoreCase("Vendor Shipping")) {
-                    ll_select_shipping_services.setVisibility(View.VISIBLE);
-                    ll_shipping_services.setVisibility(View.VISIBLE);
-                    shipping = "1";
-                }else {
-                    ll_select_shipping_services.setVisibility(View.GONE);
-                    ll_shipping_services.setVisibility(View.GONE);
-                    shipping = "2";
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    transportStr = parent.getItemAtPosition(position).toString();
+                    if (position > 0) {
+                        if (transportStr.equalsIgnoreCase("Vendor Shipping")) {
+                            ll_select_shipping_services.setVisibility(View.VISIBLE);
+                            ll_shipping_services.setVisibility(View.VISIBLE);
+                            shipping = "1";
+                            getShippingCharge();
+                        } else {
+                            ll_select_shipping_services.setVisibility(View.GONE);
+                            ll_shipping_services.setVisibility(View.GONE);
+                            shipping = "2";
+                        }
+                    }
                 }
-            }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
         spinner_shipping_services = (Spinner) findViewById(R.id.spinner_shipping_services);
         name_review = (EditText) findViewById(R.id.name_review);
         edit_quantity = (EditText) findViewById(R.id.edit_quantity);
+        edit_quantity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(discount.equalsIgnoreCase("") || discount.equalsIgnoreCase("null")){
+                    float quantityInt = Float.parseFloat(edit_quantity.getText().toString());
+                    float priceInt = Float.parseFloat(pr_price);
+                    float ProdPriceStrFloat = priceInt*quantityInt ;
+                    ProdPriceStr = String.valueOf(ProdPriceStrFloat);
+                    product_price.setText(ProdPriceStr);
+                }else {
+                    float quantityInt = Float.parseFloat(edit_quantity.getText().toString());
+                    float priceStr = TotalPriceStr * quantityInt;
+                    String ProdPriceString = String.valueOf(priceStr);
+                    product_price.setText(ProdPriceString);
+                }
+            }
+        });
         image_product_details = (ImageView) findViewById(R.id.image_product_details);
         product_name = (TextView) findViewById(R.id.product_name);
         prod_price = (TextView) findViewById(R.id.prod_price);
+        prod_price1 = (TextView) findViewById(R.id.prod_price1);
         prod_details_unit = (TextView) findViewById(R.id.prod_details_unit);
         packing_type = (TextView) findViewById(R.id.packing_type);
         min_quantity = (TextView) findViewById(R.id.min_quantity);
@@ -238,7 +259,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int number = Integer.parseInt(edit_quantity.getText().toString());
                 int number1 = Integer.parseInt(quantity);
-                if(transportStr.equalsIgnoreCase("Select Shipping")){
+                if(transportStr.equalsIgnoreCase("Select Shipping Type")){
                     Toast.makeText(ProductDetailsActivity.this, "Please Select Transport Option", Toast.LENGTH_SHORT).show();
                 }else if(transportStr.equalsIgnoreCase("Vendor Shipping")){
                     if(ServiceStr.equalsIgnoreCase("null") || ServiceStr.equalsIgnoreCase(""))
@@ -266,111 +287,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
         change_address_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customdialog = new Dialog(ProductDetailsActivity.this);
-                customdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customdialog.setContentView(R.layout.drop_location_dialog);
-                customdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-                customdialog.getWindow().setBackgroundDrawableResource(R.drawable.squre_corner_shape);
-                ll_shipping_details = (LinearLayout) customdialog.findViewById(R.id.ll_shipping_details);
-                ll_existing_address = (LinearLayout) customdialog.findViewById(R.id.ll_existing_address);
-                recyclerview_saved_addresses = (RecyclerView) customdialog.findViewById(R.id.recyclerview_saved_addresses);
-                LinearLayoutManager layoutManager1 = new LinearLayoutManager(ProductDetailsActivity.this, LinearLayoutManager.VERTICAL, false);
-                recyclerview_saved_addresses.setLayoutManager(layoutManager1);
-                saved_address_text = (TextView) customdialog.findViewById(R.id.saved_address_text);
-                save_address_btn = (Button) customdialog.findViewById(R.id.save_address_btn);
-                name_address = (EditText) customdialog.findViewById(R.id.name_address);
-                company_address = (EditText) customdialog.findViewById(R.id.company_address);
-                email_address = (EditText) customdialog.findViewById(R.id.email_address);
-                first_name_address = (EditText) customdialog.findViewById(R.id.first_name_address);
-                spinner_countrydialog = (TextView) customdialog.findViewById(R.id.spinner_countrydialog);
-                spinner_countrydialog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                            getCountryList();
-                    }
-                });
-                last_name_address = (EditText) customdialog.findViewById(R.id.last_name_address);
-                address_txt_map_dialog = customdialog.findViewById(R.id.address_txt_map_dialog);
-                address_txt_map_dialog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent mapIntent = new Intent(ProductDetailsActivity.this, MapsActivity.class);
-                        mapIntent.putExtra("activity", "product");
-                        mapIntent.putExtra("type", "none");
-                        startActivity(mapIntent);
-                    }
-                });
-                address2_address = (EditText) customdialog.findViewById(R.id.address2_address);
-                address_state = (TextView) customdialog.findViewById(R.id.address_state);
-                address_state.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getStatesList();
-                    }
-                });
-                address_town = (TextView) customdialog.findViewById(R.id.address_town);
-                address_town.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getCityList();
-                    }
-                });
-                mobile_address = (EditText) customdialog.findViewById(R.id.mobile_address);
-                pincode_address = (EditText) customdialog.findViewById(R.id.pincode_address);
-                fax_address = (EditText) customdialog.findViewById(R.id.fax_address);
-                radioGroup = (RadioGroup) customdialog.findViewById(R.id.radioGroup);
-                existing_radiobtn = (RadioButton) customdialog.findViewById(R.id.existing_radiobtn);
-                new_radiobtn = (RadioButton) customdialog.findViewById(R.id.new_radiobtn);
-                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        switch (checkedId) {
-                            case R.id.existing_radiobtn:
-                                ll_existing_address.setVisibility(View.VISIBLE);
-                                ll_shipping_details.setVisibility(View.GONE);
-                                getExistingAddresses();
-                                // do operations specific to this selection
-                                break;
-                            case R.id.new_radiobtn:
-                                ll_shipping_details.setVisibility(View.VISIBLE);
-                                ll_existing_address.setVisibility(View.GONE);
-                                // do operations specific to this selection
-                                break;
-                        }
-                    }
-                });
-                save_address = (Button) customdialog.findViewById(R.id.save_address);
-                save_address.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        saveExistingAddress();
-                    }
-                });
-                save_address_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        nameAddress = name_address.getText().toString().trim();
-                        companyAddress = company_address.getText().toString().trim();
-                        emailAddress = email_address.getText().toString().trim();
-                        firstnameAddress = first_name_address.getText().toString().trim();
-                        lastnameAddress = last_name_address.getText().toString().trim();
-                        address2Address = address2_address.getText().toString().trim();
-                        addressState = address_state.getText().toString().trim();
-                        addressTown = address_town.getText().toString().trim();
-                        mobileAddress = mobile_address.getText().toString().trim();
-                        pincodeAddress = pincode_address.getText().toString().trim();
-                        faxAddress = fax_address.getText().toString().trim();
-                        saveNewAddress();
-                    }
-                });
-
-                close_drop_dialog = (Button) customdialog.findViewById(R.id.close_drop_dialog);
-                close_drop_dialog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        customdialog.dismiss();
-                    }
-                });
-                customdialog.show();
+                Intent i = new Intent(ProductDetailsActivity.this,LocationDialogActivity.class);
+                i.putExtra("ContractLocation","0");
+                i.putExtra("OrderId",pro_id);
+                i.putExtra("UserId",userid);
+                i.putExtra("productZipcode",product_zipcode);
+                startActivity(i);
             }
         });
         image_product_details.setOnClickListener(new View.OnClickListener() {
@@ -583,7 +505,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         UserApi service = retrofit.create(UserApi.class);
 
         Call<JsonElement> callRetrofit = null;
-        // callRetrofit = service.productDetails(user_id, pro_id);
+        // callRetrofit = service.productDetails("446", "540");
         callRetrofit = service.productDetails(user_id, pro_id);
 
         callRetrofit.enqueue(new Callback<JsonElement>() {
@@ -620,7 +542,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                         success = root.getInt("success");
                                         String reviewcount = root.getString("reviewcount");
                                         String rattingcount = root.getString("rattingcount");
-                                        //   message = root.getString("message");
                                         if (success == 1) {
                                             if (progressDialog.isShowing())
                                                 progressDialog.dismiss();
@@ -628,17 +549,41 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                                 pro_id = jsonObject.getString("id");
+                                                userid = jsonObject.getString("userid");
+                                                if(userid.equalsIgnoreCase(user_id)){
+                                                    addtocart.setVisibility(View.GONE);
+                                                }
                                                 pr_title = jsonObject.getString("pr_title");
                                                 String pr_image = jsonObject.getString("pr_image");
                                                 pr_price = jsonObject.getString("pr_price");
                                                 pr_currency = jsonObject.getString("pr_currency");
                                                 discount = jsonObject.getString("discount");
-                                                if (discount.equalsIgnoreCase("null")) {
-                                                    vendor_discount.setText("No Discount");
-                                                } else {
-                                                    vendor_discount.setText(discount + "%");
-                                                }
                                                 quantity = jsonObject.getString("pr_min");
+                                                if (discount.equalsIgnoreCase("null")|| discount.equalsIgnoreCase("")) {
+                                                    ll_discount.setVisibility(View.GONE);
+                                                    vendor_discount.setText("No Discount");
+                                                    prod_price.setText(pr_currency+" "+pr_price);
+                                                    float quantityInt = Float.parseFloat(quantity);
+                                                    float priceInt = Float.parseFloat(pr_price);
+                                                    float ProdPriceStrFloat = priceInt*quantityInt ;
+                                                    ProdPriceStr = String.valueOf(ProdPriceStrFloat);
+                                                    product_price.setText(ProdPriceStr);
+                                                } else {
+                                                    ll_discount.setVisibility(View.VISIBLE);
+                                                    vendor_discount.setText(discount + "%");
+                                                    int OriginalPrice = Integer.parseInt(pr_price);
+                                                    int DiscountStr = Integer.parseInt(discount);
+                                                    int DiscountPrice = OriginalPrice * DiscountStr;
+                                                    float DisPriceStr = Float.parseFloat(String.valueOf(DiscountPrice))/100;
+                                                    TotalPriceStr = Float.parseFloat(pr_price)-DisPriceStr;
+                                                    prod_price.setText(pr_currency+" "+String.valueOf(TotalPriceStr));
+                                                    prod_price1.setVisibility(View.VISIBLE);
+                                                    prod_price1.setText(pr_price);
+                                                    float quantityInt = Float.parseFloat(quantity);
+                                                    float ProdPriceStrFloat = quantityInt * TotalPriceStr ;
+                                                    ProdPriceStr = String.valueOf(ProdPriceStrFloat);
+                                                    product_price.setText(ProdPriceStr);
+                                                }
                                                 pr_weight = jsonObject.getString("pr_weight");
                                                 String pr_packtype = jsonObject.getString("pr_packtype");
                                                 String days = jsonObject.getString("days");
@@ -647,37 +592,108 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                 String bus_name = jsonObject.getString("bus_name");
                                                 String imagepath = jsonObject.getString("imagepath");
                                                 String shipingprovide = jsonObject.getString("shipingprovide");
-                                                if(shipingprovide.equalsIgnoreCase("yes")){
-                                                    ArrayAdapter thirdparty = new ArrayAdapter(ProductDetailsActivity.this, android.R.layout.simple_spinner_item, transport);
+                                                spinner_thirdparty_shipping.setPrompt("Select Shipping Type");
+                                                if(status.equalsIgnoreCase("2")){
+                                                    ll_select_shipping_services.setVisibility(View.VISIBLE);
+                                                    ll_shipping_services.setVisibility(View.VISIBLE);
+                                                    ArrayAdapter thirdparty = new ArrayAdapter(ProductDetailsActivity.this, android.R.layout.simple_spinner_item, transport2);
                                                     thirdparty.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                                     spinner_thirdparty_shipping.setAdapter(thirdparty);
                                                     if (transportStr != null) {
                                                         int spinnerPosition = thirdparty.getPosition(transportStr);
                                                         spinner_thirdparty_shipping.setSelection(spinnerPosition);
                                                     }
-                                                    // spinner_thirdparty_shipping.setSelection(1);
                                                 }else{
-                                                    ArrayAdapter thirdparty = new ArrayAdapter(ProductDetailsActivity.this, android.R.layout.simple_spinner_item, transport1);
-                                                    thirdparty.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                                    spinner_thirdparty_shipping.setAdapter(thirdparty);
-                                                    if (transportStr != null) {
-                                                        int spinnerPosition = thirdparty.getPosition(transportStr);
-                                                        spinner_thirdparty_shipping.setSelection(spinnerPosition);
+                                                    if(shipingprovide.equalsIgnoreCase("yes")){
+                                                        //  ArrayAdapter thirdparty = new ArrayAdapter(ProductDetailsActivity.this, android.R.layout.simple_spinner_item, transport);
+                                                        final ArrayAdapter<String> thirdparty = new ArrayAdapter<String>(ProductDetailsActivity.this,android.R.layout.simple_spinner_item,transport){
+                                                            @Override
+                                                            public boolean isEnabled(int position){
+                                                                if(position == 0)
+                                                                {
+                                                                    // Disable the first item from Spinner
+                                                                    // First item will be use for hint
+                                                                    return false;
+                                                                }
+                                                                else
+                                                                {
+                                                                    return true;
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public View getDropDownView(int position, View convertView,
+                                                                                        ViewGroup parent) {
+                                                                View view = super.getDropDownView(position, convertView, parent);
+                                                                TextView tv = (TextView) view;
+                                                                if(position == 0){
+                                                                    // Set the hint text color gray
+                                                                    tv.setTextColor(Color.GRAY);
+                                                                }
+                                                                else {
+                                                                    tv.setTextColor(Color.BLACK);
+                                                                }
+                                                                return view;
+                                                            }
+                                                        };
+                                                        thirdparty.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                        spinner_thirdparty_shipping.setAdapter(thirdparty);
+                                                        if (transportStr != null) {
+                                                            int spinnerPosition = thirdparty.getPosition(transportStr);
+                                                            spinner_thirdparty_shipping.setSelection(spinnerPosition);
+                                                        }
+                                                        // spinner_thirdparty_shipping.setSelection(1);
+                                                    }
+                                                    else{
+                                                        //  ArrayAdapter thirdparty = new ArrayAdapter(ProductDetailsActivity.this, android.R.layout.simple_spinner_item, transport1);
+                                                        final ArrayAdapter<String> thirdparty = new ArrayAdapter<String>(ProductDetailsActivity.this,android.R.layout.simple_spinner_item,transport1){
+                                                            @Override
+                                                            public boolean isEnabled(int position){
+                                                                if(position == 0)
+                                                                {
+                                                                    // Disable the first item from Spinner
+                                                                    // First item will be use for hint
+                                                                    return false;
+                                                                }
+                                                                else
+                                                                {
+                                                                    return true;
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                                                                View view = super.getDropDownView(position, convertView, parent);
+                                                                TextView tv = (TextView) view;
+                                                                if(position == 0){
+                                                                    // Set the hint text color gray
+                                                                    tv.setTextColor(Color.GRAY);
+                                                                }
+                                                                else {
+                                                                    tv.setTextColor(Color.BLACK);
+                                                                }
+                                                                return view;
+                                                            }
+                                                        };
+                                                        thirdparty.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                        spinner_thirdparty_shipping.setAdapter(thirdparty);
+                                                        if (transportStr != null) {
+                                                            int spinnerPosition = thirdparty.getPosition(transportStr);
+                                                            spinner_thirdparty_shipping.setSelection(spinnerPosition);
+                                                        }
                                                     }
                                                 }
                                                 String city = jsonObject.getString("city");
                                                 String state = jsonObject.getString("state");
                                                 String country = jsonObject.getString("country");
-                                                String zipcode = jsonObject.getString("zipcode");
+                                                zipcode = jsonObject.getString("zipcode");
                                                 makeoffer = jsonObject.getString("makeoffer");
+                                                product_zipcode = jsonObject.getString("zipcode");
                                                 String prod_image = imagepath + pr_image;
                                                 product_image_path = prod_image;
-                                                if (makeoffer.equalsIgnoreCase("1")) {
+                                                if (makeoffer.equalsIgnoreCase("1") && !userid.equalsIgnoreCase(user_id)) {
                                                     make_offer.setVisibility(View.VISIBLE);
-                                                } else {
+                                                }else{
                                                     make_offer.setVisibility(View.GONE);
                                                 }
-
                                                 if (prod_image != null && !prod_image.isEmpty()) {
                                                     Picasso.get()
                                                             .load(prod_image)
@@ -691,17 +707,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                             .error(R.drawable.no_image_available)
                                                             .into(image_product_details);
                                                 }
-                                              /*  if(image.isEmpty() || image != null){
-                                                    Glide.with(ProductDetailsActivity.this)
-                                                            .load(image)
-                                                            .into(image_product_details);
-                                                }else {
-                                                    Glide.with(ProductDetailsActivity.this)
-                                                            .load(R.drawable.no_image_available)
-                                                            .into(image_product_details);
-                                                }*/
                                                 product_name.setText(pr_title);
-                                                prod_price.setText(pr_currency+" "+pr_price);
                                                 prod_details_unit.setText(pr_weight + weight_unit);
                                                 packing_type.setText(pr_packtype);
                                                 min_quantity.setText(quantity);
@@ -713,13 +719,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                     reviews_count.setText("No Reviews");
                                                 }
                                                 reviews_count.setText("Reviews" + "(" + reviewcount + ")");
-                                                int quantityInt = Integer.parseInt(quantity);
-                                                int priceStr = Integer.parseInt(pr_price);
-                                                pick_up_location.setText(city+","+state+","+country+","+zipcode);
-                                                ProdPriceStr = String.valueOf(quantityInt * priceStr);
-                                                product_price.setText(ProdPriceStr);
+                                                pick_up_location.setText(city+","+state+"\n"+country+","+zipcode);
                                                 // ratingBar.setRating(Float.parseFloat(rattingcount));
-
                                             }
                                             JSONArray jsonArray1 = root.getJSONArray("getproductsamdel");
                                             for (int j = 0; j < jsonArray1.length(); j++) {
@@ -747,12 +748,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                     // Toast.makeText(CartActivity.this, "User", Toast.LENGTH_SHORT).show();
                                                 }
                                                 ArrayAdapter<String> adapter1;
-//                                spinner_dealer = (Spinner) findViewById(R.id.spinner_dealer);
                                                 if (vendor_service_names != null) {
                                                     adapter1 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, vendor_service_names);
                                                     adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                                     spinner_shipping_services.setAdapter(adapter1);
-                                                    //  progressDialog.dismiss();
                                                 } else {
                                                    /* adapter1 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, shippingServices);
                                                     adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -769,7 +768,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                         // preferenceUtils.saveString(PreferenceUtils.CUST_USER_ID,cust_id);
                                                         //   customer_users_st = customerUserListModels.get(pos).getCommon_id();
                                                     }
-
                                                     @Override
                                                     public void onNothingSelected(AdapterView<?> adapterView) {
                                                         //getCustomerUserList();
@@ -780,15 +778,17 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                 JSONObject delidetails = root.getJSONObject("delidetails");
                                                 if(delidetails != null) {
                                                     String address1 = delidetails.getString("address1");
-                                                    String city_drop = delidetails.getString("city");
-                                                    String state_drop = delidetails.getString("state");
-                                                    String country_drop = delidetails.getString("country");
-                                                    String zipcode_drop = delidetails.getString("zipcode");
-                                                    if (address1 != null || !address1.isEmpty() || city_drop != null || !city_drop.isEmpty() || state_drop != null || !state_drop.isEmpty()
-                                                            || country_drop != null || !country_drop.isEmpty() || zipcode_drop != null || !zipcode_drop.isEmpty()) {
-                                                        change_address_btn.setText("Add New Address");
+                                                    String address2 = delidetails.getString("address2");
+                                                    String city_drop = delidetails.getString("city_name");
+                                                    String state_drop = delidetails.getString("subdivision_1_name");
+                                                    String country_drop = delidetails.getString("country_name");
+                                                    zipcode_drop = delidetails.getString("zipcode");
+                                                    getShippingCharge();
+                                                    if (address1 != null || !address1.isEmpty()) {
+                                                        drop_location.setText(address1+"\n" + city_drop + "," + state_drop + "\n" + country_drop + "," + zipcode_drop);
                                                     } else {
-                                                        drop_location.setText(address1 + "," + city_drop + "," + state_drop + "," + country_drop + "," + zipcode_drop);
+                                                        change_address_btn.setText("Add New Address");
+                                                        //  drop_location.setText(address1 + "," + city_drop + "," + state_drop + "," + country_drop + "," + zipcode_drop);
                                                     }
                                                 }
                                             }catch (Exception e){
@@ -809,9 +809,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                 String fullname = object.getString("fullname");
                                                 String city1 = object.getString("city");
                                                 String country1 = object.getString("country");
-
-                                               // ratingBarProduct.setRating(Float.parseFloat(String.valueOf(Integer.parseInt(ratting))));
-
+                                                // ratingBarProduct.setRating(Float.parseFloat(String.valueOf(Integer.parseInt(ratting))));
                                             }
                                             JSONArray jsonArray3 = root.getJSONArray("review");
                                             getReviewsModels = new ArrayList<>();
@@ -856,9 +854,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                             pr_currency_sample = object.getString("pr_currency");
                                             pr_min_sample = object.getString("pr_min");
                                             preferenceUtils.getStringFromPreference(PreferenceUtils.SampleProdId, sid);
-                                            if (object != null || !object.equals("")) {
+                                            if ((object != null || !object.equals("")) && !userid.equalsIgnoreCase(user_id)) {
                                                 buy_sample.setVisibility(View.VISIBLE);
-                                            } else {
+                                            }else{
                                                 buy_sample.setVisibility(View.GONE);
                                             }
                                         } else {
@@ -890,6 +888,65 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
     }
+    public void getShippingCharge() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DZ_URL.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        CartApi service = retrofit.create(CartApi.class);
+        Call<JsonElement> callRetrofit = null;
+        callRetrofit = service.getShippingCharge(zipcode,zipcode_drop);
+        callRetrofit.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        System.out.println("----------------------------------------------------");
+                        Log.d("Call request", call.request().toString());
+                        Log.d("Call request header", call.request().headers().toString());
+                        Log.d("Response raw header", response.headers().toString());
+                        Log.d("Response raw", String.valueOf(response.raw().body()));
+                        Log.d("Response code", String.valueOf(response.code()));
+                        System.out.println("----------------------------------------------------");
+                        if (response.body().toString() != null) {
+                            if (response != null) {
+                                String searchResponse = response.body().toString();
+                                Log.d("Categeries", "response  >>" + searchResponse.toString());
+                                if (searchResponse != null) {
+                                    JSONObject root = null;
+                                    try {
+                                        root = new JSONObject(searchResponse);
+                                        String getkms = root.getString("getkms");
+                                        getpricekms = root.getString("getpricekms");
+                                        String success = root.getString("success");
+                                        if (success.equalsIgnoreCase("1")) {
+                                            shipping_charge.setText(getpricekms);
+                                            //cartCount();
+                                        } else {
+                                            //Toast.makeText(ProductDetailsActivity.this, message, Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                    else {
+                       // Toast.makeText(ProductDetailsActivity.this, "Product Not Added To Cart", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+//                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     public void addToCart() {
         user_id = preferenceUtils.getStringFromPreference(preferenceUtils.USER_ID,"");
         progressdialog();
@@ -901,8 +958,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
         CartApi service = retrofit.create(CartApi.class);
 
         Call<JsonElement> callRetrofit = null;
-
-        callRetrofit = service.addToCart(user_id,pro_id,quantity,shipping,ProdPriceStr,vendorServiceIdStr);
+        if(shipping.equalsIgnoreCase("")){
+            shipping = "1";
+        }
+        callRetrofit = service.addToCart(user_id,pro_id,quantity,shipping,ProdPriceStr,vendorServiceIdStr,getpricekms);
         callRetrofit.enqueue(new Callback<JsonElement>() {
 
             @Override
@@ -916,15 +975,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         Log.d("Response raw header", response.headers().toString());
                         Log.d("Response raw", String.valueOf(response.raw().body()));
                         Log.d("Response code", String.valueOf(response.code()));
-
                         System.out.println("----------------------------------------------------");
-
                         if (response.body().toString() != null) {
-
                             if (response != null) {
                                 String searchResponse = response.body().toString();
                                 Log.d("Categeries", "response  >>" + searchResponse.toString());
-
                                 if (searchResponse != null) {
                                     JSONObject root = null;
                                     try {
@@ -1036,9 +1091,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 progressDialog.dismiss();
-
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
                 Log.d("Error Call", ">>>>" + call.toString());
@@ -1100,200 +1153,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 });
-    }
-    private void getExistingAddresses() {
-        progressdialog();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DZ_URL.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        TransportApi service = retrofit.create(TransportApi.class);
-
-        Call<JsonElement> callRetrofit = null;
-        // callRetrofit = service.productDetails(user_id, pro_id);
-        callRetrofit = service.getExistingAddress(user_id);
-
-        callRetrofit.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        if (progressDialog.isShowing())
-                            progressDialog.dismiss();
-                        Log.d("Success Call", ">>>>" + call);
-                        Log.d("Success Call ", ">>>>" + response.body().toString());
-
-                        System.out.println("----------------------------------------------------");
-                        Log.d("Call request", call.request().toString());
-                        Log.d("Call request header", call.request().headers().toString());
-                        Log.d("Response raw header", response.headers().toString());
-                        Log.d("Response raw", String.valueOf(response.raw().body()));
-                        Log.d("Response code", String.valueOf(response.code()));
-                        System.out.println("----------------------------------------------------");
-
-
-                        if (response.body().toString() != null) {
-
-                            if (response != null) {
-                                String searchResponse = response.body().toString();
-                                Log.d("Reg", "Response  >>" + searchResponse.toString());
-
-                                if (searchResponse != null) {
-                                    JSONObject root = null;
-                                    try {
-                                        root = new JSONObject(searchResponse);
-                                        String message;
-                                        Integer success;
-                                        message = root.getString("message");
-                                        success = root.getInt("success");
-                                        if (success == 1) {
-                                            if (progressDialog.isShowing())
-                                                progressDialog.dismiss();
-                                            JSONArray jsonArray = root.getJSONArray("existing");
-                                            getAddressModels = new ArrayList<>();
-                                            for (int i = 0; i < jsonArray.length(); i++) {
-                                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                                String id = jsonObject.getString("id");
-                                                String user_id = jsonObject.getString("user_id");
-                                                String name = jsonObject.getString("name");
-                                                String address1 = jsonObject.getString("address1");
-                                                String zipcode = jsonObject.getString("zipcode");
-                                                String country_name = jsonObject.getString("country_name");
-                                                String state = jsonObject.getString("state");
-                                                String city_name = jsonObject.getString("city_name");
-
-                                                GetAddressModel getAddressModel = new GetAddressModel();
-                                                getAddressModel.setId(id);
-                                                getAddressModel.setUser_id(user_id);
-                                                getAddressModel.setName(name);
-                                                getAddressModel.setAddress1(address1);
-                                                getAddressModel.setZipcode(zipcode);
-                                                getAddressModel.setCountry_name(country_name);
-                                                getAddressModel.setState(state);
-                                                getAddressModel.setCity_name(city_name);
-                                                getAddressModels.add(getAddressModel);
-
-                                            }
-                                            if (getAddressModels != null) {
-                                                saved_address_text.setVisibility(View.GONE);
-                                                existingAddressAdapter = new ExistingAddressAdapter(ProductDetailsActivity.this,getAddressModels);
-                                                recyclerview_saved_addresses.setAdapter(existingAddressAdapter);
-                                                existingAddressAdapter.notifyDataSetChanged();
-                                            }else{
-                                                saved_address_text.setVisibility(View.VISIBLE);
-                                            }
-
-                                        } else {
-                                            saved_address_text.setVisibility(View.VISIBLE);
-
-                                        }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                progressDialog.dismiss();
-
-            }
-
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-                Log.d("Error Call", ">>>>" + call.toString());
-                Log.d("Error", ">>>>" + t.toString());
-                //  Toast.makeText(ProductsActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
-    }
-    private void saveNewAddress() {
-        progressdialog();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DZ_URL.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        TransportApi service = retrofit.create(TransportApi.class);
-        nameAddress = name_address.getText().toString().trim();
-        companyAddress = company_address.getText().toString().trim();
-        emailAddress = email_address.getText().toString().trim();
-        firstnameAddress = first_name_address.getText().toString().trim();
-        lastnameAddress = last_name_address.getText().toString().trim();
-        address2Address = address2_address.getText().toString().trim();
-        addressState = address_state.getText().toString().trim();
-        addressTown = address_town.getText().toString().trim();
-        mobileAddress = mobile_address.getText().toString().trim();
-        pincodeAddress = pincode_address.getText().toString().trim();
-        faxAddress = fax_address.getText().toString().trim();
-        Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.addNewAddress(user_id,nameAddress,companyAddress,firstnameAddress, lastnameAddress,
-                emailAddress,"",address2Address,pincodeAddress,countryAddress,addressState,addressTown,mobileAddress,faxAddress,"","");
-
-        callRetrofit.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        progressDialog.dismiss();
-                        Log.d("Success Call", ">>>>" + call);
-                        Log.d("Success Call ", ">>>>" + response.body().toString());
-
-                        System.out.println("----------------------------------------------------");
-                        Log.d("Call request", call.request().toString());
-                        Log.d("Call request header", call.request().headers().toString());
-                        Log.d("Response raw header", response.headers().toString());
-                        Log.d("Response raw", String.valueOf(response.raw().body()));
-                        Log.d("Response code", String.valueOf(response.code()));
-                        System.out.println("----------------------------------------------------");
-
-
-                        if (response.body().toString() != null) {
-
-                            if (response != null) {
-                                String searchResponse = response.body().toString();
-                                Log.d("Reg", "Response  >>" + searchResponse.toString());
-
-                                if (searchResponse != null) {
-                                    JSONObject root = null;
-                                    try {
-                                        root = new JSONObject(searchResponse);
-                                        String message;
-                                        Integer success;
-                                        message = root.getString("message");
-                                        success = root.getInt("success");
-                                        if (success == 1) {
-                                            progressDialog.dismiss();
-                                            customdialog.dismiss();
-                                            Toast.makeText(ProductDetailsActivity.this, message, Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(ProductDetailsActivity.this, message, Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                progressDialog.dismiss();
-            }
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-                Log.d("Error Call", ">>>>" + call.toString());
-                Log.d("Error", ">>>>" + t.toString());
-                //  Toast.makeText(ProductsActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
     }
     public void cartCount() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -1357,420 +1216,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
     }
-    public void saveExistingAddress() {
-        progressdialog();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DZ_URL.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        TransportApi service = retrofit.create(TransportApi.class);
-
-        Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.sentAddress(user_id,user_id,"408","500038","5.76765656","8.765645","14");
-
-        callRetrofit.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        progressDialog.dismiss();
-                        Log.d("Success Call", ">>>>" + call);
-                        Log.d("Success Call ", ">>>>" + response.body().toString());
-
-                        System.out.println("----------------------------------------------------");
-                        Log.d("Call request", call.request().toString());
-                        Log.d("Call request header", call.request().headers().toString());
-                        Log.d("Response raw header", response.headers().toString());
-                        Log.d("Response raw", String.valueOf(response.raw().body()));
-                        Log.d("Response code", String.valueOf(response.code()));
-                        System.out.println("----------------------------------------------------");
-
-
-                        if (response.body().toString() != null) {
-
-                            if (response != null) {
-                                String searchResponse = response.body().toString();
-                                Log.d("Reg", "Response  >>" + searchResponse.toString());
-
-                                if (searchResponse != null) {
-                                    JSONObject root = null;
-                                    try {
-                                        root = new JSONObject(searchResponse);
-                                        String message;
-                                        Integer success;
-                                        message = root.getString("message");
-                                        success = root.getInt("success");
-                                        if (success == 1) {
-                                            progressDialog.dismiss();
-                                            customdialog.dismiss();
-                                            /*Intent i = new Intent(ProductDetailsActivity.this,ProductDetailsActivity.class);
-                                            startActivity(i);*/
-                                            //drop_location.setText(radioText);
-                                            Toast.makeText(ProductDetailsActivity.this, message, Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(ProductDetailsActivity.this, message, Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                progressDialog.dismiss();
-
-            }
-
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-                Log.d("Error Call", ">>>>" + call.toString());
-                Log.d("Error", ">>>>" + t.toString());
-                //  Toast.makeText(ProductsActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
-    }
-    private void getCountryList() {
-        progressdialog();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DZ_URL.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        UserApi service = retrofit.create(UserApi.class);
-
-        Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getCountries();
-
-        callRetrofit.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        progressDialog.dismiss();
-                        Log.d("Success Call", ">>>>" + call);
-                        Log.d("Success Call ", ">>>>" + response.body().toString());
-
-                        System.out.println("----------------------------------------------------");
-                        Log.d("Call request", call.request().toString());
-                        Log.d("Call request header", call.request().headers().toString());
-                        Log.d("Response raw header", response.headers().toString());
-                        Log.d("Response raw", String.valueOf(response.raw().body()));
-                        Log.d("Response code", String.valueOf(response.code()));
-                        System.out.println("----------------------------------------------------");
-                        if (response.body().toString() != null) {
-                            JSONObject root = null;
-                            try {
-                                root = new JSONObject(response.body().toString());
-                                String success = root.getString("success");
-                                if (success.equalsIgnoreCase("1")) {
-                                    JSONArray jsonArray = root.getJSONArray("country");
-                                    countryList = new ArrayList<>();
-                                    List<String> idList = new ArrayList<>();
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                                        countryList.add(jsonObject.getString("country_name"));
-                                        idList.add(jsonObject.getString("CountryCode"));
-                                    }
-                                    //In response data
-                                    progressDialog.dismiss();
-                                    showAlertDialog(true, countryList, idList);
-                                } else {
-
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-                Log.d("Error Call", ">>>>" + call.toString());
-                Log.d("Error", ">>>>" + t.toString());
-                //  Toast.makeText(ProductsActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
-    }
-    private void getStatesList() {
-        progressdialog();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DZ_URL.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        UserApi service = retrofit.create(UserApi.class);
-
-        Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getStates(countryId);
-
-        callRetrofit.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        progressDialog.dismiss();
-                        Log.d("Success Call", ">>>>" + call);
-                        Log.d("Success Call ", ">>>>" + response.body().toString());
-
-                        System.out.println("----------------------------------------------------");
-                        Log.d("Call request", call.request().toString());
-                        Log.d("Call request header", call.request().headers().toString());
-                        Log.d("Response raw header", response.headers().toString());
-                        Log.d("Response raw", String.valueOf(response.raw().body()));
-                        Log.d("Response code", String.valueOf(response.code()));
-                        System.out.println("----------------------------------------------------");
-
-                        if (response.body().toString() != null) {
-                            JSONObject root = null;
-                            try {
-                                root = new JSONObject(response.body().toString());
-                                String success = root.getString("success");
-                                if (success.equalsIgnoreCase("1")) {
-                                    JSONArray jsonArray = root.getJSONArray("states");
-                                    statesList = new ArrayList<>();
-                                    List<String> idList = new ArrayList<>();
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                                        statesList.add(jsonObject.getString("subdivision_1_name"));
-                                        idList.add(jsonObject.getString("subdivision_1_iso_code"));
-                                    }
-                                    //In response data
-                                    progressDialog.dismiss();
-                                    showAlertDialog(false,statesList, idList);
-                                } else {
-
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                progressDialog.dismiss();
-            }
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-                Log.d("Error Call", ">>>>" + call.toString());
-                Log.d("Error", ">>>>" + t.toString());
-                progressDialog.dismiss();
-            }
-        });
-    }
-    private void getCityList() {
-        progressdialog();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DZ_URL.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        UserApi service = retrofit.create(UserApi.class);
-
-        Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getCities(stateId);
-
-        callRetrofit.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        progressDialog.dismiss();
-                        Log.d("Success Call", ">>>>" + call);
-                        Log.d("Success Call ", ">>>>" + response.body().toString());
-
-                        System.out.println("----------------------------------------------------");
-                        Log.d("Call request", call.request().toString());
-                        Log.d("Call request header", call.request().headers().toString());
-                        Log.d("Response raw header", response.headers().toString());
-                        Log.d("Response raw", String.valueOf(response.raw().body()));
-                        Log.d("Response code", String.valueOf(response.code()));
-                        System.out.println("----------------------------------------------------");
-
-                        if (response.body().toString() != null) {
-                            JSONObject root = null;
-                            try {
-                                root = new JSONObject(response.body().toString());
-                                String success = root.getString("success");
-                                if (success.equalsIgnoreCase("1")) {
-                                    JSONArray jsonArray = root.getJSONArray("cities");
-                                    citiesList = new ArrayList<>();
-                                    List<String> idList = new ArrayList<>();
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                                        idList.add(jsonObject.getString("city_id"));
-                                        citiesList.add(jsonObject.getString("city_name"));
-                                    }
-                                    //In response data
-                                    progressDialog.dismiss();
-                                    showAlertDialogCity(citiesList, idList);
-                                } else {
-
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-                Log.d("Error Call", ">>>>" + call.toString());
-                Log.d("Error", ">>>>" + t.toString());
-                //  Toast.makeText(ProductsActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
-    }
-    private void showAlertDialog(final boolean isCountry, final List<String> countryList,
-                                  final List<String> idList){
-        try {
-            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ProductDetailsActivity.this);
-            LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.custom_list_layout, null);
-            dialogBuilder.setView(dialogView);
-
-            TextView title = (TextView) dialogView.findViewById(R.id.customDialogTitle);
-            if (isCountry)
-                title.setText("Choose Country");
-            else
-                title.setText("Choose State");
-
-            final ListView categoryListView = (ListView) dialogView.findViewById(R.id.categoryList);
-            final ShimmerFrameLayout shimmerFrameLayout = dialogView.findViewById(R.id.shimmer_list_item);
-            shimmerFrameLayout.startShimmerAnimation();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    helper.stopShimmer(shimmerFrameLayout);
-                }
-            }, 3000);
-            alertDialog = dialogBuilder.create();
-            if (countryList.size() == 0) {
-                if (alertDialog != null)
-                    alertDialog.dismiss();
-            }
-            try {
-                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                Window window = alertDialog.getWindow();
-                lp.copyFrom(window.getAttributes());
-                // This makes the dialog take up the full width
-                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-                window.setAttributes(lp);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    R.layout.simple_list_item, R.id.list_item_txt, countryList);
-            // Assign adapter to ListView
-            categoryListView.setAdapter(adapter);
-
-            // ListView Item Click Listener
-            categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    String itemValue = countryList.get(position);
-                    if (isCountry) {
-                        spinner_countrydialog.setText(itemValue);
-                        address_state.setText("");
-                        address_state.setHint("Choose State");
-                        countryId = idList.get(position);
-                        alertDialog.dismiss();
-                    } else {
-                        address_state.setText(itemValue);
-                        stateId = idList.get(position);
-                        alertDialog.dismiss();
-                    }
-                }
-            });
-            alertDialog.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    private void showAlertDialogCity(final List<String> cityList,
-                                     final List<String> idList){
-        try {
-            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ProductDetailsActivity.this);
-            LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.custom_list_layout, null);
-            dialogBuilder.setView(dialogView);
-
-            TextView title = (TextView) dialogView.findViewById(R.id.customDialogTitle);
-            title.setText("Choose City");
-
-            final ListView categoryListView = (ListView) dialogView.findViewById(R.id.categoryList);
-            final ShimmerFrameLayout shimmerFrameLayout = dialogView.findViewById(R.id.shimmer_list_item);
-            shimmerFrameLayout.startShimmerAnimation();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    helper.stopShimmer(shimmerFrameLayout);
-                }
-            }, 3000);
-            alertDialog = dialogBuilder.create();
-            if (cityList.size() == 0) {
-                if (alertDialog != null)
-                    alertDialog.dismiss();
-            }
-            try {
-                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                Window window = alertDialog.getWindow();
-                lp.copyFrom(window.getAttributes());
-                // This makes the dialog take up the full width
-                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-                window.setAttributes(lp);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    R.layout.simple_list_item, R.id.list_item_txt, cityList);
-            // Assign adapter to ListView
-            categoryListView.setAdapter(adapter);
-
-            // ListView Item Click Listener
-            categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    String itemValue = cityList.get(position);
-                    address_town.setText(itemValue);
-                    cityId = idList.get(position);
-                    alertDialog.dismiss();
-                }
-            });
-            alertDialog.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+/*
     @Override
     protected void onResume() {
         super.onResume();
 
         if (address_txt_map_dialog != null) {
-            address_txt_map_dialog.setText(Product_Detail_Address_Map);
+            address_txt_map_dialog.setText(Address);
         }
     }
+*/
 }

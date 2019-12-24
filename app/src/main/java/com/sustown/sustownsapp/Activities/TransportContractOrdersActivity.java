@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,8 @@ import com.sustown.sustownsapp.Adapters.TransportReceivedOrdersAdapter;
 import com.sustown.sustownsapp.Api.DZ_URL;
 import com.sustown.sustownsapp.Api.TransportApi;
 import com.sustown.sustownsapp.Api.WebServices;
+import com.sustown.sustownsapp.Models.TransportContractOrdersModel;
+import com.sustown.sustownsapp.Models.TransportDetailsModel;
 import com.sustown.sustownsapp.Models.TransportOrdersModel;
 import com.sustown.sustownsapp.Models.TransportOrdersModelObj;
 import com.sustown.sustownsapp.helpers.Helper;
@@ -51,13 +54,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class TransportOrdersActivity extends AppCompatActivity implements DataListener {
+public class TransportContractOrdersActivity extends AppCompatActivity implements DataListener {
+
     RecyclerView recycler_view_transportorders;
     ImageView backarrow, cart_img;
     PreferenceUtils preferenceUtils;
-    String user_id, ordersValue, s_zipcode, b_zipcode, chargePerKm, getkms, getpricekms, order_id, service_id;
+    String user_id, ordersValue, s_zipcode, b_zipcode, chargePerKm, getkms, getpricekms, order_id, service_id,invoiceNoStr;
     ProgressDialog progressDialog;
-    ArrayList<TransportOrdersModel> transportOrdersModels;
+    ArrayList<TransportContractOrdersModel> transportDetailsModels;
     TransportReceivedOrdersAdapter transportReceivedOrdersAdapter;
     TextView available_text, total_price, kilometers_text,order_vehicle_type,order_load_type,order_quote,order_charge_km,order_min_charge;
     Helper helper;
@@ -65,10 +69,13 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
     WebServices webServices;
     Button radius_btn, extended_radius_btn;
     EditText charge_per_km;
-    String OrderId,ServiceId;
-    TextView order_prod_name,order_weight,order_quantity,invoice_no, order_packing_type,order_shipped_to,order_seller_address;
+    String OrderId,ServiceId,seller_zipcode,buyer_zipcode;
+    TextView order_prod_name,order_category_type,order_weight,order_quantity,vendor_name_transport,invoice_no, order_packing_type,order_shipped_to,order_seller_address;
     TextView shipping_name,shipping_number,shipping_address,shipping_postalcode,seller_name_text,seller_number_text,seller_address_text,seller_postalcode_text;
     SwipeRefreshLayout swipeRefreshLayout;
+    TableRow ll_weight,ll_pack_type,ll_category,ll_vendor_name;
+    EditText driver_name,mobile_number,product_address;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +83,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_transport_orders);
-        preferenceUtils = new PreferenceUtils(TransportOrdersActivity.this);
+        preferenceUtils = new PreferenceUtils(TransportContractOrdersActivity.this);
         helper = new Helper(this);
         webServices = new WebServices(this);
         user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID, "");
@@ -86,19 +93,19 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
         cart_img = (ImageView) findViewById(R.id.cart_img);
         backarrow = (ImageView) findViewById(R.id.backarrow);
         recycler_view_transportorders = (RecyclerView) findViewById(R.id.recycler_view_transportorders);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(TransportOrdersActivity.this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(TransportContractOrdersActivity.this, LinearLayoutManager.VERTICAL, false);
         recycler_view_transportorders.setLayoutManager(layoutManager);
         cart_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(TransportOrdersActivity.this, CartActivity.class);
+                Intent i = new Intent(TransportContractOrdersActivity.this, CartActivity.class);
                 startActivity(i);
             }
         });
         backarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(TransportOrdersActivity.this, TradeManagementActivity.class);
+                Intent i = new Intent(TransportContractOrdersActivity.this, TradeManagementActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
             }
@@ -113,7 +120,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                 extended_radius_btn.setTextColor(getResources().getColor(R.color.black));
                 radius_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
                 extended_radius_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
-                getTransportOrdersList();
+                getContractTransportOrdersList();
             }
         });
         extended_radius_btn.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +131,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                 radius_btn.setTextColor(getResources().getColor(R.color.black));
                 extended_radius_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
                 radius_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
-                getTransportOrdersList();
+                getContractTransportOrdersList();
             }
         });
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
@@ -137,21 +144,20 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                 extended_radius_btn.setTextColor(getResources().getColor(R.color.black));
                 radius_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.backgroundapp_transparent));
                 extended_radius_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_square_edges));
-                getTransportOrdersList();
+                getContractTransportOrdersList();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-        getTransportOrdersList();
+        getContractTransportOrdersList();
     }
 
     public void progressdialog() {
-        progressDialog = new ProgressDialog(TransportOrdersActivity.this);
+        progressDialog = new ProgressDialog(TransportContractOrdersActivity.this);
         progressDialog.setMessage("please wait...");
         progressDialog.setCancelable(true);
         progressDialog.show();
     }
-    //  Recent get Transport Received Orders
-    public void getTransportOrdersList() {
+    public void getContractTransportOrdersList() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DZ_URL.BASE_URL)
@@ -168,7 +174,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
             transportOrdersModel1.setManual_automatic("manual");// Extended Radius
         }
         Call<JsonObject> callRetrofit = null;
-        callRetrofit = service.getTransportReceivedOrders(transportOrdersModel1);
+        callRetrofit = service.getTransportContractReceivedOrders(transportOrdersModel1);
         callRetrofit.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -197,42 +203,38 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                         if (error.equalsIgnoreCase("false")) {
                                             JSONObject responseObj = root.getJSONObject("response");
                                             JSONArray dataArray = responseObj.getJSONArray("data");
-                                            transportOrdersModels = new ArrayList<>();
+                                            transportDetailsModels = new ArrayList<>();
                                             for (int i = 0; i < dataArray.length(); i++) {
                                                 JSONObject jsonObject = dataArray.getJSONObject(i);
                                                 String id = jsonObject.getString("id");
                                                 String user_id = jsonObject.getString("user_id");
                                                 order_id = jsonObject.getString("order_id");
-                                                String ran_id = jsonObject.getString("ran_id");
-                                                service_id = jsonObject.getString("service_id");
-                                                String service_name = jsonObject.getString("service_name");
                                                 String pr_sku = jsonObject.getString("pr_sku");
                                                 String pr_title = jsonObject.getString("pr_title");
                                                 String pr_weight = jsonObject.getString("pr_weight");
-                                                String pr_type = jsonObject.getString("pr_type");
                                                 String invoice_no = jsonObject.getString("invoice_no");
                                                 String order_date = jsonObject.getString("order_date");
                                                 String quantity = jsonObject.getString("quantity");
+                                                service_id = jsonObject.getString("service_id");
+                                                String service_name = jsonObject.getString("service_name");
                                                 String trans_status = jsonObject.getString("trans_status");
                                                 String trans_status_text = jsonObject.getString("trans_status_text");
                                                 String manual_automatic = jsonObject.getString("manual_automatic");
                                                 String confirm_allow = jsonObject.getString("confirm_allow");
                                                 String quote_allow = jsonObject.getString("quote_allow");
-                                                String seller_zipcode = jsonObject.getString("seller_zipcode");
-                                                String buyer_zipcode = jsonObject.getString("buyer_zipcode");
+                                                seller_zipcode = jsonObject.getString("seller_zipcode");
+                                                buyer_zipcode = jsonObject.getString("buyer_zipcode");
                                                 String chargeperkm = jsonObject.getString("chargeperkm");
 
-                                                TransportOrdersModel transportOrderModel = new TransportOrdersModel();
+                                                TransportContractOrdersModel transportOrderModel = new TransportContractOrdersModel();
                                                 transportOrderModel.setId(id);
                                                 transportOrderModel.setUser_id(user_id);
                                                 transportOrderModel.setOrder_id(order_id);
-                                                transportOrderModel.setRan_id(ran_id);
                                                 transportOrderModel.setService_id(service_id);
                                                 transportOrderModel.setService_name(service_name);
                                                 transportOrderModel.setPr_sku(pr_sku);
                                                 transportOrderModel.setPr_title(pr_title);
                                                 transportOrderModel.setPr_weight(pr_weight);
-                                                transportOrderModel.setPr_type(pr_type);
                                                 transportOrderModel.setInvoice_no(invoice_no);
                                                 transportOrderModel.setOrder_date(order_date);
                                                 transportOrderModel.setQuantity(quantity);
@@ -244,10 +246,10 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                                 transportOrderModel.setSeller_zipcode(seller_zipcode);
                                                 transportOrderModel.setBuyer_zipcode(buyer_zipcode);
                                                 transportOrderModel.setChargeperkm(chargeperkm);
-                                                transportOrdersModels.add(transportOrderModel);
+                                                transportDetailsModels.add(transportOrderModel);
                                             }
-                                            if (transportOrdersModels != null) {
-                                                transportReceivedOrdersAdapter = new TransportReceivedOrdersAdapter(TransportOrdersActivity.this, transportOrdersModels, null);
+                                            if (transportDetailsModels != null) {
+                                                transportReceivedOrdersAdapter = new TransportReceivedOrdersAdapter(TransportContractOrdersActivity.this, null, transportDetailsModels);
                                                 recycler_view_transportorders.setAdapter(transportReceivedOrdersAdapter);
                                                 transportReceivedOrdersAdapter.notifyDataSetChanged();
                                                 available_text.setVisibility(View.GONE);
@@ -256,10 +258,8 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                                 available_text.setVisibility(View.VISIBLE);
                                                 available_text.setText("Orders Are Not Available");
                                             }
-                                            // Toast.makeText(CartActivity.this, message, Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
                                         } else {
-                                            //    Toast.makeText(CareerOppurtunitiesActivity.this, message, Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
                                         }
                                     } catch (JSONException e) {
@@ -281,14 +281,13 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-//                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
+               Toast.makeText(TransportContractOrdersActivity.this, "Some thing went wrong! please try again later", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });
     }
-
     public void confirmOrder(final int position) {
-        helper.showDialog(TransportOrdersActivity.this, SweetAlertDialog.WARNING_TYPE, "Are you sure?", "Do you want to confirm?",
+        helper.showDialog(TransportContractOrdersActivity.this, SweetAlertDialog.WARNING_TYPE, "Are you sure?", "Do you want to confirm?",
                 new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -304,7 +303,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
     }
 
     public void rejectOrder(final int position) {
-        helper.showDialog(TransportOrdersActivity.this, SweetAlertDialog.WARNING_TYPE, "Are you sure?", "Do you want to reject?",
+        helper.showDialog(TransportContractOrdersActivity.this, SweetAlertDialog.WARNING_TYPE, "Are you sure?", "Do you want to reject?",
                 new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -320,16 +319,26 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
     }
 
     public void viewDetails(int position) {
-         OrderId = transportOrdersModels.get(position).getRan_id();
-         ServiceId = transportOrdersModels.get(position).getService_id();
+         OrderId = transportDetailsModels.get(position).getInvoice_no();
+         ServiceId = transportDetailsModels.get(position).getService_id();
         try {
-            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TransportOrdersActivity.this);
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TransportContractOrdersActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
             View dialogView = inflater.inflate(R.layout.alert_transport_view_details, null);
             dialogBuilder.setView(dialogView);
+            ll_weight = dialogView.findViewById(R.id.ll_weight);
+            ll_pack_type = dialogView.findViewById(R.id.ll_pack_type);
+            ll_category = dialogView.findViewById(R.id.ll_category);
+            ll_vendor_name = dialogView.findViewById(R.id.ll_vendor_name);
+            ll_weight.setVisibility(View.VISIBLE);
+            ll_pack_type.setVisibility(View.GONE);
+            ll_category.setVisibility(View.VISIBLE);
+            ll_vendor_name.setVisibility(View.VISIBLE);
+            vendor_name_transport = dialogView.findViewById(R.id.vendor_name_transport);
             invoice_no = dialogView.findViewById(R.id.invoice_no);
             order_prod_name = dialogView.findViewById(R.id.order_prod_name);
             order_weight = dialogView.findViewById(R.id.order_weight);
+            order_category_type = dialogView.findViewById(R.id.order_category_type);
             order_quantity = dialogView.findViewById(R.id.order_quantity);
             order_packing_type = dialogView.findViewById(R.id.order_packing_type);
             order_vehicle_type = dialogView.findViewById(R.id.order_vehicle_type);
@@ -352,7 +361,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                     alertDialog.dismiss();
                 }
             });
-            getTransportDetailsList();
+            getTransportContractDetailsList();
             alertDialog = dialogBuilder.create();
             try {
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -371,52 +380,54 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
         }
     }
 
-    public void sendQuoteDetails(final int position) {
+    public void sendQuoteDetails(int position) {
         try {
-            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TransportOrdersActivity.this);
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TransportContractOrdersActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
             View dialogView = inflater.inflate(R.layout.send_quote_dialog, null);
             dialogBuilder.setView(dialogView);
-
+            LinearLayout ll_confirm = dialogView.findViewById(R.id.ll_confirm);
+            ll_confirm.setVisibility(View.VISIBLE);
             ImageView close_send_quote = dialogView.findViewById(R.id.close_send_quote);
             TextView shipping_pincode = dialogView.findViewById(R.id.shipping_pincode);
             TextView delivery_pincode = dialogView.findViewById(R.id.delivery_pincode);
             kilometers_text = dialogView.findViewById(R.id.kilometers_text);
             total_price = dialogView.findViewById(R.id.total_price);
             charge_per_km = dialogView.findViewById(R.id.charge_per_km);
+            driver_name = dialogView.findViewById(R.id.driver_name);
+            mobile_number = dialogView.findViewById(R.id.mobile_number);
+            product_address = dialogView.findViewById(R.id.product_address);
             charge_per_km.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
-
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 }
-
                 @Override
                 public void afterTextChanged(Editable s) {
                     getKmsBasedPincodes();
                 }
             });
             Button submit_sendquote = dialogView.findViewById(R.id.submit_sendquote);
-
-            s_zipcode = transportOrdersModels.get(position).getSeller_zipcode();
-            b_zipcode = transportOrdersModels.get(position).getBuyer_zipcode();
-            chargePerKm = transportOrdersModels.get(position).getChargeperkm();
+            submit_sendquote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    submitSendQuoteJsonObject();
+                }
+            });
+            s_zipcode = transportDetailsModels.get(position).getSeller_zipcode();
+            b_zipcode = transportDetailsModels.get(position).getBuyer_zipcode();
+            chargePerKm = transportDetailsModels.get(position).getChargeperkm();
+            service_id = transportDetailsModels.get(position).getService_id();
+            invoiceNoStr = transportDetailsModels.get(position).getInvoice_no();
             shipping_pincode.setText(s_zipcode);
             delivery_pincode.setText(b_zipcode);
             charge_per_km.setText(chargePerKm);
             // kilometers_text.setText(transportOrdersModels.get(position).getQuantity());
             // total_price.setText(transportOrdersModels.get(position).getPacktype());
             getKmsBasedPincodes();
-            submit_sendquote.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    service_id = transportOrdersModels.get(position).getService_id();
-                    submitSendQuoteJsonObject();
-                }
-            });
             close_send_quote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -450,7 +461,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
 
         TransportApi service = retrofit.create(TransportApi.class);
         Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getKmsBasePincodes(s_zipcode, b_zipcode, charge_per_km.getText().toString());
+        callRetrofit = service.getContractKmsBasePincodes(s_zipcode, b_zipcode, charge_per_km.getText().toString());
         // callRetrofit = service.getKmsBasePincodes(s_zipcode,b_zipcode,charge_per_km.getText().toString());
         callRetrofit.enqueue(new Callback<JsonElement>() {
             @Override
@@ -464,9 +475,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                         Log.d("Response raw header", response.headers().toString());
                         Log.d("Response raw", String.valueOf(response.raw().body()));
                         Log.d("Response code", String.valueOf(response.code()));
-
                         System.out.println("----------------------------------------------------");
-
                         if (response.body().toString() != null) {
                             if (response != null) {
                                 String searchResponse = response.body().toString();
@@ -490,7 +499,6 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                     }
                                     // progressDialog.dismiss();
                                 }
-
                             }
                         }
                     } else {
@@ -501,7 +509,6 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 //                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
@@ -516,9 +523,12 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
             jsonObj.put("ccost", charge_per_km.getText().toString());
             jsonObj.put("km", getkms);
             jsonObj.put("total", getpricekms);
-            jsonObj.put("oid", order_id);
+            jsonObj.put("oid", invoiceNoStr);
             jsonObj.put("sid", service_id);
             jsonObj.put("userid", user_id);
+            jsonObj.put("driver_name",driver_name.getText().toString());
+            jsonObj.put("driver_number",mobile_number.getText().toString());
+            jsonObj.put("vehicle_number",product_address.getText().toString());
 
             androidNetworkingSubmitQuote(jsonObj);
         } catch (Exception e) {
@@ -528,7 +538,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
 
     public void androidNetworkingSubmitQuote(JSONObject jsonObject) {
         progressdialog();
-        AndroidNetworking.post("https://www.sustowns.com/Transportservices/sendquotesubmit/")
+        AndroidNetworking.post("https://www.sustowns.com/Postcontractservice/sendquotesubmit/")
                 .addJSONObjectBody(jsonObject) // posting java object
                 .setTag("test")
                 .setPriority(Priority.HIGH)
@@ -541,17 +551,19 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                             String message = response.getString("message");
                             if (message.equalsIgnoreCase("Quote Submitted successfully")) {
                                 progressDialog.dismiss();
-                                Toast.makeText(TransportOrdersActivity.this, message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TransportContractOrdersActivity.this, message, Toast.LENGTH_SHORT).show();
                                 alertDialog.dismiss();
+                                getContractTransportOrdersList();
                             } else {
-                                Toast.makeText(TransportOrdersActivity.this, message, Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+                                Toast.makeText(TransportContractOrdersActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
                         }
+                        progressDialog.dismiss();
                     }
-
                     @Override
                     public void onError(ANError error) {
                         Log.d("Error", "ANError : " + error);
@@ -560,7 +572,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                 });
     }
 
-    public void getTransportDetailsList() {
+    public void getTransportContractDetailsList() {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DZ_URL.BASE_URL)
@@ -569,7 +581,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
 
         TransportApi service = retrofit.create(TransportApi.class);
         Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getTransportOrdersDetails(OrderId, ServiceId);
+        callRetrofit = service.getTransportContractOrdersDetails(OrderId, ServiceId);
         callRetrofit.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -596,20 +608,19 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                         String message = root.getString("message");
                                         if (success.equalsIgnoreCase("1")) {
                                             JSONObject orderitemObj = root.getJSONObject("orderitem");
-                                            String product_order_id = orderitemObj.getString("product_order_id");
-                                            String seller_name = orderitemObj.getString("seller_name");
-                                            String seller_number = orderitemObj.getString("seller_number");
-                                            String seller_address = orderitemObj.getString("seller_address");
+                                            String order_id = orderitemObj.getString("order_id");
+                                           // String seller_name = orderitemObj.getString("seller_name");
+                                           // String seller_number = orderitemObj.getString("seller_number");
+                                          //  String seller_address = orderitemObj.getString("seller_address");
                                             String seller_zipcode = orderitemObj.getString("seller_zipcode");
                                             String display_name = orderitemObj.getString("display_name");
                                             String bill_phone = orderitemObj.getString("bill_phone");
                                             String bill_address1 = orderitemObj.getString("bill_address1");
                                             String bill_zipcode = orderitemObj.getString("bill_zipcode");
                                             String service_id = orderitemObj.getString("service_id");
-                                            String pr_title = orderitemObj.getString("pr_title");
-                                            String pr_min = orderitemObj.getString("pr_min");
-                                           // String pr_weight = orderitemObj.getString("pr_weight");
-                                            String pr_packtype = orderitemObj.getString("pr_packtype");
+                                            String contractname = orderitemObj.getString("contractname");
+                                            String minqantity = orderitemObj.getString("minqantity");
+                                            String invoice_noStr = orderitemObj.getString("invoice_no");
                                             String category = orderitemObj.getString("category");
                                             String vehicle_type = orderitemObj.getString("vehicle_type");
                                             String unit_code = orderitemObj.getString("unit_code");
@@ -619,13 +630,15 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                             String qchrg_km = vehicleObj.getString("qchrg_km");
                                             String qminchrg_km = vehicleObj.getString("qminchrg_km");
                                             String vehicle_type1 = vehicleObj.getString("vehicle_type");
+                                            String service_name = vehicleObj.getString("service_name");
                                             String load = root.getString("load");
 
-                                            invoice_no.setText(product_order_id);
-                                            order_prod_name.setText(pr_title);
-                                           // order_weight.setText(pr_weight+" / "+unit_code);
-                                            order_quantity.setText(pr_min);
-                                            order_packing_type.setText(pr_packtype);
+                                            invoice_no.setText(invoice_noStr);
+                                            order_prod_name.setText(contractname);
+                                            order_weight.setText(unit_code);
+                                            vendor_name_transport.setText(service_name);
+                                            order_category_type.setText(category);
+                                            order_quantity.setText(minqantity);
                                             order_vehicle_type.setText(vehicle_type1);
                                             order_load_type.setText(load);
                                             order_charge_km.setText(qchrg_km);
@@ -634,13 +647,13 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                             shipping_number.setText(bill_phone);
                                             shipping_address.setText(bill_address1);
                                             shipping_postalcode.setText(bill_zipcode);
-                                            seller_name_text.setText(seller_name);
-                                            seller_number_text.setText(seller_number);
-                                            seller_address_text.setText(seller_address);
+                                          //  seller_name_text.setText(seller_name);
+                                           // seller_number_text.setText(seller_number);
+                                          //  seller_address_text.setText(seller_address);
                                             seller_postalcode_text.setText(seller_zipcode);
                                             progressDialog.dismiss();
                                         } else {
-                                            Toast.makeText(TransportOrdersActivity.this, message, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(TransportContractOrdersActivity.this, message, Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
                                         }
                                     } catch (JSONException e) {
@@ -671,14 +684,13 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
 
     private void showConfirmRejectDialog(final boolean isConfirm, final int position) {
         try {
-            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TransportOrdersActivity.this);
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TransportContractOrdersActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
             View dialogView = inflater.inflate(R.layout.confirm_trans_order_dialog, null);
             dialogBuilder.setView(dialogView);
-
-            final EditText driver_name = dialogView.findViewById(R.id.driver_name);
-            final EditText mobile_number = dialogView.findViewById(R.id.mobile_number);
-            final EditText product_address = dialogView.findViewById(R.id.product_address);
+            driver_name = dialogView.findViewById(R.id.driver_name);
+            mobile_number = dialogView.findViewById(R.id.mobile_number);
+            product_address = dialogView.findViewById(R.id.product_address);
 
             LinearLayout ll_reason_rejection = dialogView.findViewById(R.id.ll_reason_rejection);
             LinearLayout ll_confirm = dialogView.findViewById(R.id.ll_confirm);
@@ -702,7 +714,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                         if (driver_name.getText().toString().trim().isEmpty() || mobile_number.getText().toString().trim().isEmpty() ||
                                 product_address.getText().toString().trim().isEmpty()) {
 
-                            helper.singleClickAlert(TransportOrdersActivity.this, SweetAlertDialog.WARNING_TYPE, "", "All fields are mandatoryr",
+                            helper.singleClickAlert(TransportContractOrdersActivity.this, SweetAlertDialog.WARNING_TYPE, "", "All fields are mandatoryr",
                                     new SweetAlertDialog.OnSweetClickListener() {
                                         @Override
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -710,28 +722,26 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                         }
                                     });
                         } else {
-                            helper.showLoader(TransportOrdersActivity.this, "Loading", "Please wait for a while");
+                            helper.showLoader(TransportContractOrdersActivity.this, "Loading", "Please wait for a while");
 
                             try {
                                 JSONObject confirmObject = new JSONObject();
                                 confirmObject.put("userId", user_id);
-                                confirmObject.put("orderRandomId",transportOrdersModels.get(position).getRan_id());
-                                confirmObject.put("serviceId",transportOrdersModels.get(position).getService_id());
-                               /* confirmObject.put("orderRandomId", transportOrdersModels.get(position).getOrderRandomId());
-                                confirmObject.put("serviceId", transportOrdersModels.get(position).getServiceId());*/
+                                confirmObject.put("orderRandomId",transportDetailsModels.get(position).getInvoice_no());
+                                confirmObject.put("serviceId",transportDetailsModels.get(position).getService_id());
                                 confirmObject.put("orderStatus", "confirm");
                                 confirmObject.put("driverName", driver_name.getText().toString().trim());
                                 confirmObject.put("conactNumber", mobile_number.getText().toString().trim());
                                 confirmObject.put("vehicleNumber", product_address.getText().toString().trim());
 
-                                webServices.postJsonBodyAndGetJsonObject(DZ_URL.POST_TRANSPORT_VENDOR_CONFIRM, confirmObject,"0");
+                                webServices.postJsonBodyAndGetJsonObject(DZ_URL.POST_TRANSPORT_CONTRACT_VENDOR_CONFIRM, confirmObject,"1");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     } else {
                         if (reason_rejection.getText().toString().trim().isEmpty()) {
-                            helper.singleClickAlert(TransportOrdersActivity.this, SweetAlertDialog.WARNING_TYPE, "", "All fields are mandatoryr",
+                            helper.singleClickAlert(TransportContractOrdersActivity.this, SweetAlertDialog.WARNING_TYPE, "", "All fields are mandatoryr",
                                     new SweetAlertDialog.OnSweetClickListener() {
                                         @Override
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -739,16 +749,16 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
                                         }
                                     });
                         } else {
-                            helper.showLoader(TransportOrdersActivity.this, "Loading", "Please wait for a while");
+                            helper.showLoader(TransportContractOrdersActivity.this, "Loading", "Please wait for a while");
                             try {
                                 JSONObject rejectOrder = new JSONObject();
                                 rejectOrder.put("userId", user_id);
-                                rejectOrder.put("orderRandomId", transportOrdersModels.get(position).getRan_id());
-                                rejectOrder.put("serviceId", transportOrdersModels.get(position).getService_id());
+                                rejectOrder.put("orderRandomId", transportDetailsModels.get(position).getInvoice_no());
+                                rejectOrder.put("serviceId", transportDetailsModels.get(position).getService_id());
                                 rejectOrder.put("orderStatus", "reject");
                                 rejectOrder.put("comment", reason_rejection.getText().toString().trim());
 
-                                webServices.postJsonBodyAndGetJsonObject(DZ_URL.POST_TRANSPORT_VENDOR_CONFIRM, rejectOrder,"0");
+                                webServices.postJsonBodyAndGetJsonObject(DZ_URL.POST_TRANSPORT_CONTRACT_VENDOR_CONFIRM, rejectOrder,"1");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -787,7 +797,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
             JSONObject response = (JSONObject) data;
             if (response.getString("status").equalsIgnoreCase("success")) {
                 alertDialog.dismiss();
-                helper.singleClickAlert(TransportOrdersActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Success!", "Your request has submitted successfully.",
+                helper.singleClickAlert(TransportContractOrdersActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Success!", "Your request has submitted successfully.",
                         new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -806,7 +816,7 @@ public class TransportOrdersActivity extends AppCompatActivity implements DataLi
     @Override
     public void onError(Object data) {
         helper.hideLoader();
-        helper.singleClickAlert(TransportOrdersActivity.this, SweetAlertDialog.ERROR_TYPE, "Error!", "Something went wrong, Please try again later.",
+        helper.singleClickAlert(TransportContractOrdersActivity.this, SweetAlertDialog.ERROR_TYPE, "Error!", "Something went wrong, Please try again later.",
                 new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {

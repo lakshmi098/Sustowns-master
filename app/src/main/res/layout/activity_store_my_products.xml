@@ -110,6 +110,17 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp" />
+        <TextView
+            android:id="@+id/not_available_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="No Products Available"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="16sp" />
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeToRefresh"
             android:layout_width="match_parent"
@@ -150,8 +161,8 @@
                     android:id="@+id/ll_my_Product_contracts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginBottom="20dp"
                     android:orientation="vertical">
 
@@ -164,20 +175,20 @@
                         android:text="Title *"
                         android:visibility="gone"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <EditText
-                        android:id="@+id/title_add_prod"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="10dp"
-                        android:hint="Title *"
-                        android:textColorHint="@color/black"
-                        android:inputType="textPersonName"
-                        android:textColor="#000000"
-                        android:textSize="16sp" />
-
+                            android:id="@+id/title_add_prod"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="10dp"
+                            android:hint="Title *"
+                            android:textStyle="bold"
+                            android:textColorHint="@color/black"
+                            android:inputType="textPersonName"
+                            android:textColor="#000000"
+                            android:textSize="16sp" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -196,9 +207,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:layout_weight="1"
-                                android:text="Types Of Eggs"
+                                android:text="Types Of Eggs *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinner_eggs_types"
@@ -231,8 +243,9 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_weight="1"
                                 android:text="Quality"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinner_quality"
@@ -257,12 +270,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:padding="5dp">
@@ -272,9 +285,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:layout_weight="1"
-                                android:text="Product Category *"
+                                android:text="Product Category*"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinner_prod_category"
@@ -294,9 +308,8 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:padding="5dp">
@@ -307,8 +320,9 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_weight="1"
                                 android:text="Select Sector *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinner_sector"
@@ -338,7 +352,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="5dp"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:padding="5dp">
@@ -349,8 +363,9 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_weight="1"
                                 android:text="Listing Type *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinner_list_type"
@@ -387,7 +402,7 @@
                                 android:background="@null"
                                 android:text="Image *"
                                 android:textColor="#000000"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Button
                                 android:id="@+id/choosefile_btn1"
@@ -407,8 +422,9 @@
                         android:background="@null"
                         android:padding="7dp"
                         android:text="Image *"
+                        android:textStyle="bold"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -446,8 +462,9 @@
                         android:background="@null"
                         android:padding="5dp"
                         android:text="Product Attribute : "
+                        android:textStyle="bold"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -467,8 +484,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Unit *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <EditText
                                 android:id="@+id/unit_edit"
@@ -479,35 +497,35 @@
                                 android:inputType="numberDecimal"
                                 android:textSize="16sp" />
                         </LinearLayout>
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:layout_marginRight="5dp"
-                        android:orientation="vertical">
-
-                        <TextView
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Select Unit *"
-                            android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            android:layout_marginRight="5dp"
+                            android:orientation="vertical">
 
-                        <Spinner
-                            android:id="@+id/spinner_unit"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:padding="7dp"
-                            android:spinnerMode="dropdown"></Spinner>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Select Unit *"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:background="@color/black" />
+                            <Spinner
+                                android:id="@+id/spinner_unit"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:spinnerMode="dropdown"></Spinner>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="@color/black" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -516,7 +534,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="5dp"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -529,8 +547,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Price *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <EditText
                                 android:id="@+id/price_edittext"
@@ -551,15 +570,15 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Select Currency *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinner_price"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:padding="7dp"
+                                android:padding="5dp"
                                 android:spinnerMode="dropdown"></Spinner>
 
                             <View
@@ -583,8 +602,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Minimum Order *"
+                            android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="15sp" />
 
                         <EditText
                             android:id="@+id/min_order_et"
@@ -614,8 +634,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Stock *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <EditText
                                 android:id="@+id/stock_et"
@@ -640,8 +661,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Discount (%)"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <EditText
                                 android:id="@+id/discount_et"
@@ -672,8 +694,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Packaging Type *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinner_pack_type"
@@ -704,16 +727,17 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Delivery Lead Time : *"
+                                android:text="Delivery Lead Time :"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <EditText
                                 android:id="@+id/delivery_lead_time"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:hint="delivery time"
+                                android:hint="delivery time(in Days)"
                                 android:inputType="numberDecimal"
                                 android:textSize="16sp" />
 
@@ -732,8 +756,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Receive Offers for this listing *"
+                            android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="15sp" />
 
                         <Spinner
                             android:id="@+id/spinner_received_offers"
@@ -771,9 +796,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Discount Start Date *"
+                                android:text="Discount Start Date"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Button
                                 android:id="@+id/dis_start_date"
@@ -802,9 +828,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Discount End Date *"
+                                android:text="Discount End Date"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Button
                                 android:id="@+id/dis_end_date"
@@ -829,14 +856,15 @@
                         android:layout_marginTop="10dp"
                         android:padding="5dp"
                         android:text="Product sample Attribute : "
+                        android:textStyle="bold"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="0dp"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:padding="5dp">
 
                         <LinearLayout
@@ -849,8 +877,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Sample Unit"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
                             <EditText
                                 android:id="@+id/sample_unit_edit"
                                 android:layout_width="match_parent"
@@ -863,6 +892,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -870,14 +900,16 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:text="Select Sample Unit"
+                                    android:textStyle="bold"
                                     android:textColor="@color/black"
-                                    android:textSize="16sp" />
+                                    android:textSize="15sp" />
 
                                 <Spinner
                                     android:id="@+id/spinner_sample_unit"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
+                                    android:layout_marginTop="10dp"
                                     android:spinnerMode="dropdown"></Spinner>
                                 <View
                                     android:layout_width="match_parent"
@@ -886,57 +918,56 @@
                                     android:background="@color/black" />
 
                         </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical">
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="1dp"
-                            android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:layout_marginTop="5dp"
-                            android:orientation="vertical">
+                            android:text="Max Quantity"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Max Quantity"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <EditText
-                                android:id="@+id/max_quantity_et"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:hint="max quantity"
-                                android:inputType="number"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
+                        <EditText
+                            android:id="@+id/max_quantity_et"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:hint="max quantity"
+                            android:inputType="number"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Sample Price"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <EditText
                                 android:id="@+id/sample_price_edittext"
@@ -947,27 +978,28 @@
                                 android:hint="sample price"
                                 android:inputType="numberDecimal"
                                 android:textSize="16sp" />
+                        </LinearLayout>
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
                                 <TextView
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Select Currency"
+                                    android:textStyle="bold"
                                     android:textColor="@color/black"
-                                    android:textSize="16sp" />
+                                    android:textSize="15sp" />
 
                                 <Spinner
                                     android:id="@+id/spinner_sample_price"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="5dp"
-                                    android:padding="7dp"
+                                    android:padding="5dp"
                                     android:spinnerMode="dropdown"></Spinner>
 
                                 <View
@@ -975,8 +1007,6 @@
                                     android:layout_height="0.5dp"
                                     android:background="@color/black" />
                             </LinearLayout>
-
-                        </LinearLayout>
                     </LinearLayout>
 
 
@@ -998,8 +1028,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sample Packing Type"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinner_sample_pack_type"
@@ -1024,7 +1055,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -1036,16 +1067,17 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Sample Gross Weight:"
+                                android:text="Gross Weight"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <EditText
                                 android:id="@+id/sample_gross_weight_et"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:hint="sample gross weight"
+                                android:hint="gross weight"
                                 android:inputType="numberDecimal"
                                 android:textSize="16sp" />
                         </LinearLayout>
@@ -1054,21 +1086,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginLeft="3dp"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Select Gross Weight Unit"
+                                android:text="Gross Weight Unit"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <Spinner
                                 android:id="@+id/spinner_sample_gross_weight"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:padding="7dp"
+                                android:padding="5dp"
                                 android:spinnerMode="dropdown"></Spinner>
 
                             <View
@@ -1077,7 +1110,6 @@
                                 android:background="@color/black" />
                         </LinearLayout>
                     </LinearLayout>
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -1086,8 +1118,9 @@
                         android:background="@null"
                         android:padding="5dp"
                         android:text="Product Location : "
+                        android:textStyle="bold"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -1097,8 +1130,9 @@
                         android:background="@null"
                         android:padding="5dp"
                         android:text="Address *"
+                        android:textStyle="bold"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/address_txt_map"
@@ -1131,8 +1165,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Country *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -1171,8 +1206,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="State *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -1212,8 +1248,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="City *"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -1222,7 +1259,6 @@
                                 android:layout_marginTop="5dp"
                                 android:id="@+id/spinner_city"
                                 android:hint="Choose City"
-                                android:padding="10dp"
                                 android:textColor="@color/black" />
 
                             <View
@@ -1243,8 +1279,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Pincode"
+                                android:textStyle="bold"
                                 android:textColor="@color/black"
-                                android:textSize="16sp" />
+                                android:textSize="15sp" />
 
                             <EditText
                                 android:id="@+id/pincode_et"
@@ -1269,12 +1306,13 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Vendor Shipping Provided : "
+                            android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="15sp" />
 
                         <Spinner
                             android:id="@+id/spinner_shipping"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:layout_marginTop="5dp"
@@ -1301,8 +1339,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="Shipping Types *"
+                            android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="15sp" />
 
                         <TextView
                             android:id="@+id/spinner_shipping_type"
@@ -1310,7 +1349,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:layout_marginTop="5dp"
-                            android:hint="Choose Vehicle Type"
+                            android:hint="Choose Shipping Service"
                             android:padding="10dp"
                             android:textColor="@color/black" />
 
@@ -1335,8 +1374,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Shipping Types *"
+                            android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="15sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"

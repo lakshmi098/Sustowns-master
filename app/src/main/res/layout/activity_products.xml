@@ -122,7 +122,8 @@
                     android:layout_height="30dp"
                     android:background="@drawable/app_background_drawble"
                     android:padding="5dp"
-                    android:text="Filter"
+                    android:text="Filters"
+                    android:textStyle="bold"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="13sp" />

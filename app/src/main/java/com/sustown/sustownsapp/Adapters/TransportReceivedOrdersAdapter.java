@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import com.example.sustownsapp.R;
 import com.sustown.sustownsapp.Activities.PreferenceUtils;
+import com.sustown.sustownsapp.Activities.TransportContractOrdersActivity;
 import com.sustown.sustownsapp.Activities.TransportDetailsActivity;
 import com.sustown.sustownsapp.Activities.TransportOrdersActivity;
+import com.sustown.sustownsapp.Models.TransportContractOrdersModel;
 import com.sustown.sustownsapp.Models.TransportDetailsModel;
 import com.sustown.sustownsapp.Models.TransportOrdersModel;
 
@@ -24,11 +26,11 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
     LayoutInflater inflater;
     PreferenceUtils preferenceUtils;
     ArrayList<TransportOrdersModel> orderModels;
-    List<TransportDetailsModel> transportDetailsList;
+    List<TransportContractOrdersModel> transportDetailsList;
     public static final int TRANSPORT_ORDER = 1;
-    public static final int TRANSPORT_DETAILS = 2;
+    public static final int TRANSPORT_CONTRACT_DETAILS = 2;
 
-    public TransportReceivedOrdersAdapter(Context context, ArrayList<TransportOrdersModel> orderModels, List<TransportDetailsModel> transportDetailsList) {
+    public TransportReceivedOrdersAdapter(Context context, ArrayList<TransportOrdersModel> orderModels, List<TransportContractOrdersModel> transportDetailsList) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
         this.orderModels = orderModels;
@@ -106,7 +108,66 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
                         }
                     });
                     break;
-                case TRANSPORT_DETAILS:
+                case TRANSPORT_CONTRACT_DETAILS:
+                    viewHolder.order_weight.setText(transportDetailsList.get(position).getPr_title());
+                    viewHolder.product_code.setText(transportDetailsList.get(position).getPr_sku());
+                    viewHolder.order_name.setText(transportDetailsList.get(position).getService_name());
+                    viewHolder.order_number.setText(transportDetailsList.get(position).getInvoice_no());
+                    viewHolder.order_date.setText(transportDetailsList.get(position).getOrder_date());
+                    if(transportDetailsList.get(position).getTrans_status().equalsIgnoreCase("1")){
+                        viewHolder.ll_confirm_reject.setVisibility(View.GONE);
+                        viewHolder.status_text.setVisibility(View.VISIBLE);
+                        viewHolder.status_text.setText("Confirmed");
+                    }else if(transportDetailsList.get(position).getTrans_status().equalsIgnoreCase("0")&& transportDetailsList.get(position).getManual_automatic().equalsIgnoreCase("manual")){
+                        viewHolder.ll_confirm_reject.setVisibility(View.VISIBLE);
+                        viewHolder.order_quote.setVisibility(View.VISIBLE);
+                        viewHolder.order_confirm.setVisibility(View.GONE);
+                        viewHolder.status_text.setVisibility(View.GONE);
+                    }
+                    else if(transportDetailsList.get(position).getTrans_status().equalsIgnoreCase("0")&& transportDetailsList.get(position).getManual_automatic().equalsIgnoreCase("automatic")){
+                        viewHolder.ll_confirm_reject.setVisibility(View.VISIBLE);
+                        viewHolder.order_quote.setVisibility(View.GONE);
+                        viewHolder.order_confirm.setVisibility(View.VISIBLE);
+                        viewHolder.status_text.setVisibility(View.GONE);
+                    }else if(transportDetailsList.get(position).getTrans_status().equalsIgnoreCase("2")){
+                        viewHolder.ll_confirm_reject.setVisibility(View.GONE);
+                        viewHolder.status_text.setVisibility(View.VISIBLE);
+                        viewHolder.status_text.setText("Cancelled");
+                    }else if(transportDetailsList.get(position).getTrans_status().equalsIgnoreCase("3") && transportDetailsList.get(position).getManual_automatic().equalsIgnoreCase("manual")){
+                        viewHolder.ll_confirm_reject.setVisibility(View.GONE);
+                        viewHolder.status_text.setVisibility(View.VISIBLE);
+                        viewHolder.status_text.setText("Quote Submitted");
+                    }else if(transportDetailsList.get(position).getTrans_status().equalsIgnoreCase("4") && transportDetailsList.get(position).getManual_automatic().equalsIgnoreCase("manual")){
+                        viewHolder.ll_confirm_reject.setVisibility(View.GONE);
+                        viewHolder.status_text.setVisibility(View.VISIBLE);
+                        viewHolder.status_text.setText("Quote Confirmed");
+                    }
+                    viewHolder.order_confirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((TransportContractOrdersActivity) context).confirmOrder(position);
+                        }
+                    });
+                    viewHolder.order_reject.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((TransportContractOrdersActivity) context).rejectOrder(position);
+                        }
+                    });
+                    viewHolder.order_view_details.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((TransportContractOrdersActivity) context).viewDetails(position);
+                        }
+                    });
+                    viewHolder.order_quote.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((TransportContractOrdersActivity) context).sendQuoteDetails(position);
+                        }
+                    });
+                    break;
+               /* case TRANSPORT_DETAILS:
                     viewHolder.order_name.setText(transportDetailsList.get(position).getPr_title());
                     viewHolder.order_number.setText(transportDetailsList.get(position).getInvoice_no());
                     viewHolder.order_date.setText(transportDetailsList.get(position).getOrder_date());
@@ -137,7 +198,7 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
                           //  ((TransportDetailsActivity) context).viewDetails(position);
                         }
                     });
-                    break;
+                    break;*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,7 +208,7 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
 
     @Override
     public int getItemCount() {
-        if (context instanceof TransportDetailsActivity)
+        if (context instanceof TransportContractOrdersActivity)
             return transportDetailsList.size();
         else
             return orderModels.size();
@@ -179,8 +240,8 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
     @Override
     public int getItemViewType(int position) {
         int viewType = -1;
-        if (context instanceof TransportDetailsActivity) {
-            viewType = TRANSPORT_DETAILS;
+        if (context instanceof TransportContractOrdersActivity) {
+            viewType = TRANSPORT_CONTRACT_DETAILS;
         } else {
             viewType = TRANSPORT_ORDER;
         }

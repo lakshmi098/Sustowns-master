@@ -8,6 +8,8 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.sustownsapp.R;
+import com.sustown.sustownsapp.Activities.TransportContractOrdersActivity;
+import com.sustown.sustownsapp.Activities.TransportOrdersActivity;
 import com.sustown.sustownsapp.helpers.Helper;
 import com.sustown.sustownsapp.listeners.ConnectivityReceiver;
 import com.sustown.sustownsapp.listeners.DataListener;
@@ -28,7 +30,7 @@ public class WebServices {
         basicUtilities = new Helper(context);
     }
 
-    public void postJsonBodyAndGetJsonObject(final String url, JSONObject jsonObject) {
+    public void postJsonBodyAndGetJsonObject(final String url, JSONObject jsonObject, final String Contracts) {
         if (ConnectivityReceiver.isConnected()) {
             AndroidNetworking.post(DZ_URL.BASE_URL + url)
                     .addJSONObjectBody(jsonObject)
@@ -37,7 +39,13 @@ public class WebServices {
                     .getAsJSONObject(new JSONObjectRequestListener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            mDataListener.onDataRetrieved(response, url);
+                            if(Contracts.equalsIgnoreCase("1")){
+                                mDataListener.onDataRetrieved(response, url);
+                                ((TransportContractOrdersActivity)context).getContractTransportOrdersList();
+                            }else{
+                                mDataListener.onDataRetrieved(response, url);
+                                ((TransportOrdersActivity)context).getTransportOrdersList();
+                            }
                         }
 
                         @Override

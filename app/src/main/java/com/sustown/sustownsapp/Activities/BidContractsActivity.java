@@ -47,7 +47,7 @@ public class BidContractsActivity extends AppCompatActivity {
     Button open,quoted,approved,completed,bid_contracts_btn,post_contracts_btn,addProdRequest;
     LinearLayout home,news,store,bidcontracts,poultryprices,ll_requests_contracts,ll_search_contracts,ll_post_contracts,ll_contracts;
     RecyclerView recyclerView;
-    LinearLayout ll_myproductcontracts,ll_myservicecontracts,ll_mycontractpurchases;
+    LinearLayout ll_myproductcontracts,ll_myservicecontracts;
     OpenRequestAdapter openRequestAdapter;
     QuotedRequestAdapter quotedRequestAdapter;
     ServiceContractAdapter serviceContractAdapter;
@@ -114,7 +114,6 @@ public class BidContractsActivity extends AppCompatActivity {
         completed = (Button) findViewById(R.id.completed_btn);
         ll_myproductcontracts = (LinearLayout) findViewById(R.id.ll_myproductcontracts);
         ll_myservicecontracts = (LinearLayout) findViewById(R.id.ll_myservicecontracts);
-        ll_mycontractpurchases = (LinearLayout) findViewById(R.id.ll_mycontractpurchases);
         ll_requests_contracts.setVisibility(View.VISIBLE);
         contracts_title.setText("Bid Contracts");
         ll_post_contracts.setVisibility(View.GONE);
@@ -133,13 +132,6 @@ public class BidContractsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(BidContractsActivity.this, MyServiceContractActivity.class);
-                startActivity(i);
-            }
-        });
-        ll_mycontractpurchases.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(BidContractsActivity.this, LogisticsOrdersActivity.class);
                 startActivity(i);
             }
         });

@@ -184,7 +184,7 @@ public class ReceivedContractsAdapter extends RecyclerView.Adapter<ReceivedContr
             @Override
             public void onClick(View v) {
                 Instantamount = receivedContractModels.get(position).getInstant_amount();
-                job_quote_id = receivedContractModels.get(position).getId();
+                job_quote_id = receivedContractModels.get(position).getBidid();
                 quoted_id = receivedContractModels.get(position).getUser_id();
                 jobId = receivedContractModels.get(position).getJob_id();
                 Intent i = new Intent(context, PaymentContractsActvity.class);

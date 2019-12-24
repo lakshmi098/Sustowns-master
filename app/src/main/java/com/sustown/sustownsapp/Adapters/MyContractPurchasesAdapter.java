@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.sustownsapp.R;
 import com.sustown.sustownsapp.Activities.AddPaymentActivity;
+import com.sustown.sustownsapp.Activities.AddTransportActivity;
 import com.sustown.sustownsapp.Activities.ContractOrdersInvoice;
 import com.sustown.sustownsapp.Activities.PreferenceUtils;
 import com.sustown.sustownsapp.Models.ContractPurchasesModel;
@@ -58,11 +59,12 @@ public class MyContractPurchasesAdapter extends RecyclerView.Adapter<MyContractP
                /* viewHolder.add_payment_btn.setVisibility(View.GONE);
                 viewHolder.add_transport_btn.setVisibility(View.GONE);
                 viewHolder.ll_paymentstatus.setVisibility(View.GONE);*/
-            }else if(order_status.equalsIgnoreCase("1")){
+            }else if(order_status.equalsIgnoreCase("1") && contractPurchasesModels.get(position).getJob_location().equalsIgnoreCase("buyers")){
                /* viewHolder.add_payment_btn.setVisibility(View.GONE);
                 viewHolder.add_transport_btn.setVisibility(View.GONE);
-                //  viewHolder.add_transport_btn.setVisibility(View.VISIBLE);// if Transport is required
+                viewHolder.add_transport_btn.setVisibility(View.VISIBLE);// if Transport is required
                 viewHolder.ll_paymentstatus.setVisibility(View.GONE);*/
+                viewHolder.add_transport_btn.setVisibility(View.VISIBLE);
                 viewHolder.orderStatus.setText("Complete");
             }else if(order_status.equalsIgnoreCase("2")){
               /*  viewHolder.add_payment_btn.setVisibility(View.GONE);
@@ -147,6 +149,17 @@ public class MyContractPurchasesAdapter extends RecyclerView.Adapter<MyContractP
                 viewHolder.add_transport_btn.setVisibility(View.GONE);
             }*/
         }
+        viewHolder.add_transport_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, AddTransportActivity.class);
+                i.putExtra("OrderId",contractPurchasesModels.get(position).getOrder_id());
+                i.putExtra("InvoiceNo",contractPurchasesModels.get(position).getInvoice_no());
+                i.putExtra("ContractTransport","1");
+                context.startActivity(i);
+            }
+        });
+
         viewHolder.view_invoice_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

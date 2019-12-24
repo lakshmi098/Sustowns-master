@@ -167,6 +167,9 @@ public class PaymentContractsActvity  extends AppCompatActivity {
         }else if(logisticsStr.equalsIgnoreCase("Offers")){
             ll_quote_received_details.setVisibility(View.GONE);
             close_payment_dialog.setVisibility(View.VISIBLE);
+        }else if(logisticsStr.equalsIgnoreCase("3")){
+            ll_quote_received_details.setVisibility(View.GONE);
+            close_payment_dialog.setVisibility(View.VISIBLE);
         }
         received_orders_cardview = (CardView) findViewById(R.id.received_orders_cardview);
         ll_payment = (LinearLayout) findViewById(R.id.ll_payment);
@@ -203,6 +206,9 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                                         makeOfferPaymentBank();
                                         setParameter();
                                         generateHashFromSDK(mPaymentParams, salt);
+                                    }else if(logisticsStr.equalsIgnoreCase("3")){
+                                        setParameter();
+                                        generateHashFromSDK(mPaymentParams, salt);
                                     }
 
                                 }
@@ -226,8 +232,9 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                                         setJsonbject();
                                     }else if(logisticsStr.equalsIgnoreCase("Offers")){
                                         makeOfferPaymentBank();
+                                    }else if(logisticsStr.equalsIgnoreCase("3")){
+                                        setContractPayByBankJsonbject();
                                     }
-
                                 }
                             }, new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
@@ -281,6 +288,8 @@ public class PaymentContractsActvity  extends AppCompatActivity {
             public void onClick(View v) {
                 if(logisticsStr.equalsIgnoreCase("1")){
                     Intent i = new Intent(PaymentContractsActvity.this,LogisticsOrdersActivity.class);
+                    i.putExtra("Logistics","0");
+                    i.putExtra("Message","");
                     startActivity(i);
                 }else if(logisticsStr.equalsIgnoreCase("0")) {
                     Intent i = new Intent(PaymentContractsActvity.this, MyContractOrdersActivity.class);
@@ -482,6 +491,62 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                                     progressDialog.dismiss();
                                 Intent i = new Intent(PaymentContractsActvity.this, LogisticsOrdersActivity.class);
                                 i.putExtra("Message","Thank you for Choosing Pay by Bank Option and further process to Check My Orders");
+                                i.putExtra("Logistics","1");
+                                startActivity(i);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setContractPayByBankJsonbject() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("user_id", user_id);
+            jsonObj.put("order_ran", orderRandId);
+            jsonObj.put("service_id",serviceId);
+            jsonObj.put("action","bank");
+
+            androidNetworkingContractpayByBank(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingContractpayByBank(JSONObject jsonObject){
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Postcontractservice/transportbankpayment/")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            String message = response.getString("message");
+                            String success = response.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                Snackbar snackbar = Snackbar
+                                        .make(linearlayout,"Thank you for Choosing Pay by Bank Option and further process to Check My Orders", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                                if(progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                Intent i = new Intent(PaymentContractsActvity.this, LogisticsOrdersActivity.class);
+                                i.putExtra("Message","Thank you for Choosing Pay by Bank Option and further process to Check My Orders");
+                                i.putExtra("Logistics","0");
                                 startActivity(i);
                                 progressDialog.dismiss();
                             } else {
@@ -674,6 +739,68 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                                 ll_payment.setVisibility(View.GONE);
                                 Intent i = new Intent(PaymentContractsActvity.this, LogisticsOrdersActivity.class);
                                 i.putExtra("Message","");
+                                i.putExtra("Logistics","1");
+                                startActivity(i);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setPayUContractsLogisticsSuccess() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("userid", user_id);
+            jsonObj.put("txnid",txnid);
+            jsonObj.put("order_ran",orderRandId);
+            jsonObj.put("service_id",serviceId);
+            jsonObj.put("amount",amount);
+            jsonObj.put("transport_id",transportId);
+            jsonObj.put("mode",mode);
+            jsonObj.put("mihpayid",mihpayid);
+            jsonObj.put("PG_TYPE",PG_TYPE);
+            jsonObj.put("bank_ref_num",bank_ref_num);
+            jsonObj.put("bankcode",bankCode);
+            androidNetworkingContractLogisticsPayUSuccess(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingContractLogisticsPayUSuccess(JSONObject jsonObject) {
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Transportservices/transportpayuSuccess")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            JSONObject responseObj = response.getJSONObject("response");
+                            String message = responseObj.getString("message");
+                            String success = responseObj.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, "", Toast.LENGTH_SHORT).show();
+                                ll_payment.setVisibility(View.GONE);
+                                Intent i = new Intent(PaymentContractsActvity.this, LogisticsOrdersActivity.class);
+                                i.putExtra("Message","");
+                                i.putExtra("Logistics","0");
                                 startActivity(i);
                                 progressDialog.dismiss();
                             } else {
@@ -734,6 +861,68 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                                // Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(PaymentContractsActvity.this,ReceivedContracts.class);
                                 i.putExtra("Message","");
+                                i.putExtra("Logistics","1");
+                                startActivity(i);
+                                /*ll_payment.setVisibility(View.VISIBLE);
+                                ll_order_placed_text.setVisibility(View.GONE);*/
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            // Toast.makeText(ServiceManagementActivity.this, "No Subcategories Available.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.d("Error", "ANError : " + error);
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+    public void setPayUContractFailure() {
+        try {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("userid", user_id);
+            jsonObj.put("txnid",txnid);
+            jsonObj.put("order_ran",orderRandId);
+            jsonObj.put("service_id",serviceId);
+            jsonObj.put("amount",amount);
+            jsonObj.put("transport_id",transportId);
+            jsonObj.put("mode",mode);
+            jsonObj.put("mihpayid",mihpayid);
+            jsonObj.put("PG_TYPE",PG_TYPE);
+            jsonObj.put("bank_ref_num",bank_ref_num);
+            jsonObj.put("bankcode",bankCode);
+            androidNetworkingPayUFailureContractLogistics(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void androidNetworkingPayUFailureContractLogistics(JSONObject jsonObject) {
+        progressdialog();
+        AndroidNetworking.post("https://www.sustowns.com/Postcontractservices/transportpayuFailure")
+                .addJSONObjectBody(jsonObject) // posting java object
+                .setTag("test")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response", "JSON : " + response);
+                        try {
+                            JSONObject responseObj = response.getJSONObject("response");
+                            String message = responseObj.getString("message");
+                            String success = responseObj.getString("success");
+                            if (success.equalsIgnoreCase("1")) {
+                                if(progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                // Toast.makeText(PaymentContractsActvity.this, message, Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(PaymentContractsActvity.this,ReceivedContracts.class);
+                                i.putExtra("Message","");
+                                i.putExtra("Logistics","0");
                                 startActivity(i);
                                 /*ll_payment.setVisibility(View.VISIBLE);
                                 ll_order_placed_text.setVisibility(View.GONE);*/
@@ -1054,6 +1243,8 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                                     setPayULogisticsSuccess();
                                 }else if(logisticsStr.equalsIgnoreCase("Offers")){
                                     setPayUMakeOfferSuccess();
+                                }else if(logisticsStr.equalsIgnoreCase("3")){
+                                    setPayUContractsLogisticsSuccess();
                                 }
                                 //Write the next set of code in the success
                             }
@@ -1067,6 +1258,8 @@ public class PaymentContractsActvity  extends AppCompatActivity {
                     setPayUFailureLogistics();
                 }else if(logisticsStr.equalsIgnoreCase("Offers")){
                     setPayUMakeOfferFailure();
+                }else if(logisticsStr.equalsIgnoreCase("3")){
+                    setPayUContractFailure();
                 }
                // setPayUFailure();
                 // Toast.makeText(this, getString(R.string.could_not_receive_data), Toast.LENGTH_LONG).show();

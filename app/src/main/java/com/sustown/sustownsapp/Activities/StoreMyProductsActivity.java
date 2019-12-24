@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,6 +30,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -110,7 +112,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
     Button add_product_store, save_product, choosefile_btn;
     RelativeLayout rl_capture, rl_gallery;
     public static List<MyProductsModel> myProductsModelList;
-    TextView title_store;
+    TextView title_store,not_available_text;
     private Uri picUri;
     public String PickedImgPath = null;
     String currency_st, TitleStr = "", shippingId = "";
@@ -123,7 +125,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
     Spinner spinner_eggs_types, spinner_quality, spinner_prod_category, spinner_sector, spinner_list_type, spinner_sample_gross_weight;
     Spinner spinner_unit, spinner_price, spinner_sample_pack_type, spinner_shipping;
     EditText title_add_prod, unit_edit, price_edittext, min_order_et, stock_et, discount_et, sample_unit_edit, pincode_et, gross_weight_et;
-    String[] eggsType = {"Regular/Layer Eggs", "Organic Eggs", "Duck Eggs", "Quail Eggs"};
+    String[] eggsType = {"Types Of Eggs","Regular/Layer Eggs", "Organic Eggs", "Duck Eggs", "Quail Eggs"};
     String[] quality = {"select quality", "AA", "A", "B"};
     String[] prod_category = {"Category","Egg", "Poultry"};
     String[] sector = {"Sector","B2B(Business to Business)", "Buyer network"};
@@ -134,8 +136,8 @@ public class StoreMyProductsActivity extends AppCompatActivity {
     String[] country = {"India", "Indonesia", "Iceland", "Australia", "Algeria", "Malaysia", "Saudi Arabia", "Singapore", "USA", "UK", "Uganda"};
     String[] city = {"Hyderabad", "Mumbai", "Chennai", "Kolkata", "Pune"};
     String[] state = {"Telangana", "AP", "Punjab", "UP", "Kerala", "Delhi"};
-    String[] shipping = {"No","Yes"};
-    String[] gross_weight_unit = {"gross weight unit", "Crate", "Box"};
+    String[] shipping = {"no","yes"};
+    String[] gross_weight_unit = {"weight unit", "Crate", "Box"};
     String[] receivedOffers = {"Select Recevied Offers", "Yes", "No"};
     String[] packingSize = {"mm", "cm", "in", "ft"};
     String[] DeliveryType = {"EXW", "FOB", "CIF", "Door to Door", "Door to Port", "Port to Door", "Port to Port"};
@@ -182,11 +184,11 @@ public class StoreMyProductsActivity extends AppCompatActivity {
     List<ImageModel> imagesList = new ArrayList<>();
     List<String> fileList = new ArrayList<>();
     List<String> shippingList = new ArrayList<>();
-    AlertDialog alertDialog;
+    AlertDialog alertDialog,alertDialog1;
     List<Integer> shippingSelectedPosition = new ArrayList<>();
     List<String> shippingSelectedList = new ArrayList<>();
     Helper helper;
-    String UnitId,CategoryId,SectorId,countryId = "",stateId = "",cityId = "",clickAction = "",StartDateStr="",EndDateStr="";
+    String UnitId,CategoryId,SectorId,countryId = "",clickedSearch = "",stateId = "",cityId = "",clickAction = "",StartDateStr="",EndDateStr="";
     SwipeRefreshLayout swipeRefreshLayout;
     int textlength = 0;
     ArrayList<String> selectedCountryList = new ArrayList<String>();
@@ -209,6 +211,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_store_my_products);
         preferenceUtils = new PreferenceUtils(StoreMyProductsActivity.this);
         try {
+            not_available_text = (TextView) findViewById(R.id.not_available_text);
             CustomizationKey = getIntent().getStringExtra("Customizations");
             // checkAndroidVersion();
             helper = new Helper(this);
@@ -216,7 +219,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID, "");
             user_role = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ROLE, "");
             recycler_view_products_store = (RecyclerView) findViewById(R.id.recycler_view_products_store);
-            // recycler_view_products_store.setHasFixedSize(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(StoreMyProductsActivity.this, LinearLayoutManager.VERTICAL, false);
             recycler_view_products_store.setLayoutManager(layoutManager);
 
@@ -268,6 +270,39 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                         TitleStr = "Add Product";
                         title_store.setText(TitleStr);
                         ll_prod_list.setVisibility(View.GONE);
+                    }
+                }
+            });
+            sp_country = (TextView) findViewById(R.id.spinner_country);
+            sp_country.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        getCountryList();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+            sp_state = (TextView) findViewById(R.id.spinner_state);
+            sp_state.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        getStatesList();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+            sp_city = (TextView) findViewById(R.id.spinner_city);
+            sp_city.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        getCityList();
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
             });
@@ -489,23 +524,35 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
-          /*  ArrayAdapter sampleprice = new ArrayAdapter(this, android.R.layout.simple_spinner_item, price);
-            sampleprice.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            //Setting the ArrayAdapter data on the Spinner
-            spinner_sample_price.setAdapter(sampleprice);
-            spinner_sample_price.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    sample_price_str = parent.getItemAtPosition(position).toString();
-                    // preferenceUtils.saveString(PreferenceUtils.SAMPLE_CURRENCY,sample_price_str);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });*/
             spinner_eggs_types = (Spinner) findViewById(R.id.spinner_eggs_types);
-            ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, eggsType);
+           // ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, eggsType);
+            final ArrayAdapter<String> aa = new ArrayAdapter<String>(StoreMyProductsActivity.this,android.R.layout.simple_spinner_item,eggsType){
+                @Override
+                public boolean isEnabled(int position){
+                    if(position == 0)
+                    {
+                        // Disable the first item from Spinner
+                        // First item will be use for hint
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+                @Override
+                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                    View view = super.getDropDownView(position, convertView, parent);
+                    TextView tv = (TextView) view;
+                    if(position == 0){
+                        // Set the hint text color gray
+                        tv.setTextColor(Color.GRAY);
+                    }
+                    else {
+                        tv.setTextColor(Color.BLACK);
+                    }
+                    return view;
+                }
+            };
             aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             //Setting the ArrayAdapter data on the Spinner
             spinner_eggs_types.setAdapter(aa);
@@ -513,6 +560,11 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     eggs_type = parent.getItemAtPosition(position).toString();
+                    if(eggs_type.equalsIgnoreCase("Regular/Layer Eggs")){
+                        eggs_type = "regular";
+                    }else{
+                        eggs_type = parent.getItemAtPosition(position).toString();
+                    }
                     preferenceUtils.saveString(PreferenceUtils.EGGS_TYPE,eggs_type);
                 }
                 @Override
@@ -521,7 +573,34 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             });
 //  spinner quality
             spinner_quality = (Spinner) findViewById(R.id.spinner_quality);
-            ArrayAdapter aa1 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, quality);
+           // ArrayAdapter aa1 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, quality);
+            final ArrayAdapter<String> aa1 = new ArrayAdapter<String>(StoreMyProductsActivity.this,android.R.layout.simple_spinner_item,quality){
+                @Override
+                public boolean isEnabled(int position){
+                    if(position == 0)
+                    {
+                        // Disable the first item from Spinner
+                        // First item will be use for hint
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+                @Override
+                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                    View view = super.getDropDownView(position, convertView, parent);
+                    TextView tv = (TextView) view;
+                    if(position == 0){
+                        // Set the hint text color gray
+                        tv.setTextColor(Color.GRAY);
+                    }
+                    else {
+                        tv.setTextColor(Color.BLACK);
+                    }
+                    return view;
+                }
+            };
             aa1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             //Setting the ArrayAdapter data on the Spinner
             spinner_quality.setAdapter(aa1);
@@ -536,7 +615,34 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             });
             // spinner prod category
             spinner_prod_category = (Spinner) findViewById(R.id.spinner_prod_category);
-            ArrayAdapter aa2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, prod_category);
+         //   ArrayAdapter aa2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, prod_category);
+            final ArrayAdapter<String> aa2 = new ArrayAdapter<String>(StoreMyProductsActivity.this,android.R.layout.simple_spinner_item,prod_category){
+                @Override
+                public boolean isEnabled(int position){
+                    if(position == 0)
+                    {
+                        // Disable the first item from Spinner
+                        // First item will be use for hint
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+                @Override
+                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                    View view = super.getDropDownView(position, convertView, parent);
+                    TextView tv = (TextView) view;
+                    if(position == 0){
+                        // Set the hint text color gray
+                        tv.setTextColor(Color.GRAY);
+                    }
+                    else {
+                        tv.setTextColor(Color.BLACK);
+                    }
+                    return view;
+                }
+            };
             aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             //Setting the ArrayAdapter data on the Spinner
             spinner_prod_category.setAdapter(aa2);
@@ -641,7 +747,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                     received_offers_st = parent.getItemAtPosition(position).toString();
                     if(received_offers_st.equalsIgnoreCase("Yes")){
                         receivedOffersStr = "1";
-                    }else  if(unit_sp_st.equalsIgnoreCase("No")){
+                    }else  if(received_offers_st.equalsIgnoreCase("No")){
                         receivedOffersStr = "0";
                     }
                     preferenceUtils.saveString(PreferenceUtils.ReceivedOffersList, received_offers_st);
@@ -683,11 +789,11 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     shipping_st = parent.getItemAtPosition(position).toString();
-                    if (shipping_st.equalsIgnoreCase("Yes")) {
+                    if (shipping_st.equalsIgnoreCase("yes")) {
                         ll_choose_shipping_types.setVisibility(View.VISIBLE);
                         //  getVendorServicesList();
 /*
-                        ll_choose_shipping_types.setOnClickListener(new View.OnClickListener() {
+                       ll_choose_shipping_types.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 getVendorServicesList();
@@ -699,79 +805,10 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                     }
                     // preferenceUtils.saveString(PreferenceUtils.Shipping,shipping_st);
                 }
-
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
-            sp_country = (TextView) findViewById(R.id.spinner_country);
-            sp_country.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getCountryList();
-                }
-            });
-          /*  ArrayAdapter aa9 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, country);
-            aa9.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            //Setting the ArrayAdapter data on the Spinner
-            sp_country.setAdapter(aa9);
-            sp_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    country_st = parent.getItemAtPosition(position).toString();
-                    preferenceUtils.saveString(PreferenceUtils.COUNTRY, country_st);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });*/
-            sp_state = (TextView) findViewById(R.id.spinner_state);
-            sp_state.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getStatesList();
-                }
-            });
-          /*  ArrayAdapter aa_state = new ArrayAdapter(this, android.R.layout.simple_spinner_item, state);
-            aa_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            //Setting the ArrayAdapter data on the Spinner
-            sp_state.setAdapter(aa_state);
-            sp_state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    state_st = parent.getItemAtPosition(position).toString();
-                    preferenceUtils.saveString(PreferenceUtils.STATE, state_st);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });*/
-            sp_city = (TextView) findViewById(R.id.spinner_city);
-            sp_city.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getCityList();
-                }
-            });
-
-          /*  ArrayAdapter aa_city = new ArrayAdapter(this, android.R.layout.simple_spinner_item, city);
-            aa_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            //Setting the ArrayAd
-            // adapter data on the Spinner
-            sp_city.setAdapter(aa_city);
-            sp_city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    city_st = parent.getItemAtPosition(position).toString();
-                    preferenceUtils.saveString(PreferenceUtils.CITY, city_st);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });*/
             spinner_sample_gross_weight = (Spinner) findViewById(R.id.spinner_sample_gross_weight);
             ArrayAdapter aa_sam_gross_wt = new ArrayAdapter(this, android.R.layout.simple_spinner_item, gross_weight_unit);
             aa_sam_gross_wt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -784,7 +821,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                     sample_gross_weight_sp = parent.getItemAtPosition(position).toString();
                     //  preferenceUtils.saveString(PreferenceUtils.SAMPLE_GROSS_WEIGHT, sample_gross_weight_sp);
                 }
-
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
@@ -807,7 +843,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                         UnitIdSample = "17";
                     }
                 }
-
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
@@ -823,7 +858,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     packTypeStr = parent.getItemAtPosition(position).toString();
                 }
-
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
@@ -832,7 +866,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         address_txt_map = findViewById(R.id.address_txt_map);
         address_txt_map.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -843,16 +876,15 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 startActivity(mapIntent);
             }
         });
-
         // on click events
         save_product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isUpdate) {
                     if (title_add_prod.getText().toString().trim().isEmpty() || min_order_et.getText().toString().trim().isEmpty() ||
-                            eggs_type.equalsIgnoreCase("select eggs type")||unit_edit.getText().toString().isEmpty() ||
+                            eggs_type.equalsIgnoreCase("Types Of Eggs")||unit_edit.getText().toString().isEmpty() ||
                             unit_sp_st.equalsIgnoreCase("select unit") || price_edittext.getText().toString().isEmpty() || packTypeStr.equalsIgnoreCase("sample pack type")||
-                            received_offers_st.equalsIgnoreCase("Select Recevied Offers")||StartDateStr.isEmpty()||EndDateStr.isEmpty()||delivery_lead_time.getText().toString().isEmpty()
+                            received_offers_st.equalsIgnoreCase("Select Recevied Offers")
                     ||prodCategory.equalsIgnoreCase("Category")||sector_st.equalsIgnoreCase("Sector")||listingtype_st.equalsIgnoreCase("Listing Type")|| unit_sp_st.equalsIgnoreCase("Units")) {
                         Toast.makeText(StoreMyProductsActivity.this, "Please fill Mandatory(*) fields", Toast.LENGTH_SHORT).show();
                     }else if(imagesList.size() == 0 || imagesList.get(position).getIsPrimary().equalsIgnoreCase("no")){
@@ -864,10 +896,22 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                         Toast.makeText(StoreMyProductsActivity.this, "Address is required", Toast.LENGTH_SHORT).show();
                     }else
                     {
-                        try {
-                            setAddProductJsonObject();
-                        }catch(Exception e){
-                            e.printStackTrace();
+                        if(!discount_et.getText().toString().isEmpty()) {
+                            if(StartDateStr.isEmpty() || EndDateStr.isEmpty()){
+                                Toast.makeText(StoreMyProductsActivity.this, "Please Choose Discount start and End Date", Toast.LENGTH_SHORT).show();
+                            }else{
+                                try {
+                                    setAddProductJsonObject();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                        }
+                        }else{
+                            try {
+                                setAddProductJsonObject();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }else{
@@ -1218,6 +1262,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
         return "";
     }
     public void editProduct(int positionValue) {
+        address_txt_map.setText(myProductsModelList.get(position).getAddress());
         TitleStr = "Edit Product";
         title_store.setText(TitleStr);
         ll_add_products_store.setVisibility(View.VISIBLE);
@@ -1249,7 +1294,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
         min_order_et.setText(min_order_st);
         discount_et.setText(discount_st);
         unit_edit.setText(unit_st);
-        address_txt_map.setText(myProductsModelList.get(position).getAddress());
     }
     public void progressdialog() {
         progressDialog = new ProgressDialog(StoreMyProductsActivity.this);
@@ -1348,16 +1392,19 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                                 progressDialog.dismiss();
                                             }
                                         }
-
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    if (myProductsModelList != null) {
+                                    if (myProductsModelList != null || !myProductsModelList.isEmpty()) {
                                         progressDialog.dismiss();
+                                        not_available_text.setVisibility(View.GONE);
+                                        recycler_view_products_store.setVisibility(View.VISIBLE);
                                         storeMyProductsAdapter = new StoreMyProductsAdapter(StoreMyProductsActivity.this, myProductsModelList);
                                         recycler_view_products_store.setAdapter(storeMyProductsAdapter);
                                         storeMyProductsAdapter.notifyDataSetChanged();
                                     } else {
+                                        not_available_text.setVisibility(View.VISIBLE);
+                                        recycler_view_products_store.setVisibility(View.GONE);
                                         progressDialog.dismiss();
                                         // Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
                                     }
@@ -1366,6 +1413,9 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                         }
                     }
                 } catch (Exception e) {
+                    not_available_text.setVisibility(View.VISIBLE);
+                    recycler_view_products_store.setVisibility(View.GONE);
+                    progressDialog.dismiss();
                     e.printStackTrace();
                 }
                 progressDialog.dismiss();
@@ -1428,7 +1478,11 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                         }
                                         //In response data
                                         progressDialog.dismiss();
-                                        showAlertDialog(shippingList, idList);
+                                        if(shippingList.size()>0) {
+                                            showAlertDialog(shippingList, idList);
+                                        }else{
+                                            Toast.makeText(StoreMyProductsActivity.this, "Categories not available", Toast.LENGTH_SHORT).show();
+                                        }
                                     } else {
 
                                     }
@@ -1455,12 +1509,12 @@ public class StoreMyProductsActivity extends AppCompatActivity {
         try {
             final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(StoreMyProductsActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.custom_list_category, null);
-            dialogBuilder.setView(dialogView);
+            View dialogView1 = inflater.inflate(R.layout.custom_list_category, null);
+            dialogBuilder.setView(dialogView1);
 
-            Button submitCat_btn = (Button) dialogView.findViewById(R.id.submitCat_btn);
-            final ListView categoryListView = (ListView) dialogView.findViewById(R.id.categoryList);
-            final ShimmerFrameLayout shimmerFrameLayout = dialogView.findViewById(R.id.shimmer_list_item);
+            Button submitCat_btn = (Button) dialogView1.findViewById(R.id.submitCat_btn);
+            final ListView categoryListView = (ListView) dialogView1.findViewById(R.id.categoryList);
+            final ShimmerFrameLayout shimmerFrameLayout = dialogView1.findViewById(R.id.shimmer_list_item);
             shimmerFrameLayout.startShimmerAnimation();
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1547,12 +1601,11 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             JSONArray shippingTypeArray = new JSONArray();
             for (int j = 0; j < shippingSelectedList.size(); j++) {
                 JSONObject shippingObj = new JSONObject();
-                shippingObj.put("shipping_type", shippingSelectedList.get(j));
+                shippingObj.put("service_id", shippingSelectedList.get(j));
                 shippingTypeArray.put(shippingObj);
             }
-            jsonObj.put("shippingTypeArray", shippingTypeArray);
+            jsonObj.put("shipping_type", shippingTypeArray);
             Log.e("shippingTypeArray", "" + jsonObj);
-
             jsonObj.put("pr_userid", user_id);
            // jsonObj.put("pr_bussid", "");
             jsonObj.put("pr_price", price_edittext.getText().toString());
@@ -1560,19 +1613,18 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             jsonObj.put("pr_stocks", stock_et.getText().toString());
             jsonObj.put("pr_min", min_order_et.getText().toString());
             // Image Array
-            //    JsonParser jsonParser = new JsonParser();
             JSONArray imageArray = new JSONArray();
             for (int j = 0; j < imagesList.size(); j++) {
                 JSONObject imageObj = new JSONObject();
                 imageBase64 = imagesList.get(j).getImage_base64();
-                imageObj.put("img","data:image/jpeg;base64,"+imageBase64.replace("\\", ""));
-//                 imageObj.put("img", URLEncoder.encode(imageBase64, "UTF-8"));
+                //imageObj.put("img","data:image/jpeg;base64,"+imageBase64.replace("\\",""));
+                imageObj.put("img","data:image/jpeg;base64,"+imageBase64.replaceAll("\\\\",""));
                 imageObj.put("isPrimary", imagesList.get(j).getIsPrimary());
                 imageArray.put(imageObj);
             }
             jsonObj.put("image", imageArray);
             Log.e("image_Array", "" + jsonObj);
-
+            //    JsonParser jsonParser = new JsonParser();
             jsonObj.put("pr_type", SectorId);
             jsonObj.put("pr_quality", quality_st);
             jsonObj.put("packaging", packTypeStr);
@@ -1595,7 +1647,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             jsonObj.put("day", delivery_lead_time.getText().toString());
 
             androidNetworkingAdd(jsonObj);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1615,14 +1666,14 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                             String message = response.getString("message");
                             String success = response.getString("success");
                             if (success.equalsIgnoreCase("1")) {
-                                progressDialog.dismiss();
-                                Intent i = new Intent(StoreMyProductsActivity.this, StoreMyProductsActivity.class);
-                                i.putExtra("Customizations","0");
-                                startActivity(i);
+                               // progressDialog.dismiss();
                                 Snackbar snackbar = Snackbar
                                         .make(linearlayout,message, Snackbar.LENGTH_LONG);
                                 snackbar.show();
-
+                                Intent i = new Intent(StoreMyProductsActivity.this, StoreMyProductsActivity.class);
+                                i.putExtra("Customizations","0");
+                                startActivity(i);
+                                progressDialog.dismiss();
                                 //Toast.makeText(StoreMyProductsActivity.this, message, Toast.LENGTH_SHORT).show();
                             } else {
                                 progressDialog.dismiss();
@@ -1654,10 +1705,10 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             JSONArray shippingTypeArray = new JSONArray();
             for (int j = 0; j < shippingSelectedList.size(); j++) {
                 JSONObject shippingObj = new JSONObject();
-                shippingObj.put("shipping_type", shippingSelectedList.get(j));
+                shippingObj.put("service_id", shippingSelectedList.get(j));
                 shippingTypeArray.put(shippingObj);
             }
-            jsonObj.put("shippingTypeArray", shippingTypeArray);
+            jsonObj.put("shipping_type", shippingTypeArray);
             Log.e("shippingTypeArray", "" + jsonObj);
 
             jsonObj.put("pr_userid", user_id);
@@ -1671,8 +1722,8 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             for (int j = 0; j < imagesList.size(); j++) {
                 JSONObject imageObj = new JSONObject();
                 imageBase64 = imagesList.get(j).getImage_base64();
-                imageObj.put("img","data:image/jpeg;base64,"+imageBase64.replace("\\", ""));
-//                 imageObj.put("img", URLEncoder.encode(imageBase64, "UTF-8"));
+              //  imageObj.put("img","data:image/jpeg;base64,"+imageBase64.replace("\\", ""));
+                imageObj.put("img",imageBase64.replaceAll("\\\\", ""));
                 imageObj.put("isPrimary", imagesList.get(j).getIsPrimary());
                 imageArray.put(imageObj);
             }
@@ -2087,6 +2138,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                     // When user changed the Text
                     // adapter.getFilter().filter(cs);
+                    clickedSearch = "clicked";
                     if (isCountry) {
                         textlength = inputSearch.getText().length();
                         selectedCountryList.clear();
@@ -2131,27 +2183,44 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                     // TODO Auto-generated method stub
                 }
             });
+            clickedSearch = "not clicked";
             // ListView Item Click Listener
             categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    String itemValue = selectedCountryList.get(position);
-                    if (isCountry) {
-                        //String itemValue = selectedCountryList.get(position);
-                        sp_country.setText(itemValue);
-                        countryId = selectedCountryIdList.get(position);
-                        sp_country.setText(itemValue);
-                        sp_state.setText("");
-                        sp_state.setHint("Choose State");
-                      //  countryId = idList.get(position);
-                        alertDialog.dismiss();
-                    } else {
+                    if (clickedSearch.equalsIgnoreCase("clicked")) {
+                        if (isCountry) {
+                            String itemValue = selectedCountryList.get(position);
+                            sp_country.setText(itemValue);
+                            countryId = selectedCountryIdList.get(position);
+                            sp_country.setText(itemValue);
+                            sp_state.setText("");
+                            sp_state.setHint("Choose State");
+                            //  countryId = idList.get(position);
+                            alertDialog.dismiss();
+                        } else {
+                            String itemValue = selectedCountryList.get(position);
                        /* sp_state.setText(itemValue);
                         stateId = idList.get(position);*/
-                        sp_state.setText(itemValue);
-                        stateId = selectedCountryIdList.get(position);
-                        alertDialog.dismiss();
+                            sp_state.setText(itemValue);
+                            stateId = selectedCountryIdList.get(position);
+                            alertDialog.dismiss();
+                        }
+                    }else{
+                        if (isCountry) {
+                            String itemValue = countryList.get(position);
+                            sp_country.setText(itemValue);
+                            sp_state.setText("");
+                            sp_state.setHint("Choose State");
+                            countryId = idList.get(position);
+                            alertDialog.dismiss();
+                        } else {
+                            String itemValue = countryList.get(position);
+                            sp_state.setText(itemValue);
+                            stateId = idList.get(position);
+                            alertDialog.dismiss();
+                        }
                     }
                 }
             });
@@ -2205,7 +2274,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 @Override
                 public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                     // When user changed the Text
-                    // adapter.getFilter().filter(cs);
+                    clickedSearch = "clicked";
                     textlength = inputSearch.getText().length();
                     selectedCountryList.clear();
                     selectedCountryIdList.clear();
@@ -2234,15 +2303,23 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                     // TODO Auto-generated method stub
                 }
             });
+            clickedSearch = "not clicked";
             // ListView Item Click Listener
             categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    String itemValue = selectedCountryList.get(position);
+                    if (clickedSearch.equalsIgnoreCase("clicked")) {
+                        String itemValue = selectedCountryList.get(position);
                         sp_city.setText(itemValue);
                         cityId = selectedCountryIdList.get(position);
                         alertDialog.dismiss();
+                    }else{
+                        String itemValue = cityList.get(position);
+                        sp_city.setText(itemValue);
+                        cityId = idList.get(position);
+                        alertDialog.dismiss();
+                    }
                 }
             });
             alertDialog.show();
