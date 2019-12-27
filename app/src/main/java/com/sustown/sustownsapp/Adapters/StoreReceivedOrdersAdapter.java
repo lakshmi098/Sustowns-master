@@ -62,7 +62,7 @@ public class StoreReceivedOrdersAdapter extends RecyclerView.Adapter<StoreReceiv
                // viewHolder.ll_paymentstatus.setVisibility(View.GONE);
             }else if(order_status.equalsIgnoreCase("1")){
                // viewHolder.add_payment_btn.setVisibility(View.GONE);
-                if(orderModels.get(position).getShipamount().equalsIgnoreCase("")||orderModels.get(position).getShipamount().equalsIgnoreCase("0")) {
+                if(orderModels.get(position).getShipamount().equalsIgnoreCase("")||orderModels.get(position).getShipamount().equalsIgnoreCase("0")||orderModels.get(position).getShipamount().equalsIgnoreCase("null")) {
                     viewHolder.add_transport_btn.setVisibility(View.VISIBLE);
                 }
                // viewHolder.ll_paymentstatus.setVisibility(View.GONE);

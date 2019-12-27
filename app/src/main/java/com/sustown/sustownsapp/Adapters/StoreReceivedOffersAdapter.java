@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.sustownsapp.R;
 import com.google.gson.JsonElement;
 import com.sustown.sustownsapp.Activities.PreferenceUtils;
+import com.sustown.sustownsapp.Activities.StoreOffersActivity;
 import com.sustown.sustownsapp.Api.DZ_URL;
 import com.sustown.sustownsapp.Api.ProductsApi;
 import com.sustown.sustownsapp.Models.StoreSentOffersModel;
@@ -60,17 +61,29 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         if(storeSentOffersModels.get(position) != null){
             viewHolder.prod_name.setText(storeSentOffersModels.get(position).getPr_title());
-            viewHolder.offer_prod_price.setText(storeSentOffersModels.get(position).getPr_price());
+            viewHolder.offer_prod_price.setText("INR "+storeSentOffersModels.get(position).getPr_price());
             viewHolder.offer_price.setText(storeSentOffersModels.get(position).getMakepeice());
             viewHolder.offer_quantity.setText(storeSentOffersModels.get(position).getMakeqty());
             viewHolder.offered_by.setText(storeSentOffersModels.get(position).getFullname());
+            makeStatus = storeSentOffersModels.get(position).getStatus();
+            if(makeStatus.equalsIgnoreCase("1")){
+
+            }else if(makeStatus.equalsIgnoreCase("2")){
+                viewHolder.offer_accepted.setVisibility(View.VISIBLE);
+                viewHolder.accept_offer_img.setVisibility(View.GONE);
+                viewHolder.remove_offer.setVisibility(View.GONE);
+            }else if(makeStatus.equalsIgnoreCase("0")){
+                viewHolder.accept_offer_img.setVisibility(View.GONE);
+                viewHolder.remove_offer.setVisibility(View.GONE);
+                viewHolder.offer_accepted.setVisibility(View.VISIBLE);
+                viewHolder.offer_accepted.setText("Offer Rejected");
+            }
         }
         viewHolder.accept_offer_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 makeId = storeSentOffersModels.get(position).getId();
                 makeProId = storeSentOffersModels.get(position).getProd_id();
-                makeStatus = storeSentOffersModels.get(position).getStatus();
                 acceptMakeOffer();
             }
         });
@@ -78,7 +91,7 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
             @Override
             public void onClick(View v) {
                 makeId = storeSentOffersModels.get(position).getId();
-                makeStatus = storeSentOffersModels.get(position).getStatus();
+               // makeStatus = storeSentOffersModels.get(position).getStatus();
                 storeSentOffersModels.remove(position);
                 removeOffer(position);
                 removeAt(position);
@@ -109,7 +122,7 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
 
         Call<JsonElement> callRetrofit = null;
 
-        callRetrofit = service.acceptMakeOffer(makeId,makeProId,makeStatus);
+        callRetrofit = service.acceptMakeOffer(makeId,makeProId,"2");
         callRetrofit.enqueue(new Callback<JsonElement>() {
 
             @Override
@@ -140,6 +153,7 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
                                     if (success.equals("1")) {
                                         progressDialog.dismiss();
                                          Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                                        ((StoreOffersActivity)context).receivedOffersList();
                                     } else {
                                         progressDialog.dismiss();
                                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -178,7 +192,7 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
 
         Call<JsonElement> callRetrofit = null;
 
-        callRetrofit = service.deleteOffer(makeId,makeStatus);
+        callRetrofit = service.deleteOffer(makeId,"0");
         callRetrofit.enqueue(new Callback<JsonElement>() {
 
             @Override
@@ -211,14 +225,15 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
                                     if (success.equals("1")) {
                                         progressDialog.dismiss();
                                         //((CartActivity) context).getCartTotals();
+                                        Toast.makeText(context, "successfully removed", Toast.LENGTH_SHORT).show();
                                         notifyItemRemoved(position);
                                         notifyItemRangeChanged(position, storeSentOffersModels.size());
                                         notifyDataSetChanged();
+                                        ((StoreOffersActivity)context).receivedOffersList();
                                         // editor.putBoolean("loginstatus", true);
                                         // editor.putString("cart_id", cart_id);
                                         // editor.commit();
                                         // Toast.makeText(context, message_cart, Toast.LENGTH_SHORT).show();
-                                          Toast.makeText(context, "successfully removed", Toast.LENGTH_SHORT).show();
                                     } else {
                                         progressDialog.dismiss();
                                         Toast.makeText(context, "not deleted", Toast.LENGTH_SHORT).show();
@@ -246,8 +261,6 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
             }
         });
     }
-
-
     @Override
     public int getItemCount() {
         return storeSentOffersModels.size();
@@ -255,7 +268,7 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView remove_offer,accept_offer_img;
-        TextView prod_name,offer_prod_price,offer_quantity,offer_price,offered_by;
+        TextView prod_name,offer_prod_price,offer_quantity,offer_price,offered_by,offer_accepted;
         Button offer_btn;
         public ViewHolder(View view) {
             super(view);
@@ -266,6 +279,7 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
             offered_by = (TextView) view.findViewById(R.id.offered_by);
             remove_offer = (ImageView) view.findViewById(R.id.remove_offer);
             accept_offer_img = (ImageView) view.findViewById(R.id.accept_offer_img);
+            offer_accepted = (TextView) view.findViewById(R.id.offer_accepted);
         }
     }
 }

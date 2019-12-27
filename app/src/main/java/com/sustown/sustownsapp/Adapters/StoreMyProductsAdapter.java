@@ -91,21 +91,13 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
                         .into(viewHolder.imageView);
             }
             viewHolder.prod_name.setText(myProductsModels.get(position).getPr_title());
-            viewHolder.prod_price.setText(myProductsModels.get(position).getPr_price());
-            viewHolder.prod_quantity.setText(myProductsModels.get(position).getPr_min());
+            viewHolder.prod_price.setText("INR "+myProductsModels.get(position).getPr_price());
+            viewHolder.prod_quantity.setText(myProductsModels.get(position).getPr_min()+" "+myProductsModels.get(position).getWeight_unit());
             viewHolder.prod_status.setText(myProductsModels.get(position).getPr_sku());
-          /*  if(prod_status.equalsIgnoreCase("0")){
-                viewHolder.prod_status.setText("Pending");
-            }else if(prod_status.equalsIgnoreCase("1")){
-                viewHolder.prod_status.setText("Complete");
-            }*/
         }
         viewHolder.update_prod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* ll_add_products_store.setVisibility(View.VISIBLE);
-                ll_prod_list.setVisibility(View.GONE);*/
-              // prod_id = myProductsModels.get(position).getId();
                 ((StoreMyProductsActivity) context).editProduct(position);
             }
         });

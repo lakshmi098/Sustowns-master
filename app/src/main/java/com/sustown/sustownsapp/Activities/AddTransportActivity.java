@@ -192,7 +192,6 @@ public class AddTransportActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     @Override
     public void onBackPressed() {
         finish();
@@ -200,7 +199,6 @@ public class AddTransportActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);*/
     }
-
     public void DateDialog() {
         DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
 
@@ -222,10 +220,8 @@ public class AddTransportActivity extends AppCompatActivity {
                 } else {
                     day_string = String.valueOf(dayOfMonth);
                 }
-
                 pickupfrom_date.setText(month_string + "/" +day_string + "/" + year);
                 pickupDateFrom = month_string + "/" +day_string + "/" + year;
-
                 request_transport_btn.setVisibility(View.VISIBLE);
                 ll_transport_services.setVisibility(View.GONE);
             }
@@ -450,7 +446,7 @@ public class AddTransportActivity extends AppCompatActivity {
 
                                             category_transport.setText(title);
                                             product_name_transport.setText(contractname);
-                                            weight_transport.setText(qnt_weight);
+                                            weight_transport.setText(unit_code);
                                             seller_country_transport.setText("India");
                                             drop_country_transport.setText("India");
                                             if(seller_zipcode.isEmpty() || seller_zipcode.equalsIgnoreCase("")){
@@ -608,7 +604,6 @@ public class AddTransportActivity extends AppCompatActivity {
                                     }
                                     progressDialog.dismiss();
                                 }
-
                             }
                         }
                     } else {
@@ -636,7 +631,7 @@ public class AddTransportActivity extends AppCompatActivity {
         final TransportApi service = retrofit.create(TransportApi.class);
 
         Call<JsonElement> callRetrofit = null;
-        callRetrofit = service.getContractRequestServicesList(invoiceNo, orderId, pickupDateFromContract, pickupDatetoContract);
+        callRetrofit = service.getContractRequestServicesList(invoiceNo, orderId, pickupDateFrom, pickupDateto);
         callRetrofit.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {

@@ -773,7 +773,7 @@ public class LogisticsOrdersActivity extends AppCompatActivity {
                 }
                 else if(order_status.equalsIgnoreCase("7") && transportDetailsModels.get(position).getManual_automatic().equalsIgnoreCase("automatic")){
                     viewHolder.ll_status.setVisibility(View.VISIBLE);
-                    viewHolder.orderStatus.setText("Payment Paid");
+                    viewHolder.orderStatus.setText("Awaiting for Delivery");
                 }
                 else{
                     viewHolder.ll_status.setVisibility(View.VISIBLE);
@@ -941,11 +941,11 @@ public class LogisticsOrdersActivity extends AppCompatActivity {
                 }
                 else if(order_status.equalsIgnoreCase("7") && transportDetailsModels.get(position).getManual_automatic().equalsIgnoreCase("automatic")){
                     viewHolder.ll_status.setVisibility(View.VISIBLE);
-                    viewHolder.orderStatus.setText("Payment Paid");
+                    viewHolder.orderStatus.setText("Awaiting for Delivery");
                 }
                 else{
                     viewHolder.ll_status.setVisibility(View.VISIBLE);
-                    viewHolder.orderStatus.setText("Waiting for Delivery");
+                    viewHolder.orderStatus.setText("Pending");
                 }
             }
             viewHolder.view_invoice_btn.setOnClickListener(new View.OnClickListener() {

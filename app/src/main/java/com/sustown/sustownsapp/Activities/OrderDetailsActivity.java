@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.sustownsapp.R;
@@ -234,9 +235,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                                 int shipInt = Integer.parseInt(shipamount);
                                                 int totalPriceInt = Integer.parseInt(totalprice);
                                                 int TotalShippingAmount = shipInt + totalPriceInt;
-                                                total_amount_shipping.setText(String.valueOf(TotalShippingAmount));
+                                                total_amount_shipping.setText(currency_code +" "+String.valueOf(TotalShippingAmount));
                                             }
-                                            total_amount_shipping.setText(currency_code +" "+totalprice);
+                                           // total_amount_shipping.setText(currency_code +" "+totalprice);
                                             if(progressDialog.isShowing())
                                                 progressDialog.dismiss();
                                         }
@@ -248,7 +249,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                                     }else{
                                         if(progressDialog.isShowing())
                                             progressDialog.dismiss();
-                                      //  Toast.makeText(OrderDetailsActivity.this, "Orders not available", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(OrderDetailsActivity.this, "Orders not available", Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();

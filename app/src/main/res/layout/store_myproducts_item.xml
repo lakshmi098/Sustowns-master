@@ -84,6 +84,7 @@
                         android:layout_gravity="left"
                         android:layout_weight="1"
                         android:text="Product Name"
+                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="15sp" />
                     <ImageView
@@ -164,9 +165,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
-                        android:background="@drawable/app_background_drawble"
                         android:focusableInTouchMode="false"
                         android:hint="quantity"
+                        android:background="@null"
                         android:maxLines="1"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
@@ -181,7 +182,7 @@
                     android:layout_marginRight="10dp"
                     android:padding="3dp"
                     android:layout_marginTop="5dp"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="2dp"
                     android:orientation="horizontal">
 
                     <TextView

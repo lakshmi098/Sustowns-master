@@ -114,14 +114,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             viewHolder.quantity_text.setText(cartServerModelList.get(position).getQty());
            if(cartServerModelList.get(position).getDiscount().equalsIgnoreCase("")||cartServerModelList.get(position).getDiscount().equalsIgnoreCase("null")){
                 viewHolder.prod_price1.setVisibility(View.GONE);
-                viewHolder.dollar.setText("Price : "+cartServerModelList.get(position).getPrice_qty());
+                viewHolder.dollar.setText("Price : INR "+cartServerModelList.get(position).getPrice_qty());
             }else{
                 viewHolder.prod_price1.setVisibility(View.VISIBLE);
                 int OriginalPrice = Integer.parseInt(cartServerModelList.get(position).getMrp())*Integer.parseInt(cartServerModelList.get(position).getQty());
                 viewHolder.prod_price1.setText(String.valueOf(OriginalPrice));
-                viewHolder.dollar.setText("Price : "+cartServerModelList.get(position).getPrice_qty());
+                viewHolder.dollar.setText("Price : INR "+cartServerModelList.get(position).getPrice_qty());
             }
-            viewHolder.cart_prod_code.setText("Product Code :"+cartServerModelList.get(position).getPro_code());
+            viewHolder.cart_prod_code.setText("Product Code : "+cartServerModelList.get(position).getPro_code());
             //    if(cartServerModelList.get(position).getShipping_type().equalsIgnoreCase("1")){
             if(cartServerModelList.get(position).getShiping_amount().equalsIgnoreCase("null")){
                 viewHolder.shipping_cart_layout.setVisibility(View.GONE);
@@ -140,8 +140,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                         .error(R.drawable.shipping_image)
                         .into(viewHolder.shipping_image);
                 viewHolder.shipping_name.setText(cartServerModelList.get(position).getName());
-                viewHolder.shipping_price.setText("Amount : "+cartServerModelList.get(position).getShiping_amount());
-                viewHolder.ship_prod_code.setText("Product Code :"+cartServerModelList.get(position).getShiping_id());
+                viewHolder.shipping_price.setText("Amount : INR "+cartServerModelList.get(position).getShiping_amount());
+                viewHolder.ship_prod_code.setText("Product Code : "+cartServerModelList.get(position).getShiping_id());
             }
         }
         viewHolder.remove.setOnClickListener(new View.OnClickListener() {
@@ -288,7 +288,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         Call<JsonElement> callRetrofit = null;
 
-        callRetrofit = service.removeShippingItem("https://www.sustowns.com/Sustownsservice/remove_cartforsingle?cart_id="+cart_id);
+        callRetrofit = service.removeShippingItem("https://www.sustowns.com/Sustownsservice/remove_shipcart/?cart_id="+cart_id);
         callRetrofit.enqueue(new Callback<JsonElement>() {
 
             @Override
@@ -356,26 +356,23 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
                 progressDialog.dismiss();
-//                Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Some thing went wrong!Please try again later", Toast.LENGTH_SHORT).show();
 
             }
         });
     }
 
     public void removeCartItem(final int position) {
-      //  progressdialog();
+        progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DZ_URL.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         CartApi service = retrofit.create(CartApi.class);
-
         Call<JsonElement> callRetrofit = null;
-
         callRetrofit = service.removeShippingItem("https://www.sustowns.com/Sustownsservice/remove_cartforsingle?cart_id="+cart_id);
         callRetrofit.enqueue(new Callback<JsonElement>() {
-
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 if (response.isSuccessful()) {
@@ -388,13 +385,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                     Log.d("Response code", String.valueOf(response.code()));
 
                     System.out.println("----------------------------------------------------");
-
                     if (response.body().toString() != null) {
-
                         if (response != null) {
                             String searchResponse = response.body().toString();
                             Log.d("Categeries", "response  >>" + searchResponse.toString());
-
                             if (searchResponse != null) {
                                 JSONObject root = null;
                                 Integer status_cart_remove;
@@ -403,25 +397,23 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                                     root = new JSONObject(searchResponse);
                                     String message = root.getString("message");
                                     String success = root.getString("success");
-
                                     if (success.equals("1")) {
-                                        ((CartActivity) context).getCartListItems();
                                         ((CartActivity) context).cartCount();
                                         notifyItemRemoved(position);
                                         notifyItemRangeChanged(position, cartServerModelList.size());
                                         notifyDataSetChanged();
-                                        /*Intent i = new Intent(context, CartActivity.class);
-                                        context.startActivity(i);*/
+                                        Intent i = new Intent(context, CartActivity.class);
+                                        context.startActivity(i);
                                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                                       // progressDialog.dismiss();
+                                        progressDialog.dismiss();
                                     }else {
                                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                                       // progressDialog.dismiss();
+                                        progressDialog.dismiss();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                               // progressDialog.dismiss();
+                                progressDialog.dismiss();
                             }
 
                         }
@@ -433,7 +425,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             }
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
-               // progressDialog.dismiss();
+                progressDialog.dismiss();
+                Toast.makeText(context, "Some thing went wrong!Please try again later", Toast.LENGTH_SHORT).show();
 //                Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();
             }
         });

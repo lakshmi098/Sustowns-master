@@ -47,14 +47,14 @@ public class StoreSentOffersAdapter extends RecyclerView.Adapter<StoreSentOffers
         status = storeSentOffersModels.get(position).getStatus();
         if(storeSentOffersModels.get(position) != null){
             viewHolder.prod_name.setText(storeSentOffersModels.get(position).getPr_title());
-            viewHolder.offer_price.setText(storeSentOffersModels.get(position).getMakepeice());
+            viewHolder.offer_price.setText("INR "+storeSentOffersModels.get(position).getMakepeice());
             viewHolder.offer_quantity.setText(storeSentOffersModels.get(position).getMakeqty());
             viewHolder.offered_by.setText(storeSentOffersModels.get(position).getFullname());
             if(status.equalsIgnoreCase("1")){
                 viewHolder.text_offer_status.setVisibility(View.VISIBLE);
                 viewHolder.offer_btn.setVisibility(View.GONE);
                 viewHolder.offer_accepted.setVisibility(View.GONE);
-                viewHolder.text_offer_status.setText("Pending");
+                viewHolder.text_offer_status.setText("Awaiting for Acceptence");
             }else if(status.equalsIgnoreCase("2")){
                 viewHolder.text_offer_status.setVisibility(View.GONE);
                 viewHolder.offer_btn.setVisibility(View.VISIBLE);
@@ -65,7 +65,12 @@ public class StoreSentOffersAdapter extends RecyclerView.Adapter<StoreSentOffers
                 viewHolder.text_offer_status.setVisibility(View.VISIBLE);
                 viewHolder.offer_btn.setVisibility(View.GONE);
                 viewHolder.offer_accepted.setVisibility(View.GONE);
-                viewHolder.offer_btn.setText("Paid");
+                viewHolder.text_offer_status.setText("Paid");
+            }else if(status.equalsIgnoreCase("0")){
+                viewHolder.text_offer_status.setVisibility(View.VISIBLE);
+                viewHolder.offer_btn.setVisibility(View.GONE);
+                viewHolder.offer_accepted.setVisibility(View.GONE);
+                viewHolder.text_offer_status.setText("Offer Rejected");
             }
         }
         viewHolder.offer_btn.setOnClickListener(new View.OnClickListener() {
@@ -78,18 +83,6 @@ public class StoreSentOffersAdapter extends RecyclerView.Adapter<StoreSentOffers
                 context.startActivity(i);
             }
         });
-       /* viewHolder.accept_offer_img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        viewHolder.remove_offer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });*/
     }
     public void removeAt(int position) {
         //  notifyDataSetChanged();

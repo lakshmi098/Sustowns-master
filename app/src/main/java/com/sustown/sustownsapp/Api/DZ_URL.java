@@ -73,7 +73,6 @@ public interface DZ_URL {
     String BID_CONTRACTS_APPROVE = "Bidcontractservice/bidapprove";
     String BID_CONFIRM_APPROVE_CONTTRACT = "Bidcontractservice/approveconfirmcontract";
     String BID_CONTRACTS_COMPLETE_QUOTE_DETAILS = "Bidcontractservice/myquotecompletebid";
-
     String CONTRACTS_PURCHASES = "Postcontractservice/mycontractpurchases";
     String CONTRACTS_ORDERS = "Postcontractservice/mycontractorders";
     String CONTRACT_ORDER_INVOICE = "Postcontractservice/mycontractjobinvoice";
@@ -100,9 +99,7 @@ public interface DZ_URL {
     String ADD_SERVICE = "transportservices/addservice";
     String GET_CART_LIST_SERVER = "Sustownsservice/viewcart/?";
     String GET_VENDOR_SERVICES_ADD_PRODUCT = "Sustownsservice/getvendor_ser";
-
     String GET_PAYU_HASH = "checkoutservice/checkoutser/?";
-
     // CUSTOMIZATION
     String GET_CUSTOMIZATION_LIST = "customizationsserv/myservices";
     // Live
@@ -120,10 +117,5 @@ public interface DZ_URL {
     String GET_TRANSPORT_Contract_ORDERDETAILS_LIST = "Postcontractservice/productdetails/";
     String GET_CONTRACT_KMS_BASED_PINCODES = "Postcontractservice/sendquote/";
     String GET_CONTRACT_LOGISTICS_ORDERS_LIST = "Postcontractservice/contracttransportorders/";
-
-    //Move To Live API'S
-
-    // 1. add_transdetails_req IN Add Transport
-
 }
 

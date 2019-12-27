@@ -93,7 +93,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
             }
         });
     }
-
     private boolean removeItemByPosition(int position) {
         try {
             imagesList.remove(position);

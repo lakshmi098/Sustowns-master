@@ -157,7 +157,6 @@ public class FileUtils {
             return imageOrientation;
         }
     }
-
     public static Bitmap getRotatedBitmap(Bitmap bitmap, int imageOrientation) {
         Matrix matrix = new Matrix();
         if (imageOrientation == 0 || imageOrientation == 6 || imageOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
@@ -169,11 +168,9 @@ public class FileUtils {
         } else if (imageOrientation == ExifInterface.ORIENTATION_NORMAL) {
 
         }
-
         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         return bitmap;
     }
-
     public static Bitmap changeBitmapContrastBrightness(Bitmap bmp, float contrast, float brightness) {
         ColorMatrix cm = new ColorMatrix(new float[]
                 {

@@ -190,22 +190,22 @@
                         android:text="name"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
-                    <TextView
-                        android:id="@+id/offer_accepted"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_gravity="right"
-                        android:gravity="right"
-                        android:padding="7dp"
-                        android:text="Offer Accepted"
-                        android:visibility="gone"
-                        android:layout_marginRight="10dp"
-                        android:textColor="@color/btn_background_color"
-                        android:textStyle="bold"
-                        android:textSize="16sp" />
 
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/offer_accepted"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                    android:padding="7dp"
+                    android:text="Offer Accepted"
+                    android:visibility="gone"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/btn_background_color"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

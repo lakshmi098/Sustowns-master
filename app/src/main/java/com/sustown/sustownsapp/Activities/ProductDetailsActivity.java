@@ -578,7 +578,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                     TotalPriceStr = Float.parseFloat(pr_price)-DisPriceStr;
                                                     prod_price.setText(pr_currency+" "+String.valueOf(TotalPriceStr));
                                                     prod_price1.setVisibility(View.VISIBLE);
-                                                    prod_price1.setText(pr_price);
+                                                    prod_price1.setText(pr_currency+" "+pr_price);
                                                     float quantityInt = Float.parseFloat(quantity);
                                                     float ProdPriceStrFloat = quantityInt * TotalPriceStr ;
                                                     ProdPriceStr = String.valueOf(ProdPriceStrFloat);
@@ -700,7 +700,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                             .placeholder(R.drawable.no_image_available)
                                                             .error(R.drawable.no_image_available)
                                                             .into(image_product_details);
-                                                } else {
+                                                }else {
                                                     Picasso.get()
                                                             .load(product_image_path)
                                                             .placeholder(R.drawable.no_image_available)
@@ -708,7 +708,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                             .into(image_product_details);
                                                 }
                                                 product_name.setText(pr_title);
-                                                prod_details_unit.setText(pr_weight + weight_unit);
+                                                prod_details_unit.setText(pr_weight +" "+weight_unit);
                                                 packing_type.setText(pr_packtype);
                                                 min_quantity.setText(quantity);
                                                 availability_stock.setText(stock_status_name);

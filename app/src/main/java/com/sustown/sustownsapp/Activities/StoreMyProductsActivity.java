@@ -428,7 +428,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                         }
                     });
                     customdialog.show();
-//                imagePath = FileUtils.launchServiceCamera(ServiceManagementActivity.this, count, true);
                 }
             });
             imageview = (CircleImageView) findViewById(R.id.imageview);
@@ -488,7 +487,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     sampleGrossStr = parent.getItemAtPosition(position).toString();
-                    // preferenceUtils.saveString(PreferenceUtils.EGGS_TYPE,eggs_type);
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -503,7 +501,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     countyOriginStr = parent.getItemAtPosition(position).toString();
-                    // preferenceUtils.saveString(PreferenceUtils.EGGS_TYPE,eggs_type);
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -1361,6 +1358,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                                 String pr_price = jsonObject.getString("pr_price");
                                                 String pr_min = jsonObject.getString("pr_min");
                                                 String pr_discount = jsonObject.getString("pr_discount");
+                                                String weight_unit = jsonObject.getString("weight_unit");
                                                 String imagepath = jsonObject.getString("imagepath");
                                                 String pr_type = jsonObject.getString("pr_type");
                                                 String makeoffer = jsonObject.getString("makeoffer");
@@ -1383,6 +1381,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                                 myProductsModel.setPr_price(pr_price);
                                                 myProductsModel.setPr_min(pr_min);
                                                 myProductsModel.setPr_discount(pr_discount);
+                                                myProductsModel.setWeight_unit(weight_unit);
                                                 myProductsModel.setPr_type(pr_type);
                                                 myProductsModel.setMakeoffer(makeoffer);
                                                 myProductsModel.setPr_image(prod_image);

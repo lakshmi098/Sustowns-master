@@ -69,7 +69,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 public class ProductsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
-    private static final Integer[] images = {R.drawable.simg3, R.drawable.simg9, R.drawable.simg5, R.drawable.simg9, R.drawable.simg3, R.drawable.simg5, R.drawable.simg9, R.drawable.simg3};
     public static String username, useremail;
     GridView products_list;
     PreferenceUtils preferenceUtils;
@@ -83,7 +82,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
     String search_st, locationTypeStr, l_type = "", continent_values, country_radiobtn, continenetIds;
     ProductsAdapter productsAdapter;
     ImageView search_img, backarrow;
-    RangeSeekBar seekBar;
     ArrayList<PoultryProductsModel> poultryProductsModels;
     ArrayList<SearchProductsModel> searchProductsModels;
     SearchProductsAdapter searchProductsAdapter;
@@ -95,8 +93,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
     FilterListTypeAdapter filterListTypeAdapter = new FilterListTypeAdapter();
     FilterContinentAdapter filterContinentAdapter = new FilterContinentAdapter();
     Button cancel_filter, apply_filter, filter_btn;
-    String[] categories = {"Live Stock", "Poultry", "Eggs", "Eggs1", "Eggs2", "Eggs3", "Eggs4", "Eggs5", "Eggs6",};
-    String[] list_type = {"All", "Product", "Service"};
     String[] sector_type = {"All", "B2B", "Buyer Network"};
     String[] LocationType = {"select", "Product Location", "Vendor Location", "Product Origin"};
     ShimmerFrameLayout shimmer_grid_container;
@@ -794,24 +790,20 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                 Log.d("Response raw header", response.headers().toString());
                 Log.d("Response raw", String.valueOf(response.raw().body()));
                 Log.d("Response code", String.valueOf(response.code()));
-
                 System.out.println("----------------------------------------------------");
-
                 if (response.isSuccessful()) {
                     search_et.setFocusableInTouchMode(false);
-                    // if(progressDialog.isShowing())
-                    //   progressDialog.dismiss();
                     if (response.body().toString() != null) {
                         if (response != null) {
                             String searchResponse = response.body().toString();
                             Log.d("Reg", "Response  >>" + searchResponse.toString());
-
                             if (searchResponse != null) {
                                 JSONObject root = null;
                                 try {
                                     root = new JSONObject(searchResponse);
                                     Integer success;
                                     success = root.getInt("success");
+                                    String imagepath = root.getString("imagepath");
                                     if (success == 1) {
                                         JSONArray msg = root.getJSONArray("viewproducts");
                                         searchProductsModels = new ArrayList<SearchProductsModel>();
@@ -843,7 +835,7 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                                             poultryProductsModel.setPr_weight_unit(pr_weight_unit);
                                             poultryProductsModel.setPr_weight(pr_weight);
                                             poultryProductsModel.setImagepath(pr_image);
-                                            poultryProductsModel.setPr_image(pr_image);
+                                            poultryProductsModel.setPr_image(imagepath+pr_image);
                                             poultryProductsModel.setCountry_name(country_name);
                                             poultryProductsModel.setCity_name(city_name);
                                             poultryProductsModel.setJob_location(job_location);
@@ -861,7 +853,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                                         empty.setVisibility(View.VISIBLE);
                                         helper.stopShimmer(shimmer_grid_container);
                                     }
-
                                 } catch (JSONException e) {
                                     helper.stopShimmer(shimmer_grid_container);
                                     e.printStackTrace();
@@ -869,12 +860,10 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
                             }
                         }
                     }
-
                 } else {
                     helper.stopShimmer(shimmer_grid_container);
                 }
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
                 Log.d("Error Call", ">>>>" + call.toString());
@@ -883,7 +872,6 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
             }
         });
     }
-
     private void getFilterContinents() {
         shimmer_grid_container.startShimmerAnimation();
         Retrofit retrofit = new Retrofit.Builder()

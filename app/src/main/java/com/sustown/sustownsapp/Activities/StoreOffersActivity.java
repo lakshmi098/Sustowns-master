@@ -209,7 +209,7 @@ public class StoreOffersActivity extends AppCompatActivity {
                                                 preferenceUtils.saveString(PreferenceUtils.OFF_PRO_ID,prod_id);
 
                                                 StoreSentOffersModel storeSentOffersModel = new StoreSentOffersModel();
-                                                storeSentOffersModel.setId(id);
+                                                                                      storeSentOffersModel.setId(id);
                                                 storeSentOffersModel.setProd_id(prod_id);
                                                 storeSentOffersModel.setMakepeice(TotalPrice);
                                                 storeSentOffersModel.setMakeqty(makeqty);

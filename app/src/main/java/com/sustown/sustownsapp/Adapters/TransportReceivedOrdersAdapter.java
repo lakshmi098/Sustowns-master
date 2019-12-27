@@ -81,7 +81,10 @@ public class TransportReceivedOrdersAdapter extends RecyclerView.Adapter<Transpo
                         viewHolder.ll_confirm_reject.setVisibility(View.GONE);
                         viewHolder.status_text.setVisibility(View.VISIBLE);
                         viewHolder.status_text.setText("Quote Confirmed");
-
+                    }else if(orderModels.get(position).getTrans_status().equalsIgnoreCase("7")){
+                        viewHolder.ll_confirm_reject.setVisibility(View.GONE);
+                        viewHolder.status_text.setVisibility(View.VISIBLE);
+                        viewHolder.status_text.setText("Awaiting for Product Pickup");
                     }
                     viewHolder.order_confirm.setOnClickListener(new View.OnClickListener() {
                         @Override

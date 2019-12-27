@@ -12,6 +12,7 @@ public class MyProductsModel {
     private String pr_price;
     private String pr_min;
     private String pr_discount;
+    private String weight_unit;
     private String imagepath;
     private String pr_type;
     private String makeoffer;
@@ -87,6 +88,14 @@ public class MyProductsModel {
 
     public void setPr_discount(String pr_discount) {
         this.pr_discount = pr_discount;
+    }
+
+    public String getWeight_unit() {
+        return weight_unit;
+    }
+
+    public void setWeight_unit(String weight_unit) {
+        this.weight_unit = weight_unit;
     }
 
     public String getPr_min() {

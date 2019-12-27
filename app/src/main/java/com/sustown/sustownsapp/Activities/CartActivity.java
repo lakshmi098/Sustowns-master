@@ -228,7 +228,7 @@ public class CartActivity extends AppCompatActivity implements DataListener {
                 addToCartModels.add(addToCartModel);
                 cartAmountTotal = Double.parseDouble(addToCartModel.getTotalItemCost()) + cartAmountTotal;
             }
-            cart_total_amount.setText("Total Amount : " + String.valueOf(cartAmountTotal));
+            cart_total_amount.setText("Total Amount : INR " + String.valueOf(cartAmountTotal));
         } else {
             checkout.setVisibility(View.GONE);
             cart_text.setVisibility(View.VISIBLE);
@@ -333,7 +333,7 @@ public void cartCount() {
         realm.beginTransaction();
         AddToCartModel addToCartModel = realm.where(AddToCartModel.class).equalTo("itemId", itemId).findFirst();
         cartAmountTotal = cartAmountTotal - Double.parseDouble(addToCartModel.getTotalItemCost());
-        cart_total_amount.setText("Total Amount : " + String.valueOf(cartAmountTotal));
+        cart_total_amount.setText("Total Amount : INR " + String.valueOf(cartAmountTotal));
         addToCartModel.deleteFromRealm();
 
         addToCartModels.remove(position);
@@ -350,7 +350,7 @@ public void cartCount() {
         cartAmountTotal = cartAmountTotal - Double.parseDouble(addToCartModel.getTotalItemCost());
         Double totalAmount = Double.parseDouble(quantity) * Double.parseDouble(addToCartModel.getPrice());
         cartAmountTotal = cartAmountTotal + totalAmount;
-        cart_total_amount.setText("Total Amount : " + String.valueOf(cartAmountTotal));
+        cart_total_amount.setText("Total Amount : INR " + String.valueOf(cartAmountTotal));
         addToCartModel.setQuantity(quantity);
         addToCartModel.setTotalItemCost(String.valueOf(totalAmount));
         realm.copyToRealmOrUpdate(addToCartModel);
@@ -409,7 +409,7 @@ public void cartCount() {
                                // cartServerList.add(cartServerModel);
                             }
                             cartAmountTotal = Double.parseDouble(response.getString("order_total"));
-                            cart_total_amount.setText("Total Amount : " + response.getString("order_total"));
+                            cart_total_amount.setText("Total Amount : INR " + response.getString("order_total"));
                             helper.hideLoader();
                         } else {
                             helper.singleClickAlert(CartActivity.this, SweetAlertDialog.NORMAL_TYPE, "", "Cart is empty",
@@ -437,7 +437,7 @@ public void cartCount() {
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                                         sweetAlertDialog.dismissWithAnimation();
                                         cartAmountTotal = cartAmountTotal - Double.parseDouble(cartServerList.get(removePosition).getPrice_qty());
-                                        cart_total_amount.setText("Total Amount : " + cartAmountTotal);
+                                        cart_total_amount.setText("Total Amount : INR " + cartAmountTotal);
                                         if(cartAmountTotal > 0.0){
                                             checkout.setVisibility(View.VISIBLE);
                                             cart_text.setVisibility(View.GONE);
@@ -607,7 +607,7 @@ public void cartCount() {
                                             cartServerList.add(cartListModel);
                                         }
                                         cartAmountTotal = Double.parseDouble(order_total);
-                                        cart_total_amount.setText("Total Amount : " + order_total);
+                                        cart_total_amount.setText("Total Amount : INR " + order_total);
                                         }else{
                                         checkout.setVisibility(View.GONE);
                                         cart_text.setVisibility(View.VISIBLE);
