@@ -49,6 +49,15 @@ public class MyProductsModel {
     private String country_st;
     private String state_st;
     private String city_st;
+    public List<ImageModelEdit> getImageModelList() {
+      return imageModelList;
+    }
+
+    public void setImageModelList(List<ImageModelEdit> imageModelList) {
+       this.imageModelList = imageModelList;
+    }
+
+    private List<ImageModelEdit> imageModelList;
 
     public String getId() {
         return id;
