@@ -84,7 +84,6 @@
                     android:layout_marginRight="15dp"
                     android:inputType="textPersonName"
                     android:hint="Name *"
-                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textColorHint="@color/black"
                     android:textSize="16sp" />
@@ -105,7 +104,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
                     android:hint="Vehicle ID *"
-                    android:textStyle="bold"
                     android:textColorHint="@color/black"
                     android:textColor="#000000"
                     android:textSize="16sp" />
@@ -463,8 +461,7 @@
                     android:inputType="numberDecimal"
                     android:textColor="#000000"
                     android:textColorHint="@color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -486,7 +483,6 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="3dp"
                     android:hint="Width(Feets)"
-                    android:textStyle="bold"
                     android:textColorHint="@color/black"
                     android:inputType="numberDecimal"
                     android:textColor="#000000"
@@ -512,7 +508,6 @@
                     android:layout_marginRight="15dp"
                     android:hint="Height(Feets)"
                     android:layout_marginTop="3dp"
-                    android:textStyle="bold"
                     android:textColorHint="@color/black"
                     android:inputType="numberDecimal"
                     android:textColor="#000000"
@@ -537,7 +532,6 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="3dp"
                     android:hint="Tax :"
-                    android:textStyle="bold"
                     android:textColorHint="@color/black"
                     android:inputType="numberDecimal"
                     android:textColor="#000000"

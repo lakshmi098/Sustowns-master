@@ -6,7 +6,7 @@ public class MyProductsModel {
     private String pr_userid;
     private String pr_bussid;
     private String pr_title;
-    private String pr_image;
+    private String prod_image;
     private String pr_sku;
     private String pr_weight;
     private String pr_price;
@@ -18,6 +18,24 @@ public class MyProductsModel {
     private String makeoffer;
     private String status;
     private String address;
+    private String shippingStr;
+    private String egg_type;
+    private String quality;
+    private String catid;
+    private String stocks;
+    private String date_started;
+    private String date_end;
+    private String pr_packtype;
+    private String sweight;
+    private String sweight_unit;
+    private String sgweight;
+    private String sgweight_unit;
+    private String spack_type;
+    private String smaxquan;
+    private String sprice;
+    private String days;
+    private String listing_type;
+    private String is_primary;
 
     private String eggs_type;
     private String quality_st;
@@ -31,7 +49,6 @@ public class MyProductsModel {
     private String country_st;
     private String state_st;
     private String city_st;
-
 
     public String getId() {
         return id;
@@ -65,13 +82,12 @@ public class MyProductsModel {
         this.pr_title = pr_title;
     }
 
-
-    public String getPr_image() {
-        return pr_image;
+    public String getProd_image() {
+        return prod_image;
     }
 
-    public void setPr_image(String pr_image) {
-        this.pr_image = pr_image;
+    public void setProd_image(String prod_image) {
+        this.prod_image = prod_image;
     }
 
     public String getPr_price() {
@@ -162,12 +178,156 @@ public class MyProductsModel {
         this.address = address;
     }
 
+    public String getShippingStr() {
+        return shippingStr;
+    }
+
+    public void setShippingStr(String shippingStr) {
+        this.shippingStr = shippingStr;
+    }
+
+    public String getEgg_type() {
+        return egg_type;
+    }
+
+    public void setEgg_type(String egg_type) {
+        this.egg_type = egg_type;
+    }
+
+    public String getQuality() {
+        return quality;
+    }
+
+    public void setQuality(String quality) {
+        this.quality = quality;
+    }
+
+    public String getCatid() {
+        return catid;
+    }
+
+    public void setCatid(String catid) {
+        this.catid = catid;
+    }
+
+    public String getStocks() {
+        return stocks;
+    }
+
+    public void setStocks(String stocks) {
+        this.stocks = stocks;
+    }
+
+    public String getDate_started() {
+        return date_started;
+    }
+
+    public void setDate_started(String date_started) {
+        this.date_started = date_started;
+    }
+
+    public String getDate_end() {
+        return date_end;
+    }
+
+    public void setDate_end(String date_end) {
+        this.date_end = date_end;
+    }
+
+    public String getPr_packtype() {
+        return pr_packtype;
+    }
+
+    public void setPr_packtype(String pr_packtype) {
+        this.pr_packtype = pr_packtype;
+    }
+
+    public String getSweight() {
+        return sweight;
+    }
+
+    public void setSweight(String sweight) {
+        this.sweight = sweight;
+    }
+
+    public String getSweight_unit() {
+        return sweight_unit;
+    }
+
+    public void setSweight_unit(String sweight_unit) {
+        this.sweight_unit = sweight_unit;
+    }
+
+    public String getSgweight() {
+        return sgweight;
+    }
+
+    public void setSgweight(String sgweight) {
+        this.sgweight = sgweight;
+    }
+
+    public String getSgweight_unit() {
+        return sgweight_unit;
+    }
+
+    public void setSgweight_unit(String sgweight_unit) {
+        this.sgweight_unit = sgweight_unit;
+    }
+
+    public String getSpack_type() {
+        return spack_type;
+    }
+
+    public void setSpack_type(String spack_type) {
+        this.spack_type = spack_type;
+    }
+
+    public String getSmaxquan() {
+        return smaxquan;
+    }
+
+    public void setSmaxquan(String smaxquan) {
+        this.smaxquan = smaxquan;
+    }
+
+    public String getSprice() {
+        return sprice;
+    }
+
+    public void setSprice(String sprice) {
+        this.sprice = sprice;
+    }
+
+    public String getIs_primary() {
+        return is_primary;
+    }
+
+    public void setIs_primary(String is_primary) {
+        this.is_primary = is_primary;
+    }
+
     public String getEggs_type() {
         return eggs_type;
     }
 
     public void setEggs_type(String eggs_type) {
         this.eggs_type = eggs_type;
+    }
+
+    public String getDays() {
+        return days;
+    }
+
+    public void setDays(String days) {
+        this.days = days;
+    }
+
+    public String getListing_type() {
+        return listing_type;
+    }
+
+    public void setListing_type(String listing_type) {
+        this.listing_type = listing_type;
     }
 
     public String getQuality_st() {

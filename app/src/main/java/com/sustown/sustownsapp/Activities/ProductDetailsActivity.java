@@ -558,6 +558,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                 pr_price = jsonObject.getString("pr_price");
                                                 pr_currency = jsonObject.getString("pr_currency");
                                                 discount = jsonObject.getString("discount");
+                                                String pr_stocks = jsonObject.getString("pr_stocks");
+                                                if(pr_stocks.equalsIgnoreCase("")||pr_stocks.equalsIgnoreCase("0")){
+                                                    availability_stock.setText("Out Of Stock");
+                                                    availability_stock.setTextColor(getResources().getColor(R.color.red_btn_bg_color));
+                                                    addtocart.setVisibility(View.GONE);
+                                                }else{
+                                                    availability_stock.setText("In Stock");
+                                                }
                                                 quantity = jsonObject.getString("pr_min");
                                                 if (discount.equalsIgnoreCase("null")|| discount.equalsIgnoreCase("")) {
                                                     ll_discount.setVisibility(View.GONE);
@@ -711,7 +719,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                                 prod_details_unit.setText(pr_weight +" "+weight_unit);
                                                 packing_type.setText(pr_packtype);
                                                 min_quantity.setText(quantity);
-                                                availability_stock.setText(stock_status_name);
                                                 vendor_product_details.setText(bus_name);
                                                 delivery_time.setText(days + " Days");
                                                 edit_quantity.setText(quantity);

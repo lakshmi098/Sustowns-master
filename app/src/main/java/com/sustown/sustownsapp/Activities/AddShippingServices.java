@@ -142,7 +142,7 @@ public class AddShippingServices extends AppCompatActivity {
     StringBuilder total = new StringBuilder();
     byte[] bytes;
     ByteArrayOutputStream output;
-    String ret,fromDate,toDate,UpdateStr,nameStr, fileString, finalString, fromDateStr, toDateStr, TitleStr,filename;
+    String ret,fromDate,toDate,UpdateStr,nameStr, fileString="", finalString, TitleStr,filename="";
     ArrayList<Data_Model> arrayList = new ArrayList<>();
     RecyclerView images_recyclerView, permit_images_recyclerView;
     ImageButton confirm_add_icon, confirm_permit_add_icon;
@@ -157,7 +157,8 @@ public class AddShippingServices extends AppCompatActivity {
     private int day;
     private int month;
     private int year;
-    String Category,CheckedStr,SubCategory,CatIdStr,SubCatIdStr,VehicleIdStr,MinLoadStr,MaxLoadStr,ContainerType,Length,WidthStr,Height,TransportTax,TransportDis,ServiceRadius="",ServiceExtendRadius="",PointSourceLoc="",PointDesLoc="",LoadType;
+    String fromDateStr="", toDateStr="";
+    String Category,DiscountStr ="",CheckedStr,SubCategory,CatIdStr,SubCatIdStr,VehicleIdStr,MinLoadStr,MaxLoadStr,ContainerType,Length,WidthStr,Height,TransportTax,TransportDis,ServiceRadius="",ServiceExtendRadius="",PointSourceLoc="",PointDesLoc="",LoadType;
 
     public static String getEncodedImage(Bitmap bitmapImage) {
         ByteArrayOutputStream baos;
@@ -537,6 +538,7 @@ public class AddShippingServices extends AppCompatActivity {
                 MaxLoad = max_load_service.getText().toString().trim();
                 Lendth = length_service.getText().toString().trim();
                 Width = width_service.getText().toString().trim();
+                DiscountStr = discount_service.getText().toString();
                 if(!isUpdate){
                     if (transportId.isEmpty() || vehicleId.isEmpty()|| service_name_edit.getText().toString().isEmpty() || loadArrayList.isEmpty() || actionValue.isEmpty() || MinLoad.isEmpty() || MaxLoad.isEmpty() || Lendth.isEmpty()
                             || Width.isEmpty() || height_service.getText().toString().isEmpty() || bodyTypeStr.equalsIgnoreCase("Choose Type")) {
@@ -1499,9 +1501,14 @@ public class AddShippingServices extends AppCompatActivity {
             jsonObj.put("vehicle_width", width_service.getText().toString());
             jsonObj.put("vehicle_height", height_service.getText().toString());
             jsonObj.put("taxfield", tax_service.getText().toString());
-            jsonObj.put("discountfild", discount_service.getText().toString());
-            jsonObj.put("fromdate", fromDateStr);
-            jsonObj.put("todate", toDateStr);
+            jsonObj.put("discountfild", DiscountStr);
+            if(fromDateStr != null || toDateStr != null) {
+                jsonObj.put("fromdate", fromDateStr);
+                jsonObj.put("todate", toDateStr);
+            }else{
+                jsonObj.put("fromdate", "");
+                jsonObj.put("todate", "");
+            }
 // subcategory Array
             JSONArray subcategoryArray = new JSONArray();
             for (int i = 0; i < subCategorySelectedList.size(); i++) {
@@ -1670,9 +1677,14 @@ public class AddShippingServices extends AppCompatActivity {
             jsonObj.put("vehicle_width", width_service.getText().toString());
             jsonObj.put("vehicle_height", height_service.getText().toString());
             jsonObj.put("taxfield", tax_service.getText().toString());
-            jsonObj.put("discountfild", discount_service.getText().toString());
-            jsonObj.put("fromdate", fromDateStr);
-            jsonObj.put("todate", toDateStr);
+            jsonObj.put("discountfild", DiscountStr);
+            if(fromDateStr != null || toDateStr != null) {
+                jsonObj.put("fromdate", fromDateStr);
+                jsonObj.put("todate", toDateStr);
+            }else{
+                jsonObj.put("fromdate", "");
+                jsonObj.put("todate", "");
+            }
 // category Array
           /*  JSONArray product_categoryArray = new JSONArray();
             for (int i = 0; i < categorySelectedList.size(); i++) {

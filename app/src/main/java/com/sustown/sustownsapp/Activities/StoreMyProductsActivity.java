@@ -73,6 +73,7 @@ import com.sustown.sustownsapp.Models.AddProductVendorServices;
 import com.sustown.sustownsapp.Models.CountryModel;
 import com.sustown.sustownsapp.Models.GetCurrencyModel;
 import com.sustown.sustownsapp.Models.ImageModel;
+import com.sustown.sustownsapp.Models.ImageModelEdit;
 import com.sustown.sustownsapp.Models.MyProductsModel;
 import com.sustown.sustownsapp.Models.TransportGetService;
 import com.sustown.sustownsapp.helpers.Helper;
@@ -113,9 +114,9 @@ public class StoreMyProductsActivity extends AppCompatActivity {
     RelativeLayout rl_capture, rl_gallery;
     public static List<MyProductsModel> myProductsModelList;
     TextView title_store,not_available_text;
-    private Uri picUri;
+    public static List<ImageModelEdit> imageModelList = new ArrayList<>();
     public String PickedImgPath = null;
-    String currency_st, TitleStr = "", shippingId = "";
+    String currency_st, TitleStr = "", shippingId = "",service_id,service_name;
     LinearLayout ll_shipping_type, ll_buyer_network,linearlayout,ll_custom_invoice, ll_customizations, ll_my_products, ll_contracts;
     ArrayList<String> currencyCodes;
     ArrayList<String> countryList = new ArrayList<>();
@@ -127,28 +128,29 @@ public class StoreMyProductsActivity extends AppCompatActivity {
     EditText title_add_prod, unit_edit, price_edittext, min_order_et, stock_et, discount_et, sample_unit_edit, pincode_et, gross_weight_et;
     String[] eggsType = {"Types Of Eggs","Regular/Layer Eggs", "Organic Eggs", "Duck Eggs", "Quail Eggs"};
     String[] quality = {"select quality", "AA", "A", "B"};
-    String[] prod_category = {"Category","Egg", "Poultry"};
-    String[] sector = {"Sector","B2B(Business to Business)", "Buyer network"};
-    String[] listingtype = {"Listing Type","Product", "Service"};
-    String[] unit = {"Units","Crate", "Box"};
+    String[] prod_category = {"Category","Egg", "Poultry"},EggCat = {"Egg","Poultry"},PoultryCat = {"Poultry","Egg"};
+    String[] sector = {"Sector","B2B(Business to Business)", "Buyer network"},business = {"B2B(Business to Business)", "Buyer network"},buyerSp = {"Buyer network","B2B(Business to Business)"};
+    String[] listingtype = {"Listing Type","Product", "Service"},productSp = {"Product","Service"},serviceSp = {"Service","Product"};
+    String[] unit = {"Units","Crate", "Box"},Crate = {"Crate","Box"},Box = {"Box","Unit"};
     String[] price = {"INR"};
     String[] samplepacktype = {"sample pack type", "12 Pack Crate", "20 Pack Crate", "30 Pack Crate", "210 Pack Box"};
     String[] country = {"India", "Indonesia", "Iceland", "Australia", "Algeria", "Malaysia", "Saudi Arabia", "Singapore", "USA", "UK", "Uganda"};
     String[] city = {"Hyderabad", "Mumbai", "Chennai", "Kolkata", "Pune"};
     String[] state = {"Telangana", "AP", "Punjab", "UP", "Kerala", "Delhi"};
     String[] shipping = {"no","yes"};
+    String[] shippingEdit = {"yes","no"};
     String[] gross_weight_unit = {"weight unit", "Crate", "Box"};
-    String[] receivedOffers = {"Select Recevied Offers", "Yes", "No"};
+    String[] receivedOffers = {"Select Recevied Offers", "Yes", "No"},accepted={"Yes","No"},rejected = {"No","Yes"};
     String[] packingSize = {"mm", "cm", "in", "ft"};
     String[] DeliveryType = {"EXW", "FOB", "CIF", "Door to Door", "Door to Port", "Port to Door", "Port to Port"};
     String add_prod_st, unit_st, price_st, min_order_st,stock_st, discount_st,eggsType_st,sample_unit_st, user_id, user_role, prod_id, buss_id, pincode_st;
     PreferenceUtils preferenceUtils;
-    String address_st, sample_gross_weight_sp, gross_weight_st, quantity_st, sample_price_st, receivedOffersStr;
+    String address_st, sample_gross_weight_sp="", gross_weight_st, quantity_st, sample_price_st, receivedOffersStr;
     EditText max_quantity_et, sample_price_edittext, delivery_lead_time;
     ProgressDialog progressDialog;
     Spinner spinner_sample_unit, spinner_pack_type, spinner_received_offers;
     String sample_weight_unit_sp,UnitIdSample, packTypeStr, delivery_time, profileString, currency, country_string, received_offers_st, pr_bussid, productId;
-    String eggs_type, quality_st, prodCategory, sector_st, listingtype_st, unit_sp_st, price_sp_st, sample_packtype, shipping_st, country_st, state_st, city_st;
+    String eggs_type, quality_st, prodCategory, sector_st,ListingTypeId,listingtype_st, unit_sp_st, price_sp_st, sample_packtype, shipping_st, country_st, state_st, city_st;
     ArrayList<GetCurrencyModel> getCurrencyModels;
     ArrayList<TransportGetService> transportGetServices;
     String currency_str, sample_price_str;
@@ -171,28 +173,28 @@ public class StoreMyProductsActivity extends AppCompatActivity {
     protected static final int PICK_IMAGE = 1;
     ArrayList<AddProductVendorServices> addProductVendorServices;
     MyServicesAdapter myServicesAdapter;
-    AddVendorServicesAdapter addVendorServicesAdapter;
-    SparseBooleanArray mSelectedItemsListIds = new SparseBooleanArray();
     EditText title_general, summary_general, description_general, general_length, general_width, general_height, tax_general, sample_general_min_order,
             sample_general_length, sample_general_width, sample_general_height, sample_gross_unit_weight;
     String packingSizeStr, sampackingSizeStr, sampleGrossStr, countyOriginStr, deliveryTypeStr,CustomizationKey = "";
     CheckBox checkbox_international, checkbox_domestic;
-    LinearLayout ll_international_freight, ll_domestiic_freight;
-    public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 7;
+    LinearLayout ll_international_freight, ll_domestiic_freight,ll_eggs_type,ll_quality,ll_packtype,ll_samplepacktype;
     ImageButton confirm_add_icon;
     int count = 0;
     List<ImageModel> imagesList = new ArrayList<>();
     List<String> fileList = new ArrayList<>();
     List<String> shippingList = new ArrayList<>();
-    AlertDialog alertDialog,alertDialog1;
+    AlertDialog alertDialog;
     List<Integer> shippingSelectedPosition = new ArrayList<>();
     List<String> shippingSelectedList = new ArrayList<>();
     Helper helper;
-    String UnitId,CategoryId,SectorId,countryId = "",clickedSearch = "",stateId = "",cityId = "",clickAction = "",StartDateStr="",EndDateStr="";
+    String imagepath,product_image,is_primary,prod_image,shippingStr="",UnitId,CategoryId,SectorId,countryId = "",clickedSearch = "",stateId = "",cityId = "",clickAction = "",StartDateStr="",EndDateStr="";
     SwipeRefreshLayout swipeRefreshLayout;
     int textlength = 0;
     ArrayList<String> selectedCountryList = new ArrayList<String>();
     ArrayList<String> selectedCountryIdList = new ArrayList<String>();
+    ArrayList<String> selectedItems = new ArrayList<String>();
+    String egg_type,quality_sp,catid,stocks,date_started,date_end,pr_packtype,sweight, sweight_unit,sgweight,sgweight_unit,spack_type,smaxquan,sprice;
+    TextView text_eggs_type,text_quality,text_pack_type,text_samplepacktype;
     public static String getEncodedImage(Bitmap bitmapImage) {
         ByteArrayOutputStream baos;
         baos = new ByteArrayOutputStream();
@@ -201,7 +203,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
         String encodedImagePatientImage = Base64.encodeToString(b, Base64.DEFAULT);
         return encodedImagePatientImage;
     }
-
+    SparseBooleanArray mSelectedContinents = new SparseBooleanArray();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -687,6 +689,11 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     listingtype_st = parent.getItemAtPosition(position).toString();
+                    if(listingtype_st.equalsIgnoreCase("Product")){
+                        ListingTypeId = "0";
+                    }else if(listingtype_st.equalsIgnoreCase("Service")){
+                        ListingTypeId = "1";
+                    }
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -757,13 +764,11 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             spinner_sample_pack_type = (Spinner) findViewById(R.id.spinner_sample_pack_type);
             ArrayAdapter aa7 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, samplepacktype);
             aa7.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            //Setting the ArrayAdapter data on the Spinner
             spinner_sample_pack_type.setAdapter(aa7);
             spinner_sample_pack_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     sample_packtype = parent.getItemAtPosition(position).toString();
-                    //preferenceUtils.saveString(PreferenceUtils.Sample_PackType, sample_packtype);
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -778,29 +783,19 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 }
             });
             spinner_shipping = (Spinner) findViewById(R.id.spinner_shipping);
-            ArrayAdapter aa8 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, shipping);
-            aa8.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            //Setting the ArrayAdapter data on the Spinner
-            spinner_shipping.setAdapter(aa8);
+                ArrayAdapter aa8 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, shipping);
+                aa8.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                //Setting the ArrayAdapter data on the Spinner
+                spinner_shipping.setAdapter(aa8);
             spinner_shipping.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     shipping_st = parent.getItemAtPosition(position).toString();
                     if (shipping_st.equalsIgnoreCase("yes")) {
                         ll_choose_shipping_types.setVisibility(View.VISIBLE);
-                        //  getVendorServicesList();
-/*
-                       ll_choose_shipping_types.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                getVendorServicesList();
-                            }
-                        });
-*/
                     } else {
                         ll_choose_shipping_types.setVisibility(View.GONE);
                     }
-                    // preferenceUtils.saveString(PreferenceUtils.Shipping,shipping_st);
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -816,7 +811,12 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     sample_gross_weight_sp = parent.getItemAtPosition(position).toString();
-                    //  preferenceUtils.saveString(PreferenceUtils.SAMPLE_GROSS_WEIGHT, sample_gross_weight_sp);
+                    if(sample_gross_weight_sp.equalsIgnoreCase("Crate")){
+                        UnitIdSample = "17";
+                    }else if(sample_gross_weight_sp.equalsIgnoreCase("Box")){
+                        UnitIdSample = "18";
+                    }else{
+                    }
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -859,7 +859,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -873,6 +872,14 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 startActivity(mapIntent);
             }
         });
+        text_eggs_type = (TextView) findViewById(R.id.text_eggs_type);
+        text_quality = findViewById(R.id.text_quality);
+        text_pack_type = findViewById(R.id.text_pack_type);
+        text_samplepacktype = findViewById(R.id.text_samplepacktype);
+        ll_eggs_type = findViewById(R.id.ll_eggs_type);
+        ll_quality = findViewById(R.id.ll_quality);
+        ll_packtype = findViewById(R.id.ll_packtype);
+        ll_samplepacktype = findViewById(R.id.ll_samplepacktype);
         // on click events
         save_product.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -881,10 +888,10 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                     if (title_add_prod.getText().toString().trim().isEmpty() || min_order_et.getText().toString().trim().isEmpty() ||
                             eggs_type.equalsIgnoreCase("Types Of Eggs")||unit_edit.getText().toString().isEmpty() ||
                             unit_sp_st.equalsIgnoreCase("select unit") || price_edittext.getText().toString().isEmpty() || packTypeStr.equalsIgnoreCase("sample pack type")||
-                            received_offers_st.equalsIgnoreCase("Select Recevied Offers")
+                            received_offers_st.equalsIgnoreCase("Select Recevied Offers") || stock_et.getText().toString().isEmpty()
                     ||prodCategory.equalsIgnoreCase("Category")||sector_st.equalsIgnoreCase("Sector")||listingtype_st.equalsIgnoreCase("Listing Type")|| unit_sp_st.equalsIgnoreCase("Units")) {
                         Toast.makeText(StoreMyProductsActivity.this, "Please fill Mandatory(*) fields", Toast.LENGTH_SHORT).show();
-                    }else if(imagesList.size() == 0 || imagesList.get(position).getIsPrimary().equalsIgnoreCase("no")){
+                    }else if(imagesList.size() == 0 || ImagesAdapter.selectedPrimary.isEmpty()){
                         Toast.makeText(StoreMyProductsActivity.this, "Required! Please Select Atleast One Image", Toast.LENGTH_SHORT).show();
                     }else if(countryId.equalsIgnoreCase("") || stateId.equalsIgnoreCase("") || cityId.equalsIgnoreCase("")|| countryId.isEmpty()||stateId.isEmpty()||cityId.isEmpty()){
                         Toast.makeText(StoreMyProductsActivity.this, "Please fill mandatory(*) fields", Toast.LENGTH_SHORT).show();
@@ -1159,8 +1166,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                         }
                                         ImageModel imageModel = new ImageModel(
                                                 profileString,
-                                                "no"
-                                        );
+                                                "no");
                                         imagesList.add(imageModel);
                                         setUpRecyclerView(imagePath);
 
@@ -1259,22 +1265,395 @@ public class StoreMyProductsActivity extends AppCompatActivity {
         return "";
     }
     public void editProduct(int positionValue) {
-        address_txt_map.setText(myProductsModelList.get(position).getAddress());
         TitleStr = "Edit Product";
         title_store.setText(TitleStr);
         ll_add_products_store.setVisibility(View.VISIBLE);
-        imageview.setVisibility(View.VISIBLE);
+        //imageview.setVisibility(View.VISIBLE);
         ll_prod_list.setVisibility(View.GONE);
         isUpdate = true;
         position = positionValue;
+/*
+        for(int i = 0 ; i<imageModelList.size(); i++) {
+                ImageModel imageModel = new ImageModel(imageModelList.get(position).getProductImage(), imageModelList.get(position).getIsPrimary());
+                imagesList.add(imageModel);
+                setUpRecyclerView1(imageModelList.get(position).getProductImage());
+        }
+*/
         add_prod_st = myProductsModelList.get(position).getPr_title();
         price_st = myProductsModelList.get(position).getPr_price();
         min_order_st = myProductsModelList.get(position).getPr_min();
         discount_st = myProductsModelList.get(position).getPr_discount();
         unit_st = myProductsModelList.get(position).getPr_weight();
+        stock_et.setText(myProductsModelList.get(position).getStocks());
+        discount_et.setText(myProductsModelList.get(position).getPr_discount());
+        min_order_et.setText(myProductsModelList.get(position).getPr_min());
+        price_edittext.setText(myProductsModelList.get(position).getPr_price());
+        sample_unit_edit.setText(myProductsModelList.get(position).getSweight());
+        max_quantity_et.setText(myProductsModelList.get(position).getSmaxquan());
+        sample_price_edittext.setText(myProductsModelList.get(position).getSprice());
+        sample_gross_weight_et.setText(myProductsModelList.get(position).getSgweight());
+        delivery_lead_time.setText(myProductsModelList.get(position).getDays());
+        address_txt_map.setText(myProductsModelList.get(position).getAddress());
+        if(myProductsModelList.get(position).getDate_started() != null || myProductsModelList.get(position).getDate_end() != null) {
+            dis_start_date.setText(myProductsModelList.get(position).getDate_started());
+            dis_end_date.setText(myProductsModelList.get(position).getDate_end());
+        }else{
+            dis_start_date.setText("Discount Start Date");
+            dis_end_date.setText("Discount End Date");
+        }
+        if(myProductsModelList.get(position).getEgg_type().equalsIgnoreCase("Types Of Eggs")){
+            ll_eggs_type.setVisibility(View.VISIBLE);
+            spinner_eggs_types.setVisibility(View.GONE);
+            text_eggs_type.setText(myProductsModelList.get(position).getEgg_type());
+        }
+        if(myProductsModelList.get(position).getQuality().equalsIgnoreCase("select quality")){
+            ll_quality.setVisibility(View.VISIBLE);
+            spinner_quality.setVisibility(View.GONE);
+            text_quality.setText(myProductsModelList.get(position).getQuality());
+        }
+        if(myProductsModelList.get(position).getPr_packtype().equalsIgnoreCase("sample pack type")){
+            ll_packtype.setVisibility(View.VISIBLE);
+            spinner_pack_type.setVisibility(View.GONE);
+            text_pack_type.setText(myProductsModelList.get(position).getPr_packtype());
+        }
+        if(myProductsModelList.get(position).getSpack_type().equalsIgnoreCase("sample pack type")){
+            ll_samplepacktype.setVisibility(View.VISIBLE);
+            spinner_sample_pack_type.setVisibility(View.GONE);
+            text_samplepacktype.setText(myProductsModelList.get(position).getSpack_type());
+        }
+        ll_eggs_type.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ll_eggs_type.setVisibility(View.GONE);
+                spinner_eggs_types.setVisibility(View.VISIBLE);
+            }
+        });
+        ll_quality.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ll_quality.setVisibility(View.GONE);
+                spinner_quality.setVisibility(View.VISIBLE);
+            }
+        });
+        ll_packtype.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ll_packtype.setVisibility(View.GONE);
+                spinner_pack_type.setVisibility(View.VISIBLE);
+            }
+        });
+        ll_samplepacktype.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ll_samplepacktype.setVisibility(View.GONE);
+                spinner_sample_pack_type.setVisibility(View.VISIBLE);
+            }
+        });
+        if(myProductsModelList.get(position).getShippingStr().equalsIgnoreCase("yes")){
+            ll_choose_shipping_types.setVisibility(View.VISIBLE);
+            ArrayAdapter adapterShip = new ArrayAdapter(this, android.R.layout.simple_spinner_item, shippingEdit);
+            adapterShip.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_shipping.setAdapter(adapterShip);
+            spinner_shipping.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    shipping_st = parent.getItemAtPosition(position).toString();
+                    if (shipping_st.equalsIgnoreCase("yes")) {
+                        ll_choose_shipping_types.setVisibility(View.VISIBLE);
+                    } else {
+                        ll_choose_shipping_types.setVisibility(View.GONE);
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+        if(myProductsModelList.get(position).getMakeoffer().equalsIgnoreCase("0")){
+            ArrayAdapter received_offer_sp = new ArrayAdapter(this, android.R.layout.simple_spinner_item, accepted);
+            received_offer_sp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner_received_offers.setAdapter(received_offer_sp);
+            receivedOffersStr = "0";
+            spinner_received_offers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    received_offers_st = parent.getItemAtPosition(position).toString();
+                    if(received_offers_st.equalsIgnoreCase("Yes")){
+                        receivedOffersStr = "1";
+                    }else  if(received_offers_st.equalsIgnoreCase("No")){
+                        receivedOffersStr = "0";
+                    }
+                    preferenceUtils.saveString(PreferenceUtils.ReceivedOffersList, received_offers_st);
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }else if(myProductsModelList.get(position).getMakeoffer().equalsIgnoreCase("1")){
+            ArrayAdapter received_offer_sp = new ArrayAdapter(this, android.R.layout.simple_spinner_item, rejected);
+            received_offer_sp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner_received_offers.setAdapter(received_offer_sp);
+            receivedOffersStr = "1";
+            spinner_received_offers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    received_offers_st = parent.getItemAtPosition(position).toString();
+                    if(received_offers_st.equalsIgnoreCase("Yes")){
+                        receivedOffersStr = "1";
+                    }else  if(received_offers_st.equalsIgnoreCase("No")){
+                        receivedOffersStr = "0";
+                    }
+                    preferenceUtils.saveString(PreferenceUtils.ReceivedOffersList, received_offers_st);
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+        if(myProductsModelList.get(position).getCatid().equalsIgnoreCase("146")){
+            ArrayAdapter adapterCat = new ArrayAdapter(this, android.R.layout.simple_spinner_item, EggCat);
+            adapterCat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_prod_category.setAdapter(adapterCat);
+            CategoryId = "146";
+            spinner_prod_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    prodCategory = parent.getItemAtPosition(position).toString();
+                    if(prodCategory.equalsIgnoreCase("Egg")){
+                        CategoryId = "146";
+                    }else if(prodCategory.equalsIgnoreCase("Poultry")){
+                        CategoryId = "145";
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }else if(myProductsModelList.get(position).getCatid().equalsIgnoreCase("145")){
+            ArrayAdapter adapterCat = new ArrayAdapter(this, android.R.layout.simple_spinner_item,PoultryCat);
+            adapterCat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_prod_category.setAdapter(adapterCat);
+            CategoryId = "145";
+            spinner_prod_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    prodCategory = parent.getItemAtPosition(position).toString();
+                    if(prodCategory.equalsIgnoreCase("Egg")){
+                        CategoryId = "146";
+                    }else if(prodCategory.equalsIgnoreCase("Poultry")){
+                        CategoryId = "145";
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+        if(myProductsModelList.get(position).getPr_type().equalsIgnoreCase("1")){
+            ArrayAdapter aa3 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, business);
+            aa3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_sector.setAdapter(aa3);
+            SectorId = "1";
+            spinner_sector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    sector_st = parent.getItemAtPosition(position).toString();
+                    if(sector_st.equalsIgnoreCase("B2B(Business to Business)")){
+                        SectorId = "1";
+                    }else if(sector_st.equalsIgnoreCase("Buyer network")){
+                        SectorId = "2";
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }else if(myProductsModelList.get(position).getPr_type().equalsIgnoreCase("2")){
+            ArrayAdapter aa3 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, buyerSp);
+            aa3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_sector.setAdapter(aa3);
+            SectorId = "2";
+            spinner_sector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    sector_st = parent.getItemAtPosition(position).toString();
+                    if(sector_st.equalsIgnoreCase("B2B(Business to Business)")){
+                        SectorId = "1";
+                    }else if(sector_st.equalsIgnoreCase("Buyer network")){
+                        SectorId = "2";
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+        if(myProductsModelList.get(position).getListing_type().equalsIgnoreCase("0")){
+            ArrayAdapter aa4 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, productSp);
+            aa4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_list_type.setAdapter(aa4);
+            ListingTypeId = "0";
+            spinner_list_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    listingtype_st = parent.getItemAtPosition(position).toString();
+                    if(listingtype_st.equalsIgnoreCase("Product")){
+                        ListingTypeId = "0";
+                    }else if(listingtype_st.equalsIgnoreCase("Service")){
+                        ListingTypeId = "1";
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }else if(myProductsModelList.get(position).getListing_type().equalsIgnoreCase("1")){
+            ArrayAdapter aa4 = new ArrayAdapter(this, android.R.layout.simple_spinner_item,serviceSp);
+            aa4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_list_type.setAdapter(aa4);
+            ListingTypeId = "1";
+            spinner_list_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    listingtype_st = parent.getItemAtPosition(position).toString();
+                    if(listingtype_st.equalsIgnoreCase("Product")){
+                        ListingTypeId = "0";
+                    }else if(listingtype_st.equalsIgnoreCase("Service")){
+                        ListingTypeId = "1";
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+        if(myProductsModelList.get(position).getWeight_unit().equalsIgnoreCase("Crate")){
+            ArrayAdapter aa5 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Crate);
+            aa5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_unit.setAdapter(aa5);
+            UnitId = "16";
+            spinner_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    unit_sp_st = parent.getItemAtPosition(position).toString();
+                    if(unit_sp_st.equalsIgnoreCase("Crate")){
+                        UnitId = "16";
+                    }else  if(unit_sp_st.equalsIgnoreCase("Box")){
+                        UnitId = "17";
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }else if(myProductsModelList.get(position).getWeight_unit().equalsIgnoreCase("Box")){
+            ArrayAdapter aa5 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Box);
+            aa5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_unit.setAdapter(aa5);
+            UnitId = "17";
+            spinner_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    unit_sp_st = parent.getItemAtPosition(position).toString();
+                    if(unit_sp_st.equalsIgnoreCase("Crate")){
+                        UnitId = "16";
+                    }else  if(unit_sp_st.equalsIgnoreCase("Box")){
+                        UnitId = "17";
+                    }else{ }}
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+        if(myProductsModelList.get(position).getSweight_unit().equalsIgnoreCase("17")){
+            ArrayAdapter aa5 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Crate);
+            aa5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //Setting the ArrayAdapter data on the Spinner
+            spinner_sample_unit.setAdapter(aa5);
+            UnitId = "17";
+            spinner_sample_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    unit_sp_st = parent.getItemAtPosition(position).toString();
+                    if(unit_sp_st.equalsIgnoreCase("Crate")){
+                        UnitId = "17";
+                    }else  if(unit_sp_st.equalsIgnoreCase("Box")){
+                        UnitId = "18";
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }else if(myProductsModelList.get(position).getSweight_unit().equalsIgnoreCase("18")){
+            ArrayAdapter aa5 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Box);
+            aa5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner_sample_unit.setAdapter(aa5);
+            UnitId = "18";
+            spinner_sample_unit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    unit_sp_st = parent.getItemAtPosition(position).toString();
+                    if(unit_sp_st.equalsIgnoreCase("Crate")){
+                        UnitId = "17";
+                    }else  if(unit_sp_st.equalsIgnoreCase("Box")){
+                        UnitId = "18";
+                    }else{ }}
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+        if(myProductsModelList.get(position).getCatid().equalsIgnoreCase("17")){
+            ArrayAdapter aa5 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Crate);
+            aa5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner_sample_gross_weight.setAdapter(aa5);
+            UnitId = "17";
+            spinner_sample_gross_weight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    unit_sp_st = parent.getItemAtPosition(position).toString();
+                    if(unit_sp_st.equalsIgnoreCase("Crate")){
+                        UnitId = "17";
+                    }else  if(unit_sp_st.equalsIgnoreCase("Box")){
+                        UnitId = "18";
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }else if(myProductsModelList.get(position).getCatid().equalsIgnoreCase("18")){
+            ArrayAdapter aa5 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Box);
+            aa5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner_sample_gross_weight.setAdapter(aa5);
+            UnitId = "18";
+            spinner_sample_gross_weight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    unit_sp_st = parent.getItemAtPosition(position).toString();
+                    if(unit_sp_st.equalsIgnoreCase("Crate")){
+                        UnitId = "17";
+                    }else  if(unit_sp_st.equalsIgnoreCase("Box")){
+                        UnitId = "18";
+                    }else{ }}
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
         if(myProductsModelList.get(position) != null) {
             Picasso.get()
-                    .load(myProductsModelList.get(position).getPr_image())
+                    .load(myProductsModelList.get(position).getProd_image())
                     .placeholder(R.drawable.no_image_available)
                     .error(R.drawable.no_image_available)
                     .into(imageview);
@@ -1307,7 +1686,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ProductsApi service = retrofit.create(ProductsApi.class);
-
         Call<JsonElement> callRetrofit = null;
         callRetrofit = service.getMyProducts(user_id);// user_id : 453
 
@@ -1328,14 +1706,12 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                         Log.d("Response code", String.valueOf(response.code()));
                         System.out.println("----------------------------------------------------");
 
-
-                        if (response.body().toString() != null) {
-
-                            if (response != null) {
+                        if(response.body().toString() != null) {
+                            if(response != null) {
                                 String searchResponse = response.body().toString();
                                 Log.d("Reg", "Response  >>" + searchResponse.toString());
 
-                                if (searchResponse != null) {
+                                if(searchResponse != null) {
                                     JSONObject root = null;
                                     try {
                                         root = new JSONObject(searchResponse);
@@ -1352,20 +1728,64 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                                 String pr_userid = jsonObject.getString("pr_userid");
                                                 pr_bussid = jsonObject.getString("pr_bussid");
                                                 String pr_title = jsonObject.getString("pr_title");
-                                                String pr_image = jsonObject.getString("pr_image");
                                                 String pr_sku = jsonObject.getString("pr_sku");
                                                 String pr_weight = jsonObject.getString("pr_weight");
                                                 String pr_price = jsonObject.getString("pr_price");
                                                 String pr_min = jsonObject.getString("pr_min");
                                                 String pr_discount = jsonObject.getString("pr_discount");
                                                 String weight_unit = jsonObject.getString("weight_unit");
-                                                String imagepath = jsonObject.getString("imagepath");
+                                                imagepath = jsonObject.getString("imagepath");
+                                                JSONArray pr_imageArray = jsonObject.getJSONArray("pr_image");
+                                               // imageModelList = new ArrayList<ImageModelEdit>();
+                                                for (int i1 = 0; i1 < pr_imageArray.length(); i1++){
+                                                    JSONObject Object = pr_imageArray.getJSONObject(i1);
+                                                    String product_id = Object.getString("product_id");
+                                                    product_image = Object.getString("product_image");
+                                                    is_primary = Object.getString("is_primary");
+                                                  //  prod_image = imagepath + product_image;
+                                                    if(is_primary.equalsIgnoreCase("y")){
+                                                        prod_image = imagepath + product_image;
+                                                    }/*else {
+                                                        ImageModelEdit imageModelEdit = new ImageModelEdit();
+                                                        imageModelEdit.setProductid(product_id);
+                                                        imageModelEdit.setProductImage(imagepath + product_image);
+                                                        imageModelEdit.setIsPrimary(is_primary);
+                                                        imageModelList.add(imageModelEdit);
+                                                    }*/
+                                                    ImageModel imageModel = new ImageModel(imagepath + product_image, is_primary);
+                                                    imagesList.add(imageModel);
+                                                }
+                                                setUpRecyclerView1(imagepath + product_image);
                                                 String pr_type = jsonObject.getString("pr_type");
                                                 String makeoffer = jsonObject.getString("makeoffer");
-                                                String prod_image = imagepath + pr_image;
+                                                egg_type = jsonObject.getString("egg_type");
+                                                quality_sp = jsonObject.getString("quality");
+                                                catid = jsonObject.getString("catid");
+                                                stocks = jsonObject.getString("stocks");
+                                                date_started = jsonObject.getString("date_started");
+                                                date_end = jsonObject.getString("date_end");
+                                                pr_packtype = jsonObject.getString("pr_packtype");
+                                                sweight = jsonObject.getString("sweight");
+                                                sweight_unit = jsonObject.getString("sweight_unit");
+                                                sgweight = jsonObject.getString("sgweight");
+                                                sgweight_unit = jsonObject.getString("sgweight_unit");
+                                                spack_type = jsonObject.getString("spack_type");
+                                                smaxquan = jsonObject.getString("smaxquan");
+                                                sprice = jsonObject.getString("sprice");
                                                 String status = jsonObject.getString("status");
                                                 String address = jsonObject.getString("address");
-
+                                                String listing_type = jsonObject.getString("listing_type");
+                                                String days = jsonObject.getString("days");
+                                                shippingStr = jsonObject.getString("shipping");
+                                                JSONArray travelsArray = jsonObject.getJSONArray("travels");
+                                                for (int j = 0; j < travelsArray.length(); j++){
+                                                JSONObject Object = travelsArray.getJSONObject(j);
+                                                String id = Object.getString("id");
+                                                String user_id = Object.getString("user_id");
+                                                String product_id = Object.getString("product_id");
+                                                service_id = Object.getString("service_id");
+                                                service_name = Object.getString("service_name");
+                                                }
                                                 preferenceUtils.saveString(PreferenceUtils.STORE_PRO_ID, productId);
                                                 preferenceUtils.saveString(PreferenceUtils.USER_ID, user_id);
                                                 preferenceUtils.saveString(PreferenceUtils.Buss_ID, pr_bussid);
@@ -1384,9 +1804,27 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                                 myProductsModel.setWeight_unit(weight_unit);
                                                 myProductsModel.setPr_type(pr_type);
                                                 myProductsModel.setMakeoffer(makeoffer);
-                                                myProductsModel.setPr_image(prod_image);
+                                                myProductsModel.setProd_image(prod_image);
+                                                myProductsModel.setIs_primary(is_primary);
                                                 myProductsModel.setStatus(status);
                                                 myProductsModel.setAddress(address);
+                                                myProductsModel.setListing_type(listing_type);
+                                                myProductsModel.setDays(days);
+                                                myProductsModel.setShippingStr(shippingStr);
+                                                myProductsModel.setEgg_type(egg_type);
+                                                myProductsModel.setQuality(quality_sp);
+                                                myProductsModel.setCatid(catid);
+                                                myProductsModel.setStocks(stocks);
+                                                myProductsModel.setDate_started(date_started);
+                                                myProductsModel.setDate_end(date_end);
+                                                myProductsModel.setPr_packtype(pr_packtype);
+                                                myProductsModel.setSweight(sweight);
+                                                myProductsModel.setSweight_unit(sweight_unit);
+                                                myProductsModel.setSgweight(sgweight);
+                                                myProductsModel.setSgweight_unit(sgweight_unit);
+                                                myProductsModel.setSpack_type(spack_type);
+                                                myProductsModel.setSmaxquan(smaxquan);
+                                                myProductsModel.setSprice(sprice);
                                                 myProductsModelList.add(myProductsModel);
                                                 progressDialog.dismiss();
                                             }
@@ -1398,7 +1836,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                         progressDialog.dismiss();
                                         not_available_text.setVisibility(View.GONE);
                                         recycler_view_products_store.setVisibility(View.VISIBLE);
-                                        storeMyProductsAdapter = new StoreMyProductsAdapter(StoreMyProductsActivity.this, myProductsModelList);
+                                        storeMyProductsAdapter = new StoreMyProductsAdapter(StoreMyProductsActivity.this, myProductsModelList,imageModelList);
                                         recycler_view_products_store.setAdapter(storeMyProductsAdapter);
                                         storeMyProductsAdapter.notifyDataSetChanged();
                                     } else {
@@ -1478,7 +1916,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                         //In response data
                                         progressDialog.dismiss();
                                         if(shippingList.size()>0) {
-                                            showAlertDialog(shippingList, idList);
+                                            showAlertDialogShipping(shippingList, idList,mSelectedContinents);
                                         }else{
                                             Toast.makeText(StoreMyProductsActivity.this, "Categories not available", Toast.LENGTH_SHORT).show();
                                         }
@@ -1488,13 +1926,11 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-
                             }
                         }
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
                 Log.d("Error Call", ">>>>" + call.toString());
@@ -1504,7 +1940,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             }
         });
     }
-    private void showAlertDialog(final List<String> shippingList, final List<String> shippingIdList) {
+    private void showAlertDialogShipping(final List<String> shippingList, final List<String> shippingIdList,SparseBooleanArray mSelectedContinents) {
         try {
             final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(StoreMyProductsActivity.this);
             LayoutInflater inflater = this.getLayoutInflater();
@@ -1543,6 +1979,10 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             // Assign adapter to ListView
             categoryListView.setAdapter(adapter);
             categoryListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            if(shippingList.contains(service_name)){
+                shippingSelectedList.add(shippingIdList.get(position));
+                shippingSelectedPosition.add(position);
+            }
             if (shippingSelectedPosition.size() > 0) {
                 for (int pos = 0; pos < shippingSelectedPosition.size(); pos++) {
                     categoryListView.setItemChecked(shippingSelectedPosition.get(pos), true);
@@ -1554,9 +1994,10 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                     alertDialog.dismiss();
                     String itemValue = shippingList.get(position);
                     SparseBooleanArray checked = categoryListView.getCheckedItemPositions();
-                    ArrayList<String> selectedItems = new ArrayList<String>();
-                    shippingSelectedPosition = new ArrayList<>();
-                    shippingSelectedList = new ArrayList<>();
+                    // SparseBooleanArray checked = categoryListView.getCheckedItemPositions();
+                  //  ArrayList<String> selectedItems = new ArrayList<String>();
+                   // shippingSelectedPosition = new ArrayList<>();
+                   // shippingSelectedList = new ArrayList<>();
                     for (int i = 0; i < checked.size(); i++) {
                         // Item position in adapter
                         int position = checked.keyAt(i);
@@ -1626,6 +2067,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             //    JsonParser jsonParser = new JsonParser();
             jsonObj.put("pr_type", SectorId);
             jsonObj.put("pr_quality", quality_st);
+            jsonObj.put("listing_type",ListingTypeId);
             jsonObj.put("packaging", packTypeStr);
             jsonObj.put("job_location", Product_Address_Map);
             jsonObj.put("city", cityId);
@@ -1637,7 +2079,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             jsonObj.put("zipcode", pincode_et.getText().toString());
             jsonObj.put("sampleweightunit", sample_unit_edit.getText().toString());
             jsonObj.put("sgweight", sample_gross_weight_et.getText().toString());
-            jsonObj.put("sgweight_unit", sample_gross_weight_sp);
+            jsonObj.put("sgweight_unit", UnitIdSample);
             jsonObj.put("saprd_pack", sample_packtype);
             jsonObj.put("squantity", max_quantity_et.getText().toString());
             jsonObj.put("samplecost", sample_price_edittext.getText().toString());
@@ -1731,6 +2173,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
 
             jsonObj.put("pr_type", SectorId);
             jsonObj.put("pr_quality", quality_st);
+            jsonObj.put("listing_type",ListingTypeId);
             jsonObj.put("packaging", packTypeStr);
             jsonObj.put("job_location", Product_Address_Map);
             jsonObj.put("city", cityId);
@@ -1742,7 +2185,7 @@ public class StoreMyProductsActivity extends AppCompatActivity {
             jsonObj.put("zipcode", pincode_et.getText().toString());
             jsonObj.put("sampleweightunit", sample_unit_edit.getText().toString());
             jsonObj.put("sgweight", sample_gross_weight_et.getText().toString());
-            jsonObj.put("sgweight_unit", sample_gross_weight_sp);
+            jsonObj.put("sgweight_unit", UnitIdSample);
             jsonObj.put("saprd_pack", sample_packtype);
             jsonObj.put("squantity", max_quantity_et.getText().toString());
             jsonObj.put("samplecost", sample_price_edittext.getText().toString());
@@ -1851,7 +2294,6 @@ public class StoreMyProductsActivity extends AppCompatActivity {
                                             preferenceUtils.saveString(PreferenceUtils.CURRENCY_CODE, currency_st);
                                             //categories = getCategoriesListModels.get(pos).getId();
                                         }
-
                                         @Override
                                         public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -2473,11 +2915,22 @@ public class StoreMyProductsActivity extends AppCompatActivity {
     private void setUpRecyclerView(String image) {
         if (imagesList.size() > 0) {
             fileList.add(image);
-            ImagesAdapter imagesAdapter = new ImagesAdapter(StoreMyProductsActivity.this, fileList,imagesList, true);
+            ImagesAdapter imagesAdapter = new ImagesAdapter(StoreMyProductsActivity.this, fileList,imagesList, true,"add");
             images_recyclerView.setAdapter(imagesAdapter);
             imagesAdapter.notifyDataSetChanged();
         } else {
             images_recyclerView.setVisibility(View.GONE);
         }
     }
+    private void setUpRecyclerView1(String image) {
+        if(imagesList.size() > 0) {
+            fileList.add(image);
+            ImagesAdapter imagesAdapter = new ImagesAdapter(StoreMyProductsActivity.this, fileList,imagesList, true,"edit");
+            images_recyclerView.setAdapter(imagesAdapter);
+            imagesAdapter.notifyDataSetChanged();
+        } else{
+            images_recyclerView.setVisibility(View.GONE);
+        }
+    }
+
 }

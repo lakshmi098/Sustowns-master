@@ -26,6 +26,7 @@ import com.sustown.sustownsapp.Activities.ProductDetailsActivity;
 import com.sustown.sustownsapp.Activities.StoreMyProductsActivity;
 import com.sustown.sustownsapp.Api.DZ_URL;
 import com.sustown.sustownsapp.Api.ProductsApi;
+import com.sustown.sustownsapp.Models.ImageModelEdit;
 import com.sustown.sustownsapp.Models.MyProductsModel;
 import com.sustown.sustownsapp.helpers.Helper;
 
@@ -49,14 +50,16 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
     PreferenceUtils preferenceUtils;
     String[] order;
     List<MyProductsModel> myProductsModels;
+    List<ImageModelEdit> imageModelEdits;
     ProgressDialog progressDialog;
     AlertDialog alertDialog;
     Helper helper;
 
-    public StoreMyProductsAdapter(StoreMyProductsActivity context, List<MyProductsModel> myProductsModels) {
+    public StoreMyProductsAdapter(StoreMyProductsActivity context, List<MyProductsModel> myProductsModels,List<ImageModelEdit> imageModelEdits) {
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
         this.myProductsModels = myProductsModels;
+        this.imageModelEdits = imageModelEdits;
         preferenceUtils = new PreferenceUtils(context);
         helper = new Helper(context);
         user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
@@ -75,17 +78,16 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         prod_status = myProductsModels.get(position).getStatus();
         if(myProductsModels.get(position) != null){
-            if(myProductsModels.get(position).getPr_image().isEmpty() || myProductsModels.get(position).getPr_image().equalsIgnoreCase(""))
+            if(myProductsModels.get(position).getProd_image().isEmpty() || myProductsModels.get(position).getProd_image().equalsIgnoreCase(""))
             {
                 Picasso.get()
                         .load(R.drawable.no_image_available)
                         .placeholder(R.drawable.no_image_available)
                         .error(R.drawable.no_image_available)
                         .into(viewHolder.imageView);
-
-            }else{
+            }else {
                 Picasso.get()
-                        .load(myProductsModels.get(position).getPr_image())
+                        .load(myProductsModels.get(position).getProd_image())
                         .placeholder(R.drawable.no_image_available)
                         .error(R.drawable.no_image_available)
                         .into(viewHolder.imageView);
@@ -120,28 +122,6 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
                                 sweetAlertDialog.dismissWithAnimation();
                             }
                         });
-
-              /*  final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                alertDialogBuilder.setMessage("Are you sure You want to Delete the Product");
-                        alertDialogBuilder.setPositiveButton("yes",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface arg0, int arg1) {
-                                        removeMyProduct(position);
-                                      //  Toast.makeText(context,"You clicked yes button",Toast.LENGTH_LONG).show();
-                                    }
-                                });
-
-                alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                    }
-                });
-
-                alertDialog = alertDialogBuilder.create();
-                alertDialog.show();*/
-
             }
         });
         viewHolder.copy_prod.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +136,7 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
             @Override
             public void onClick(View v) {
                 pro_id = myProductsModels.get(position).getId();
-                image = myProductsModels.get(position).getPr_image();
+                image = myProductsModels.get(position).getProd_image();
                 Intent i = new Intent(context, ProductDetailsActivity.class);
                 i.putExtra("Pro_Id",pro_id);
                 i.putExtra("Image",image);
@@ -169,7 +149,6 @@ public class StoreMyProductsAdapter extends RecyclerView.Adapter<StoreMyProducts
     public void removeAt(int position) {
           notifyDataSetChanged();
     }
-
     public void progressdialog() {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("please wait...");

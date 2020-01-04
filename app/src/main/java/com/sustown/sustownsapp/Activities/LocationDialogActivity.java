@@ -195,11 +195,23 @@ public class LocationDialogActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(contractLocationStr.equalsIgnoreCase("1")) {
-                    submitConfirmOrder();
+                    if(orderid.equalsIgnoreCase("")||order_status.equalsIgnoreCase("null")){
+                        Toast.makeText(LocationDialogActivity.this, "Please select address", Toast.LENGTH_SHORT).show();
+                    }else {
+                        submitConfirmOrder();
+                    }
                 }else if(contractLocationStr.equalsIgnoreCase("0")){
-                    saveExistingAddress();
+                    if(orderid.equalsIgnoreCase("")||order_status.equalsIgnoreCase("null")){
+                        Toast.makeText(LocationDialogActivity.this, "Please select address", Toast.LENGTH_SHORT).show();
+                    }else {
+                        saveExistingAddress();
+                    }
                 }else if(contractLocationStr.equalsIgnoreCase("2")){
-                    submitConfirmTransportAddress();
+                    if(orderid.equalsIgnoreCase("")||order_status.equalsIgnoreCase("null")){
+                        Toast.makeText(LocationDialogActivity.this, "Please select address", Toast.LENGTH_SHORT).show();
+                    }else {
+                        submitConfirmTransportAddress();
+                    }
                 }
             }
         });

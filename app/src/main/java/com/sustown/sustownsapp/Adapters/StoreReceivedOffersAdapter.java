@@ -49,14 +49,12 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
         makeProId = preferenceUtils.getStringFromPreference(PreferenceUtils.OFF_PRO_ID,"");
         makeStatus = preferenceUtils.getStringFromPreference(PreferenceUtils.MAKE_STATUS,"");*/
     }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.receive_offers_item, viewGroup, false);
         //  product_sale_activity.onItemClick(i);
         return new ViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         if(storeSentOffersModels.get(position) != null){
@@ -101,9 +99,7 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
     }
     public void removeAt(int position) {
           notifyDataSetChanged();
-
     }
-
 
     public void progressdialog() {
         progressDialog = new ProgressDialog(context);
@@ -124,7 +120,6 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
 
         callRetrofit = service.acceptMakeOffer(makeId,makeProId,"2");
         callRetrofit.enqueue(new Callback<JsonElement>() {
-
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 if (response.isSuccessful()) {
@@ -137,13 +132,10 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
                     Log.d("Response code", String.valueOf(response.code()));
 
                     System.out.println("----------------------------------------------------");
-
                     if (response.body().toString() != null) {
-
                         if (response != null) {
                             String searchResponse = response.body().toString();
                             Log.d("Categeries", "response  >>" + searchResponse.toString());
-
                             if (searchResponse != null) {
                                 JSONObject root = null;
                                 try {
@@ -171,7 +163,6 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
                     // Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 //                Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();
@@ -180,7 +171,6 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
             }
         });
     }
-
     public void removeOffer(final int position) {
         progressdialog();
         Retrofit retrofit = new Retrofit.Builder()
@@ -206,15 +196,11 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
                     Log.d("Response raw header", response.headers().toString());
                     Log.d("Response raw", String.valueOf(response.raw().body()));
                     Log.d("Response code", String.valueOf(response.code()));
-
                     System.out.println("----------------------------------------------------");
-
                     if (response.body().toString() != null) {
-
                         if (response != null) {
                             String searchResponse = response.body().toString();
                             Log.d("Categeries", "response  >>" + searchResponse.toString());
-
                             if (searchResponse != null) {
                                 JSONObject root = null;
                                 try {
@@ -238,7 +224,6 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
                                         progressDialog.dismiss();
                                         Toast.makeText(context, "not deleted", Toast.LENGTH_SHORT).show();
                                     }
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -252,7 +237,6 @@ public class StoreReceivedOffersAdapter extends RecyclerView.Adapter<StoreReceiv
                     // Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 //                Toast.makeText(context, "Service not responding", Toast.LENGTH_SHORT).show();

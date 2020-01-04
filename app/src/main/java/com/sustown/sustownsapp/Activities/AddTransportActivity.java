@@ -168,12 +168,22 @@ public class AddTransportActivity extends AppCompatActivity {
             request_transport_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ll_transport_services.setVisibility(View.VISIBLE);
-                    request_transport_btn.setVisibility(View.GONE);
                     if(TransportStr.equalsIgnoreCase("0")) {
-                        getAddTransportServices();
+                        if(pickupDateFrom.equalsIgnoreCase("")) {
+                            Toast.makeText(AddTransportActivity.this, "Please select Date", Toast.LENGTH_SHORT).show();
+                        }else{
+                            ll_transport_services.setVisibility(View.VISIBLE);
+                            request_transport_btn.setVisibility(View.GONE);
+                            getAddTransportServices();
+                        }
                     }else{
-                        getContractTransportServices();
+                        if(pickupDateFrom.equalsIgnoreCase("")) {
+                            Toast.makeText(AddTransportActivity.this, "Please select Date", Toast.LENGTH_SHORT).show();
+                        }else{
+                            ll_transport_services.setVisibility(View.VISIBLE);
+                            request_transport_btn.setVisibility(View.GONE);
+                            getContractTransportServices();
+                        }
                     }
                 }
             });

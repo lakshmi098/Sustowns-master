@@ -90,11 +90,10 @@ public class MakeOffer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 price = price_et.getText().toString().trim();
-                quantity = quantity_et.getText().toString().trim();
                 quantity_int = Integer.parseInt(price);
                 Integer MinPrice = Integer.parseInt(MinPriceStr);
                 if(quantity_int > MinPrice){
-                    Toast.makeText(MakeOffer.this, "Value must be less than "+min_quant_int+"or equals to"+min_quant_int, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MakeOffer.this, "Value must be less than "+"or equals to "+MinPrice, Toast.LENGTH_SHORT).show();
                 }else {
                     submitMakeOffer();
                 }

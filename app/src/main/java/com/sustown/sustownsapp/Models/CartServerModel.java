@@ -28,6 +28,8 @@ public class CartServerModel {
     String shipping_ven_service_id;
     String pr_title;
     String id;
+    String pr_min;
+    String pr_stocks;
 
     public String getCart_id() {
         return cart_id;
@@ -242,5 +244,21 @@ public class CartServerModel {
 
     public void setShipping_ven_service_id(String shipping_ven_service_id) {
         this.shipping_ven_service_id = shipping_ven_service_id;
+    }
+
+    public String getPr_min() {
+        return pr_min;
+    }
+
+    public void setPr_min(String pr_min) {
+        this.pr_min = pr_min;
+    }
+
+    public String getPr_stocks() {
+        return pr_stocks;
+    }
+
+    public void setPr_stocks(String pr_stocks) {
+        this.pr_stocks = pr_stocks;
     }
 }

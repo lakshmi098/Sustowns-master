@@ -127,7 +127,7 @@ public class ProductsActivity extends AppCompatActivity implements SwipeRefreshL
         useremail = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_EMAIL, "");
         user_id = preferenceUtils.getStringFromPreference(PreferenceUtils.USER_ID,"");
         helper = new Helper(this);
-        products_list = (GridView) findViewById(R.id.products_list);
+        products_list = (GridView) findViewById(R.id.products_list_grid);
         home = (LinearLayout) findViewById(R.id.ll_home);
         news = (LinearLayout) findViewById(R.id.ll_news);
         store = (LinearLayout) findViewById(R.id.ll_store);

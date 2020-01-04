@@ -112,27 +112,27 @@ public class BusinessProfileDetails extends AppCompatActivity {
         et_profile_email.setText(user_email);
         et_website.setText(user_website);*/
         profile_image = (CircleImageView) findViewById(R.id.profile_image);
-        if(image != null || !image.equalsIgnoreCase("")){
+      /*  if(image != null || !image.isEmpty()){
             Picasso.get()
                     .load(image)
                     .placeholder(R.drawable.profile_ic)
                     .error(R.drawable.profile_ic)
                     .into(profile_image);
-          /*  Glide.with(BusinessProfileDetails.this)
+          *//*  Glide.with(BusinessProfileDetails.this)
                     .load(image)
                     //.placeholder(R.drawable.profile_ic)
-                    .into(profile_image);*/
+                    .into(profile_image);*//*
         }else{
             Picasso.get()
                     .load(R.drawable.profile_ic)
                     .placeholder(R.drawable.profile_ic)
                     .error(R.drawable.profile_ic)
                     .into(profile_image);
-            /*Glide.with(BusinessProfileDetails.this)
+            *//*Glide.with(BusinessProfileDetails.this)
                     .load(R.drawable.no_image_available)
                     //.placeholder(R.drawable.profile_ic)
-                    .into(profile_image);*/
-        }
+                    .into(profile_image);*//*
+        }*/
         iv_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -576,6 +576,8 @@ public void cartCount() {
                                             String shiping_id = Obj.getString("shiping_id");
                                             String shiping_amount = Obj.getString("shiping_amount");
                                             String shipping_ven_service_id = Obj.getString("shipping_ven_service_id");
+                                            String pr_stocks = Obj.getString("pr_stocks");
+                                            String pr_min = Obj.getString("pr_min");
                                             String image = imagepath + pro_img;
 
                                             CartServerModel cartListModel = new CartServerModel();
@@ -604,6 +606,8 @@ public void cartCount() {
                                             cartListModel.setShiping_id(shiping_id);
                                             cartListModel.setShiping_amount(shiping_amount);
                                             cartListModel.setShipping_ven_service_id(shipping_ven_service_id);
+                                            cartListModel.setPr_min(pr_min);
+                                            cartListModel.setPr_stocks(pr_stocks);
                                             cartServerList.add(cartListModel);
                                         }
                                         cartAmountTotal = Double.parseDouble(order_total);
@@ -652,7 +656,7 @@ public void cartCount() {
                 Log.d("Error Call", ">>>>" + call.toString());
                     Log.d("Error", ">>>>" + t.toString());
                     progressDialog.dismiss();
-                    //   Toast.makeText(CartActivity.this,"Server not responding", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CartActivity.this, "Something went wrong!Please try again later", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -719,7 +723,7 @@ public void cartCount() {
                 Log.d("Error Call", ">>>>" + call.toString());
                 Log.d("Error", ">>>>" + t.toString());
                 progressDialog.dismiss();
-                //   Toast.makeText(CartActivity.this,"Server not responding", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CartActivity.this, "Something went wrong!Please try again later", Toast.LENGTH_SHORT).show();
             }
         });
     }

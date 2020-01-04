@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 
 import com.bumptech.glide.Glide;
 import com.example.sustownsapp.R;
+import com.squareup.picasso.Picasso;
 import com.sustown.sustownsapp.Models.ImageModel;
 import com.sustown.sustownsapp.helpers.Helper;
 
@@ -23,7 +24,8 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
     List<ImageModel> imageJSONList;
     Helper basicUtilities;
     boolean isProduct;
-    String selectedPrimary = "";
+    String isEdit;
+    public static String selectedPrimary = "";
     private int lastSelectedPosition = -1;
 
     public ImagesAdapter(Context context, List<String> imagesList, final boolean isProduct) {
@@ -33,11 +35,12 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
         basicUtilities = new Helper(context);
     }
 
-    public ImagesAdapter(Context context, List<String> imagesList, List<ImageModel> imageJSONList, final boolean isProduct) {
+    public ImagesAdapter(Context context, List<String> imagesList, List<ImageModel> imageJSONList, final boolean isProduct,String isEdit) {
         this.context = context;
         this.imagesList = imagesList;
         this.imageJSONList = imageJSONList;
         this.isProduct = isProduct;
+        this.isEdit = isEdit;
         basicUtilities = new Helper(context);
     }
 
@@ -50,26 +53,37 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final ImagesAdapter.ViewHolder holder, final int position) {
-        if (isProduct) {
-            holder.primary_radiobtn.setVisibility(View.VISIBLE);
-        } else {
-            holder.primary_radiobtn.setVisibility(View.GONE);
-        }
-        if (imagesList.get(position).contains("http")) {
-            basicUtilities.getImage(context, imagesList.get(position), holder.imageView);
-        } else {
-            try {
-                Glide.with(context).load(imagesList.get(position)).into(holder.imageView);
-            } catch (Exception e) {
-                Glide.with(context).load("file://" + imagesList.get(position)).into(holder.imageView);
-                e.printStackTrace();
+        if(isEdit.equalsIgnoreCase("add")){
+            if (isProduct) {
+                holder.primary_radiobtn.setVisibility(View.VISIBLE);
+            } else {
+                holder.primary_radiobtn.setVisibility(View.GONE);
+            }
+            if (imagesList.get(position).contains("http")) {
+                basicUtilities.getImage(context, imagesList.get(position), holder.imageView);
+            } else {
+                try {
+                    Glide.with(context).load(imagesList.get(position)).into(holder.imageView);
+                } catch (Exception e) {
+                    Glide.with(context).load("file://" + imagesList.get(position)).into(holder.imageView);
+                    e.printStackTrace();
+                }
+            }
+        }else if(isEdit.equalsIgnoreCase("edit")){
+            Picasso.get().load(imagesList.get(position))
+                    .placeholder(R.drawable.no_image_available)
+                    .error(R.drawable.no_image_available)
+                    .into(holder.imageView);
+            if(imageJSONList.get(position).getIsPrimary().equalsIgnoreCase("y")){
+                holder.primary_radiobtn.setChecked(true);
             }
         }
         holder.primary_radiobtn.setChecked(lastSelectedPosition == position);
         holder.primary_radiobtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 if (isChecked) {
+                    selectedPrimary = "1";
                     for (int i = 0; i < imagesList.size(); i++) {
                         if(i == position){
                             imageJSONList.get(i).setIsPrimary("yes");
@@ -78,6 +92,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
                         }
                     }
                 }
+               // selectedPrimary = "0";
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {

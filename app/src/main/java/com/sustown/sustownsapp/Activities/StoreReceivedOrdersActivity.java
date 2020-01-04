@@ -311,7 +311,7 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
-//                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
+                Toast.makeText(StoreReceivedOrdersActivity.this, "Something went wrong!Please try again later", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });
@@ -453,7 +453,7 @@ public class StoreReceivedOrdersActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
-//                Toast.makeText(ProductDetailsActivity.this, "Server not responding", Toast.LENGTH_SHORT).show();
+                Toast.makeText(StoreReceivedOrdersActivity.this, "Something went wrong!Please try again later", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });

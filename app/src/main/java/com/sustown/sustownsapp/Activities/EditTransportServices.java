@@ -1607,6 +1607,11 @@ public class EditTransportServices extends AppCompatActivity {
                     }
                 }
             } else {
+                if (subCategorySelectedPosition.size() > 0) {
+                    for (int pos = 0; pos < subCategorySelectedPosition.size(); pos++) {
+                        categoryListView.setItemChecked(subCategorySelectedPosition.get(pos), true);
+                    }
+                }
             }
             submitCat_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1648,7 +1653,7 @@ public class EditTransportServices extends AppCompatActivity {
                         }
                     } else {
                         SparseBooleanArray checked = categoryListView.getCheckedItemPositions();
-                        ArrayList<String> selectedItems = new ArrayList<String>();
+                        ArrayList<String> selectedItems1 = new ArrayList<String>();
                         subCategorySelectedPosition = new ArrayList<>();
                         subCategorySelectedList = new ArrayList<>();
                         for (int i = 0; i < checked.size(); i++) {
@@ -1656,18 +1661,18 @@ public class EditTransportServices extends AppCompatActivity {
                             int position = checked.keyAt(i);
                             // Add sport if it is checked i.e.) == TRUE!
                             if (checked.valueAt(i)) {
-                                selectedItems.add(adapter.getItem(position));
+                                selectedItems1.add(adapter.getItem(position));
                                 subCategorySelectedList.add(categoryIdList.get(position));
                                 subCategorySelectedPosition.add(position);
                             }
                         }
                         StringBuilder stringBuilder = new StringBuilder();
-                        if (selectedItems.size() > 0) {
-                            for (int i = 0; i < selectedItems.size(); i++) {
-                                if (i == selectedItems.size() - 1) {
-                                    stringBuilder.append(selectedItems.get(i));
+                        if (selectedItems1.size() > 0) {
+                            for (int i = 0; i < selectedItems1.size(); i++) {
+                                if (i == selectedItems1.size() - 1) {
+                                    stringBuilder.append(selectedItems1.get(i));
                                 } else {
-                                    stringBuilder.append(selectedItems.get(i) + ", ");
+                                    stringBuilder.append(selectedItems1.get(i) + ", ");
                                 }
                             }
                             choose_sub_category.setText(stringBuilder.toString());
